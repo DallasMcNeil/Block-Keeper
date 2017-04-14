@@ -1,0 +1,35 @@
+#windowBar {
+    -webkit-app-region: none;
+    position: fixed;
+    top:-30px;
+    left:0px;
+    width:100vw;
+    height:22px;
+    z-index: 2;
+}
+
+#content {
+    position: fixed;
+    top:0px;
+    left:0px;
+}
+
+#scramble {
+    position: fixed;
+    top:10px;
+    right: 20px;
+}
+
+#stats {
+    position: absolute;
+    left:10px;
+    top:10px;
+}
+
+#versionBannerContainer {
+    position: fixed;
+    top:-110px;
+    left:0px;
+    width:100vw;
+    z-index: 5;
+}

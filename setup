@@ -1,0 +1,10 @@
+#!/bin/bash
+cd src
+echo "Downloading and installing packages..."
+npm install electron
+npm install electron-json-storage
+npm install electron-shortcut
+npm install electron-window-state
+npm install electron-packager
+npm install less
+echo "Finished"

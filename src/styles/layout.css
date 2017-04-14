@@ -1,0 +1,743 @@
+
+@font-face {
+    font-family: digital;
+    src: url("../fonts/digital-7 (mono).ttf");
+}
+
+@font-face {
+    font-family: workSansThin;
+    src: url("../fonts/WorkSans-Thin.ttf");
+}
+
+@font-face {
+    font-family: workSansLight;
+    src: url("../fonts/WorkSans-Light.ttf");
+}
+
+@font-face {
+    font-family: workSans;
+    src: url("../fonts/WorkSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: workSansMedium;
+    src: url("../fonts/WorkSans-Medium.ttf");
+}
+
+@font-face {
+    font-family: workSansBold;
+    src: url("../fonts/WorkSans-Bold.ttf");
+}
+
+:not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor:text;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    position: absolute;
+    cursor:pointer;
+}
+
+::-webkit-scrollbar-track {
+    background: #282828;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #505050;
+}
+
+input, button, textarea, :focus {
+    outline: none;
+}
+
+body {
+    background-color:#202020;
+}
+
+#windowBar {
+    position: fixed;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:22px;
+    z-index: -5;
+    background-color: #202020; 
+    cursor:pointer;
+}
+
+#content {
+    position: fixed;
+    top:22px;
+    left:0px;
+}
+
+#background {
+    position:fixed;
+    display: block;
+    margin: 0px;
+    top:0px;
+    left:0px;
+    width:100vw;
+    height:100vh;
+    cursor:default;
+}
+
+.indicator {
+    position:absolute;
+    background-color:rgba(0,0,0,0);
+    width:5vw;
+    height:100vh;
+    padding:0px;
+    display:inline-block;
+    margin:0px;
+    z-index: -1;
+}
+
+#rightIndicator {
+    left:95vw;
+}
+
+#centreBackground {
+    position:absolute;
+    background-color:#202020;
+    width:100vw;
+    height:100vh;
+    padding:0px;
+    display:inline-block;
+    margin:0px;
+    left:0vw;
+    line-height: 100vh;
+    z-index: -3;
+    background-size: cover;
+    background-position: center;
+}
+
+#timer {
+    vertical-align:middle;
+    text-align: center;
+    font-size: 30vmin;
+    font-family: digital;
+    color:#E0E0E0;
+    margin:0px;
+    z-index: 0;
+}
+
+#scramble {
+    -webkit-user-select: text;
+    user-select: text;
+    position: fixed;
+    top:32px;
+    right: 20px;
+    vertical-align:top;
+    text-align: right;
+    font-size:4vh;
+    line-height:4vh;
+    max-width:calc(95vw - 250px);
+    max-height:30vh;
+    color:#C0C0C0;
+    font-family: workSansLight;
+    overflow-y: scroll;
+    word-wrap:normal;
+    margin: 0px;
+    display: block;
+}
+
+#stats {
+    display: block;
+    position: absolute;
+    width: 250px;
+    left:10px;
+    top:10px;
+    background-color: rgba(0,0,0,0);
+}
+
+button {
+    display: inline-block;
+    height: 30px;
+    font-family: workSans;
+    font-size: 18px;
+    color:#F0F0F0;
+    background-color: #303030;
+    border-color: #606060;
+    border-radius: 0px;
+    border-style: solid;
+    border-width: 2px;
+    transition: 0.1s;
+}
+
+button:hover {
+    cursor: pointer;
+    border-color: #404040;
+    transition: 0.1s;
+}
+
+button:focus {
+    outline:0;
+}
+
+select:focus {
+    outline:0;
+}
+
+input:focus {
+    outline:0;
+}
+
+
+button:active {
+    cursor: pointer;
+    background-color: #202020;
+    border-color: #404040;
+    color:#A0A0A0;
+    transition: 0.1s;
+}
+
+.cross {
+    display: block;
+    width:30px;
+    height:30px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='6,6 18,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='18,6 6,18'></polyline></svg>"); 
+    background-color: #303030;
+}
+
+#sessionButton {
+    width:30px;
+    margin-left: 10px;
+    margin-top: 0px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,18 20,18'></polyline></svg>");
+    
+    background-size: contain;
+    padding: 0px;
+    position: absolute;
+    top:40px;
+    left:210px;
+}
+
+#preferencesButton,#previewButton {
+    width:30px;
+    height:30px;
+    position: fixed;
+    right:324px;
+    bottom:10px;
+    background: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><circle cx='12' cy='12' r='5' stroke='#F0F0F0' stroke-width='3' fill='none'></circle><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='12,3 12,6'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='12,21 12,18'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='3,12 6,12'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='21,12 18,12'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='18.2,5.8 16,8'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='5.8,18.2 8,16'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='5.8,5.8 8,8'></polyline><polyline stroke-width='3.5' cap='square' fill='none' stroke='#F0F0F0' points='18.2,18.2 16,16'></polyline></svg>"); 
+    padding: 0px;
+}
+
+#previewButton {
+    right: 364px;
+    background: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='#FFF' stroke='#FFF' points='4,7 4,17 16,17 16,14 20,16 20,8 16,10 16,7'></polyline></svg>"); 
+}
+
+
+#sessionButtons {
+    display: block;
+    margin-top:50px;
+    height:0px;
+    overflow-y:hidden;
+}
+
+#newSessionButton {
+    width:118px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#deleteSessionButton {
+    width:118px;
+    margin-bottom: 10px;
+}
+
+#sessionContainer {
+    height: 30px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.disabled {
+    cursor:default;
+    opacity:0.4;
+    transition:0.2s;
+}
+ 
+button.disabled:hover {
+    cursor: default;
+    border-color: #606060;
+    transition: 0.1s;
+}
+
+button.disabled:active {
+    cursor: default;
+    background-color: #303030;
+    border-color: #606060;
+    color:#F0F0F0;
+    transition: 0.1s;
+}
+
+#puzzleSelect.disabled:hover {
+    cursor: default;
+    background-color: #303030;
+    border-color: #606060;
+    color:#F0F0F0;
+    transition: 0.1s;
+}
+
+select {
+    -webkit-appearance: none;
+    width: 250px;
+    height: 30px;
+    border-color:#606060;
+    border-width:2px;
+    border-radius: 0px;
+    border-style: solid;
+    font-family: workSans;
+    font-size: 18px;
+    color:#F0F0F0;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><path fill='#F0F0F0' d='M7.406 7.828l4.594 4.594 4.594-4.594 1.406 1.406-6 6-6-6z'></path></svg>"); 
+    
+    background-color: #303030;
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    padding-left: 8px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+select:hover {
+    cursor: pointer;
+    border-color: #404040;
+    transition: 0.1s;
+}
+
+#sessionSelect {
+    width:210px;
+    position: absolute;
+    top:40px;
+    left:0px;
+}
+
+#puzzleSelect {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+input[type="text"] {
+    width: 197px;
+    height: 24px;
+    border-color:#606060;
+    border-width:2px;
+    border-radius: 0px;
+    border-style: solid;
+    font-family: workSans;
+    font-size: 18px;
+    color:#F0F0F0;
+    background-color: #303030;
+}
+
+#sessionSelectText {
+    padding-left: 8px;
+    position: absolute;
+    top:40px;
+    left:0px;
+}
+
+#addTimeInput {
+    width:100px;
+    margin:6px;
+}
+
+#sessionSolvesTable {
+    width:250px;
+    border-collapse: collapse;
+    border: 2px solid #606060;
+    transition:0.1s;
+}
+
+#sessionDetails {
+    width:250px;
+    border-collapse: collapse;
+    border: 2px solid #606060;
+    border-bottom: 0;
+    transition:0.1s;
+} 
+
+#sessionStats {
+    width:250px;
+    border-collapse: collapse;
+    border: 2px solid #606060;
+    border-top:0;
+    transition:0.1s;
+}
+
+#sessionRecordsContainer {
+    margin-top: 10px;
+    width:248px;
+    border: 1px solid #606060;
+    max-height:calc(100vh - 340px);
+    display: block;
+    overflow: auto;
+    transition:0.1s;
+}
+
+#sessionRecords {
+    width:240px;
+    border-collapse: collapse;
+    overflow:auto;
+    display: block;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+td {
+    border: 1px solid #606060;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-family: workSans;
+    color:#D0D0D0;
+    line-height: 0px;
+    font-size: 15px;
+    text-align: center;
+    background-color: #303030;
+}
+
+table tr:first-child td {
+    font-family: workSansBold;
+    color:#F0F0F0;
+}
+
+table td:first-child {
+    font-family: workSansBold;
+    color:#F0F0F0;
+}
+
+#sessionDetails td:first-child {
+    width:125px;
+}
+
+#sessionDetails td:nth-child(2) {
+    width:125px;
+}
+
+#sessionStats td:first-child {
+    width:70px;
+}
+#sessionStats td:nth-child(2) {
+    width:90px;
+}
+#sessionStats td:nth-child(3) {
+    width:90px;
+}
+
+#sessionRecords td:first-child {
+    width:25px;
+    margin-left: 0px;
+    margin-right:0px;
+}
+
+#sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
+    width:73px;
+    cursor:pointer;
+}
+
+#sessionRecords td:nth-child(2):hover {
+    background: #202020;
+}    
+
+#sessionRecords td:nth-child(3) {
+    width:73px;
+}
+#sessionRecords td:nth-child(4) {
+    width:73px;
+}
+
+td p {
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: text;
+}
+
+#sessionRecords tr:first-child td,#sessionRecords tr:first-child td p {
+    background: #303030;
+    cursor: text;
+}
+
+#sessionRecords tr:first-child td:hover {
+    background: #303030;
+}
+
+#addTimeButton {
+    width:100%;
+    border-width: 0px;
+}
+
+#dialogRecord {
+    background: #303030;
+    border-color:#606060;
+    border-width:1px;
+    border-radius: 0px;
+    border-style: solid;
+    font-family: workSans;
+    font-size: 18px;
+    display: block;
+    color:#F0F0F0;
+    height:29px;
+    -webkit-box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.4);
+    cursor:default;
+}
+
+#dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
+    background: #303030;
+    border-color:#606060;
+    border-width:2px;
+    border-radius: 0px;
+    border-style: solid;
+    font-family: workSans;
+    font-size: 18px;
+    display: block;
+    color:#F0F0F0;
+    -webkit-box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.4);
+    cursor:default;
+}
+
+#dialogCSTimer,#dialogAddTime {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#addTimeInput {
+    margin-left: 12px;
+}
+
+#dialogPreferences select {
+    width:100px;
+}
+
+#dialogPreferences p {
+    margin-top:8px;
+    margin-bottom:7px;
+    margin-left:15px;
+}
+
+#dialogRecord button {
+    margin-right: 0px;
+    margin-left: 0px;
+    border-width: 1px;
+    border-bottom-width: 2px;
+    display: block;
+    float:left;
+}
+
+#closePreferences ,#closePreview {
+    display: block;
+    margin-top:10px;
+    margin-right: 10px;
+    float: right;
+    height:30px;
+    width:30px;
+}
+
+#savePreferences {
+    margin-left: 10px;
+    margin-top 30px;
+}
+
+#savePreview {
+    margin-top:12px;
+    margin-left: 10px;
+}
+
+#previewVideo {
+    width:480px;
+    height:360px;
+    display: block;
+    margin-left: 0px;
+    margin-top:30px;
+    border-bottom: solid 2px;
+    border-top: solid 2px;
+}
+
+
+#dialogRecord input {
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    display: none;
+    color:#F0F0F0;
+}
+
+
+.ui-dialog:focus {
+    outline:0;
+}
+
+#recordScramble {
+    -webkit-user-select: text;
+    user-select: text;
+    position: absolute;
+    display: block;
+    font-size: 18px;
+    top:13px;
+    left:5px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    color:#C0C0C0;
+    overflow-y: scroll;
+    word-wrap:normal;
+    max-width: 193px;
+    max-height: 68px;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    display:inline-block;
+    margin: 0;
+    margin-right: 10px;
+    vertical-align: middle;
+    width:25px;
+    height:25px;
+    background-color: #303030;
+    border-color:#606060;
+    border-width:2px;
+    border-radius: 0px;
+    border-style: solid;
+    cursor:pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#FFF' points='4,11 10,17 20,7'></polyline></svg>");
+    background-position: 45% 50%;
+}
+
+input[type="checkbox"]:hover {
+    border-color:#404040;
+}
+
+input[type="checkbox"]:active {
+    border-color:#404040;
+    background-color: #202020;
+}
+
+#versionBannerContainer {
+    transition: top 0.6s;
+    display: block;
+    position: fixed;
+    top:-110px;
+    left:0px;
+    width:100vw;
+    z-index: 5;
+}
+
+#versionBanner {
+    display: block;
+    position: absolute;
+    top:0px;
+    left:0px;
+    width:100vw;
+    background-color: #4444FF;
+    transition: 0.2s;
+}
+
+#versionBanner:hover {
+    background-color: #3B3BBB;
+    cursor: pointer;
+}
+
+#versionMessage {
+    font-size: 25px;
+    font-family: workSans;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    margin-right: 50px;
+    cursor: pointer;
+}
+
+#closeVersion {
+    display: block;
+    position: absolute;
+    top:10px;
+    right:10px;
+    border-color: #3333BB;
+    background-color: #4444FF;
+}
+
+#closeVersion:hover {
+    border-color: #222288;
+    background-color: #4444FF;
+}
+
+#closeVersion:active {
+    border-color: #222288;
+    background-color: #3333BB;
+}
+
+.tab {
+    display: inline-block;
+    margin-top:0px;
+    margin-bottom: -2px;
+}
+
+.tab button {
+    border-bottom: 0px;
+}
+
+.ui-tabs-active button {
+    border-bottom: solid 2px #282828;
+}
+
+:not(.ui-tabs-active).tab button {
+    border-bottom: solid 2px #505050;]
+    margin-bottom: -2px;
+}
+
+#tabs-1,#tabs-2,#tabs-3 {
+    border-bottom: solid 2px #505050;
+    border-top: solid 2px #505050;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: block;
+    max-height: 320px;
+    overflow-y: scroll;
+}
+
+ul {
+    list-style: none;
+    padding-left: 10px;
+    margin-top:20px;
+    margin-bottom: 0px;
+}
+
+ ul li { display: inline; }
+
+
+#toolSelect {
+    width:304px;
+    position:fixed;
+    bottom: 10px;
+    right:10px;
+}
+
+#tool {
+    width:300px;
+    height: 200px;
+    position:fixed;
+    bottom: 50px;
+    right:10px;
+    border-color:#505050;
+    border-width:2px;
+    border-radius: 0px;
+    border-style: solid;
+    display: block;
+    background-color: #282828;
+}
+
+#toolCanvas {
+    margin: 0px;
+    width:300px;
+    height:200px;
+}

@@ -1,0 +1,1 @@
+pandoc doc.md -o doc.html
