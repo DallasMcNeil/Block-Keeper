@@ -1,6 +1,8 @@
-#Block Keeper 1.0.0
+# Block Keeper 1.0.0
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
+
+![alt text](https://github.com/DallasMcNeil/Block-Keeper/blob/master/docs/images/blockkeeper.gif)
 
 Main Features:
 
@@ -17,19 +19,19 @@ Main Features:
 
 If you encounter any bugs, issues or want to suggest any improvements, please let me know so I can make Block Keeper even better. You can contact me on Twitter [@dmcneil_](https://twitter.com/dmcneil_) or email [dallas@dallasmcneil.com](mailto:dallas@dallasmcneil.com).
 
-##Documentation
+## Documentation
 
 An extensive guide for using Block Keeper is available [here](http://dallasmcneil.com/projects/blockkeeper/guide).
   
-##Download
+## Download
 
 A precompiled version of Block Keeper for Windows, MacOS and Linux is available [here](http://dallasmcneil.com/projects/blockkeeper).
 
-##Development
+## Development
 
 You can edit Block Keeper's source in a couple of ways.
 
-###In Precompiled
+### In Precompiled
 
 Block Keeper uses Github's [Electron](https://electron.atom.io) and the source is available to view or change in every copy. 
 
@@ -39,7 +41,7 @@ To test your code, just run the application.
 
 However, I don't recommend this method past making very small changes as it doesn't provide much flexibility.
 
-###From Source
+### From Source
 
 Once you download the source from Github. Navigate to the download folder using the command line and run the setup script. You will need [npm](https://www.npmjs.com/get-npm) installed. All scripts use bash.
 
@@ -55,17 +57,17 @@ Use the export script to create a standalone application. You can edit the scrip
 
 `./export`
 
-##Debuging
+## Debuging
 
 A debug console is available to use for debugging and other purposes. In `src/main.js` at the top, set `var debug = true` to use it. **Remeber** to set debug to false to hide the console.
 
-##Credits
+## Credits
 
 Dallas McNeil ([dallasmcneil.com](http://dallasmcneil.com))
 
 A huge thanks to the people who made these fantastic libraries, tools and assets, which make Block Keeper possible.
 
-###Tools and Libraries
+### Tools and Libraries
 
 - [electron/electron](https://github.com/electron/electron) 
 - [jviotti/electron-json-storage](https://github.com/jviotti/electron-json-storage)
@@ -80,11 +82,11 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [cubing/jsss](https://github.com/cubing/jsss)
 - [nickcolley/scrambo](https://github.com/nickcolley/scrambo)
 
-###Fonts
+### Fonts
 
 - Sizenko Alexander Style-7 [www.styleseven.com](http://www.styleseven.com)
 - Wei Huang [wweeiihhuuaanngg@gmail.com](mailto:wweeiihhuuaanngg@gmail.com)
 
-##License
+## License
 
 Block Keeper is licensed under the MIT license.
