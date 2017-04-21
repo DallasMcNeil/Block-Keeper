@@ -382,6 +382,7 @@ function stopTimer() {
     }
     $("#previewButton").fadeIn()
     cooldown = true
+    timerResult = "OK";
 }
 
 // Cancel the timer at anytime
