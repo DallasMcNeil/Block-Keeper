@@ -462,7 +462,7 @@ function SMCallback(state) {
                     leftIndicator.style.opacity = 1
                     rightIndicator.style.opacity = 1
                 }
-
+                
                 timerText.innerHTML = formatTime(state.time_milli/1000)
 
                 if (state.running) {
@@ -490,7 +490,12 @@ function SMCallback(state) {
                     }        
                 }
 
-                timerText.innerHTML = formatTime(state.time_milli/1000)
+                if (preferences.hideTiming) {
+                    timerText.innerHTML = "Solve"
+                } else {
+                    timerText.innerHTML = formatTime(state.time_milli/1000)
+                } 
+                
                 timerTime = state.time_milli/1000
 
                 if (!state.running) {
