@@ -54,21 +54,22 @@ window.onkeydown = function(e) {
                 mainDown = true
             }
         }
-    if (timerState == "timing") {
-        if (e.key == "Escape") {
-            timerResult = "DNF"
-            stopTimer() 
-        } else if (!preferences.endSplit) {
-            stopTimer()
-        }
-    } else {
-        if (e.key == "Escape") {
-            if (timerState != "normal") {
-                cancelTimer()
+        if (timerState == "timing") {
+            if (e.key == "Escape") {
+                timerResult = "DNF"
+                stopTimer() 
+            } else if (!preferences.endSplit) {
+                stopTimer()
+            }
+        } else {
+            if (e.key == "Escape") {
+                if (timerState != "normal") {
+                    cancelTimer()
+                }
             }
         }
-    }}
-    
+    }
+
     if(e.keyCode == 32 && !sessionButtonsShowing) {
         e.preventDefault();
         return false;

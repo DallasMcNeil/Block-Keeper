@@ -148,7 +148,7 @@ body {
 #stats {
     display: block;
     position: absolute;
-    width: 250px;
+    width: 254px;
     left:10px;
     top:10px;
     background-color: rgba(0,0,0,0);
@@ -207,7 +207,7 @@ button:active {
     width:30px;
     margin-left: 10px;
     margin-top: 0px;
-    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,18 20,18'></polyline></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,12 6,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,6 6,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='4,18 6,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='8,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='8,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='8,18 20,18'></polyline></svg>");
     
     background-size: contain;
     padding: 0px;
@@ -346,7 +346,9 @@ input[type="text"] {
 
 #addTimeInput {
     width:100px;
-    margin:6px;
+    margin-bottom:0px;
+    margin-top:12px;
+    margin-left: 0px;
 }
 
 #sessionSolvesTable {
@@ -505,10 +507,6 @@ td p {
 #dialogCSTimer,#dialogAddTime {
     padding-left: 10px;
     padding-right: 10px;
-}
-
-#addTimeInput {
-    margin-left: 12px;
 }
 
 #dialogPreferences select {
