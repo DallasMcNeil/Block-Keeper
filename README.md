@@ -1,4 +1,4 @@
-# Block Keeper 1.0.0
+# Block Keeper 1.0.1
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -61,7 +61,7 @@ Use the export script to create a standalone application. You can edit the scrip
 
 A debug console is available to use for debugging and other purposes. In `src/main.js` at the top, set `var debug = true` to use it. **Remeber** to set debug to false to hide the console.
 
-## Credits
+## Contributors
 
 Dallas McNeil ([dallasmcneil.com](http://dallasmcneil.com))
 

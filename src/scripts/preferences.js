@@ -119,7 +119,9 @@ $("#dialogPreferences").dialog({
 }).on('keydown',function(evt) {
     if (evt.keyCode === $.ui.keyCode.ESCAPE) {
         closePreferences()
-    }               
+    } else if (evt.keyCode === 13) {
+        evt.preventDefault();
+    }        
     evt.stopPropagation();
 });
 

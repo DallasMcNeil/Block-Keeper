@@ -54,21 +54,22 @@ window.onkeydown = function(e) {
                 mainDown = true
             }
         }
-    if (timerState == "timing") {
-        if (e.key == "Escape") {
-            timerResult = "DNF"
-            stopTimer() 
-        } else if (!preferences.endSplit) {
-            stopTimer()
-        }
-    } else {
-        if (e.key == "Escape") {
-            if (timerState != "normal") {
-                cancelTimer()
+        if (timerState == "timing") {
+            if (e.key == "Escape") {
+                timerResult = "DNF"
+                stopTimer() 
+            } else if (!preferences.endSplit) {
+                stopTimer()
+            }
+        } else {
+            if (e.key == "Escape") {
+                if (timerState != "normal") {
+                    cancelTimer()
+                }
             }
         }
-    }}
-    
+    }
+
     if(e.keyCode == 32 && !sessionButtonsShowing) {
         e.preventDefault();
         return false;
@@ -382,6 +383,7 @@ function stopTimer() {
     }
     $("#previewButton").fadeIn()
     cooldown = true
+    timerResult = "OK";
 }
 
 // Cancel the timer at anytime
@@ -461,7 +463,7 @@ function SMCallback(state) {
                     leftIndicator.style.opacity = 1
                     rightIndicator.style.opacity = 1
                 }
-
+                
                 timerText.innerHTML = formatTime(state.time_milli/1000)
 
                 if (state.running) {
@@ -489,7 +491,12 @@ function SMCallback(state) {
                     }        
                 }
 
-                timerText.innerHTML = formatTime(state.time_milli/1000)
+                if (preferences.hideTiming) {
+                    timerText.innerHTML = "Solve"
+                } else {
+                    timerText.innerHTML = formatTime(state.time_milli/1000)
+                } 
+                
                 timerTime = state.time_milli/1000
 
                 if (!state.running) {

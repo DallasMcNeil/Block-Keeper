@@ -152,7 +152,7 @@ button:active {
 }
 
 #sessionButton {
-    background-image:url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,18 20,18'></polyline></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,12 6,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,6 6,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,18 6,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,18 20,18'></polyline></svg>");
     background-color: @base;
 }
 
@@ -248,11 +248,11 @@ input[type="checkbox"]:active {
     padding-bottom:0px;
 }
 
-button, select, input, #tool, #sessionRecords,#sessionStats,#sessionDetails {
+button, select, input, #tool, #sessionRecords,#sessionStats,#sessionDetails,#sessionRecordsContainer {
      -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.4);
 }
 
-.tab a button, #addTimeButton {
+.tab a button, #addTimeButton,#sessionRecords {
     -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
 }
 

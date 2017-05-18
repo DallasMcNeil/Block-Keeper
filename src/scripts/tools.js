@@ -38,7 +38,6 @@ function updateTool() {
     } else if (toolSelect.value == "distribution") {
         distribution()
     } else if (toolSelect.value == "scramble") {
-        console.log("DRAW")
         drawScramble()
         return
     }  

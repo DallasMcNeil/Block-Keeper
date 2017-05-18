@@ -291,11 +291,11 @@ function addTime() {
     if (isNaN(t)) {
         return
     }
-    console.log(t)
-    var tmp = currentScramble
-    currentScramble = ""
+    if (t<=0) {
+        return
+    }
     createRecord(t,"OK")
-    currentScramble = tmp
+    scramble()
     closeTimeDialog()
 }
 
@@ -807,9 +807,10 @@ $("#dialogAddTime").dialog({
 }).on('keydown', function(evt) {
     if (evt.keyCode === $.ui.keyCode.ESCAPE) {
         closeTimeDialog()
-    } else if (evt.keyCode === $.ui.keyCode.ENTER) {
+    } else if (evt.keyCode === 13) {
         addTime()
-    }              
+        evt.preventDefault();
+    }
     evt.stopPropagation();
 });
 

@@ -36,6 +36,8 @@ $("#dialogPreview").dialog({
         } else {
             document.getElementById("previewVideo").pause()
         }
+    } else if (evt.keyCode === 13) {
+        evt.preventDefault();
     }         
     evt.stopPropagation();
 });
