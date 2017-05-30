@@ -3,7 +3,7 @@
 // Block Keeper
 // Created by Dallas McNeil
 
-var RecordRTC = require('recordrtc');
+
 const {win} = require('electron')
 
 var hasVideo = false
@@ -55,7 +55,7 @@ function setupRecorder() {
                 mediaStream = stream;
                 recorder = RecordRTC(mediaStream,{
                     type: 'video',
-                    frameInterval: 20,
+                    frameInterval: 25,
                     recorderType: RecordRTC.WhammyRecorder
                 });
                 hasCamera = true

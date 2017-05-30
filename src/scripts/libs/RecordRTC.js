@@ -1,5 +1,8 @@
 'use strict';
 
+// Modified by Dallas McNeil for Block Keeper
+// Modified on 30 May 2017
+
 // Last time updated: 2016-08-11 4:09:01 PM UTC
 
 // Open-Sourced: https://github.com/muaz-khan/RecordRTC
@@ -2888,7 +2891,24 @@ function WhammyRecorder(mediaStream, config) {
             setTimeout(drawFrames, frameInterval, frameInterval);
         }
     }
+    
+    /* function asyncLoop(o) {
+        var i = -1,
+            length = o.length;
 
+        var loop = function() {
+            i++;
+            if (i === length) {
+                o.callback();
+                return;
+            }
+            setTimeout(function () {
+                o.functionToLoop(loop, i);
+            }, 1)
+        };
+        loop(); //init
+    } */
+    
     function asyncLoop(o) {
         var i = -1,
             length = o.length;

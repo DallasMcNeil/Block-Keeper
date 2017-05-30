@@ -545,7 +545,7 @@ function selectImage() {
         if (fileNames === undefined) {
             return
         } else {
-            preferencesInterface.backgroundImage.value = fileNames[0]
+            preferencesInterface.backgroundImage.value = fileNames[0].replace("\\","/")
         } 
     });
 }
