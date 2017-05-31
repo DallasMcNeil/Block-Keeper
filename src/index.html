@@ -49,7 +49,7 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id=scramble>F' R2 U2 F U2 B U2 F' D2 F L2 U F R2 D2 U R2 U' F' R' F'</p>
+    <p id=scramble></p>
         
     <div id="stats">
         <select id="puzzleSelect" onchange="setPuzzle()"></select>
@@ -141,7 +141,7 @@ Created by Dallas McNeil
         <button onclick="recordResult2()">+2</button>
         <button onclick="recordResultDNF()">DNF</button>
         <button style="margin-right:0px;" onclick="deleteRecord()">Delete</button>
-        <p id="recordScramble">R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L'</p>
+        <p id="recordScramble"></p>
     </div>
     
     <div id="dialogPreview">
@@ -187,8 +187,9 @@ Created by Dallas McNeil
                     <p><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
                     <p><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
                     <p><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
-                    <p><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
                     <p><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
+                    <p><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
+                    <p>Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
                 </form>
             </div>
             <div id="tabs-2">
@@ -229,7 +230,7 @@ Created by Dallas McNeil
                         <option value=12>Neon Blue</option>
                         <option value="custom">Custom</option>
                     </select></p>
-                    <p>Background Image:   <input name="backgroundImage" type="text" style="width:140px">  <button onclick="selectImage(); return false;">Select Image</button></p>
+                    <p>Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
                     <p>Custom Theme Colors   <button onclick="previewStylesheet();return false;">Refresh Theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>

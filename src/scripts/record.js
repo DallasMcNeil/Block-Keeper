@@ -81,14 +81,24 @@ function startRecorder() {
     }
 }
 
+var videoLoading = false
 // Stop recording camera
-function stopRecorder() {
+function stopRecorder() {  
     if (hasCamera && preferences.recordSolve) {
+        $("#previewButton").addClass("disabled")
+        $("#previewButton").prop("disabled",true)
+        $("#previewButton").addClass("loading")
+        videoLoading = true
         recorder.stopRecording(function(vidurl) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
+            $("#previewButton").removeClass("loading")
             hasVideo = true
+            videoLoading = false
             document.getElementById("previewVideo").src = vidurl;
+            if (preferences.autosaveLocation != "") {
+                autosaveVideo()
+            }
         })
     }
 }
@@ -146,4 +156,22 @@ function closePreview() {
 // Save the preview to a .webm file
 function savePreview() {
     recorder.save(puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name)
+}
+
+// Saves the current video automatically to a set location
+function autosaveVideo() {
+    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name+" "+puzzles[currentPuzzle].sessions[currentSession].records.length+".webm"
+    
+    var reader = new FileReader()
+    reader.onload = function() {
+        var buffer = new Buffer(reader.result)
+        fs.writeFile(path, buffer, {}, (err, res) => {
+            if(err){
+                console.error(err)
+                return
+            }
+            console.log('video saved')
+        })
+    }
+    reader.readAsArrayBuffer(recorder.blob)
 }

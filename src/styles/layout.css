@@ -228,7 +228,7 @@ button:active {
 
 #previewButton {
     right: 364px;
-    background: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='#FFF' stroke='#FFF' points='4,7 4,17 16,17 16,14 20,16 20,8 16,10 16,7'></polyline></svg>"); 
+    background: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='#FFF' stroke='#FFF' points='4,7 4,17 16,17 16,14 20,16 20,8 16,10 16,7'></polyline></svg>");
 }
 
 
@@ -738,4 +738,10 @@ ul {
     margin: 0px;
     width:300px;
     height:200px;
+}
+
+#previewButton.loading {
+    background: url('data:image/svg+xml;utf8,<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="24" height="24" fill="none"></rect><circle cx="12" cy="12" r="8" stroke-dasharray="30 10" stroke="FFF" fill="none" stroke-width="2"><animateTransform attributeName="transform" type="rotate" values="0 12 12;180 12 12;360 12 12;" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite" begin="0s"></animateTransform></circle></svg>');
+    background-position: 45% 50%;
+    background-color: #282828;
 }

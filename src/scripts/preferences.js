@@ -32,6 +32,7 @@ var preferences = {
     rightKey:"/",
     scrambleSize:4,
     backgroundImage:"",
+    autosaveLocation:"",
     timerDelay:0.55
 }
 
@@ -83,7 +84,8 @@ function loadPreferences() {
             preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
             preferencesInterface.backgroundImage.value = preferences.backgroundImage
             preferencesTimer.timerDelay.value = preferences.timerDelay
-    
+            preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+                
             timerText.innerHTML = (0).toFixed(preferences.timerDetail)
             writeTheme(preferences.customTheme) 
             $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
@@ -175,7 +177,8 @@ function closePreferences() {
     preferencesTimer.rightKey.value = preferences.rightKey 
     preferencesInterface.scrambleSize.value = preferences.scrambleSize
     preferencesInterface.backgroundImage.value = preferences.backgroundImage
-    
+    preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+            
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
@@ -201,7 +204,7 @@ function closePreferences() {
     $("#toolSelect").removeClass("disabled")
     $("#tool").removeClass("disabled")
     
-    if (hasVideo && preferences.recordSolve) {
+    if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
@@ -228,7 +231,8 @@ function savePreferencesForm() {
     preferences.scrambleSize = preferencesInterface.scrambleSize.value 
     preferences.backgroundImage = preferencesInterface.backgroundImage.value
     preferences.timerDelay = preferencesTimer.timerDelay.value
-    
+    preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
+            
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
@@ -458,7 +462,7 @@ function importCSTime(doImport) {
         $("#toolSelect").removeClass("disabled")
         $("#tool").removeClass("disabled")
         
-        if (hasVideo && preferences.recordSolve) {
+        if (hasVideo && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
         }
@@ -546,6 +550,20 @@ function selectImage() {
             return
         } else {
             preferencesInterface.backgroundImage.value = fileNames[0].replace("\\","/")
+        } 
+    });
+}
+
+// Open dialog to select a video autosave location
+function selectLocation() {
+    dialog.showOpenDialog({
+        filters: [],
+        properties: ['openDirectory']
+    },function (fileNames) {
+        if (fileNames === undefined) {
+            return
+        } else {
+            preferencesTimer.autosaveLocation.value = fileNames[0].replace("\\","/")
         } 
     });
 }

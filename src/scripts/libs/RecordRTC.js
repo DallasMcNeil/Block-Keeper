@@ -80,7 +80,7 @@ function RecordRTC(mediaStream, config) {
                 initCallback = config.initCallback = null; // recordRTC.initRecorder should be call-backed once.
             };
         }
-
+ 
         var Recorder = new GetRecorderType(mediaStream, config);
 
         mediaRecorder = new Recorder(mediaStream, config);
@@ -2892,24 +2892,25 @@ function WhammyRecorder(mediaStream, config) {
         }
     }
     
-    /* function asyncLoop(o) {
+    function asyncLoop(o) {
         var i = -1,
             length = o.length;
 
-        var loop = function() {
+        (function loop() {
             i++;
             if (i === length) {
                 o.callback();
                 return;
             }
-            setTimeout(function () {
+
+            // "setTimeout" added by Jim McLeod
+            setTimeout(function() {
                 o.functionToLoop(loop, i);
-            }, 1)
-        };
-        loop(); //init
-    } */
+            }, 1);
+        })();
+    }
     
-    function asyncLoop(o) {
+    /*function asyncLoop(o) {
         var i = -1,
             length = o.length;
 
@@ -2922,7 +2923,7 @@ function WhammyRecorder(mediaStream, config) {
             o.functionToLoop(loop, i);
         };
         loop(); //init
-    }
+    }*/
 
 
     /**

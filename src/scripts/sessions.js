@@ -277,7 +277,7 @@ function closeTimeDialog() {
     $("#tool").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
     $("#tool").removeClass("disabled")
-    if (hasVideo && preferences.recordSolve) {
+    if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
