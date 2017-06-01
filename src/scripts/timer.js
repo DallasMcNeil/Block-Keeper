@@ -371,7 +371,6 @@ function stopTimer() {
     timerTime = ((timeLastUpdate - startTime)/1000)
     timerText.innerHTML = formatTime(timerTime)
     submitTime()
-    stopRecorder()
     inspectionTime = currentTime.getTime()
     scramble()
     $("#stats").fadeIn()
@@ -384,6 +383,7 @@ function stopTimer() {
     $("#previewButton").fadeIn()
     cooldown = true
     timerResult = "OK";
+    stopRecorder()
 }
 
 // Cancel the timer at anytime
@@ -503,7 +503,6 @@ function SMCallback(state) {
                     timerState = "normal"
                     timerText.style.color = normalColor
                     submitTime()
-                    stopRecorder()
                     scramble()
                     $("#stats").fadeIn()
                     $("#scramble").fadeIn()
@@ -513,6 +512,7 @@ function SMCallback(state) {
                         $("#tool").fadeIn()
                     }
                     $("#previewButton").fadeIn()
+                    stopRecorder()
                 }   
                 break
             }
@@ -521,7 +521,6 @@ function SMCallback(state) {
                 timerState = "normal"
                 timerText.style.color = normalColor
                 submitTime()
-                stopRecorder()
                 scramble()
                 $("#stats").fadeIn()
                 $("#scramble").fadeIn()
@@ -531,6 +530,7 @@ function SMCallback(state) {
                     $("#tool").fadeIn()
                 }
                 $("#previewButton").fadeIn()
+                stopRecorder()
             }
             timerText.style.color = normalColor
             var s = "--"

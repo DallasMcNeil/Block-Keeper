@@ -89,7 +89,15 @@ function stopRecorder() {
         $("#previewButton").prop("disabled",true)
         $("#previewButton").addClass("loading")
         videoLoading = true
-        recorder.stopRecording(function(vidurl) {
+        
+        var finishedRecorder = recorder
+        recorder = RecordRTC(mediaStream,{
+            type: 'video',
+            frameInterval: 25,
+            recorderType: RecordRTC.WhammyRecorder
+        });
+        
+        finishedRecorder.stopRecording(function(vidurl) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
             $("#previewButton").removeClass("loading")
@@ -97,7 +105,7 @@ function stopRecorder() {
             videoLoading = false
             document.getElementById("previewVideo").src = vidurl;
             if (preferences.autosaveLocation != "") {
-                autosaveVideo()
+                autosaveVideo(finishedRecorder.blob)
             }
         })
     }
@@ -159,9 +167,18 @@ function savePreview() {
 }
 
 // Saves the current video automatically to a set location
-function autosaveVideo() {
-    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name+" "+puzzles[currentPuzzle].sessions[currentSession].records.length+".webm"
+function autosaveVideo(blob) {
+    var d = new Date()
+    var time = d.getHours()+"-"+d.getMinutes()
     
+    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+".webm"
+    
+    var n = 1;
+    while (fs.existsSync(path)) {
+        path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+" "+n+".webm"
+        n++
+    }
+           
     var reader = new FileReader()
     reader.onload = function() {
         var buffer = new Buffer(reader.result)
@@ -170,8 +187,7 @@ function autosaveVideo() {
                 console.error(err)
                 return
             }
-            console.log('video saved')
         })
     }
-    reader.readAsArrayBuffer(recorder.blob)
+    reader.readAsArrayBuffer(blob)
 }
