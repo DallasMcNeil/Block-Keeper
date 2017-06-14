@@ -94,6 +94,9 @@ function stopRecorder() {
         recorder = RecordRTC(mediaStream,{
             type: 'video',
             frameInterval: 25,
+            width: 640,
+            height: 480,
+        
             recorderType: RecordRTC.WhammyRecorder
         });
         

@@ -423,12 +423,24 @@ function updateRecords() {
     }
     var mean = meanTimes(times.filter(function(t) {return t!=-1}))
     if (isNaN(mean)) {
-        $("#sessionMean").prop("innerHTML","Mean: 0.000")
+        $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(0))
+        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(0))
+        $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime(0))
     } else {
-        $("#sessionMean").prop("innerHTML","Mean: "+formatTime(mean))
+        $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(mean))
+        var sum = 0
+        var t = times.filter(function(t) {return t!=-1})
+        for (var i=0;i<t.length;i++) {
+            sum+=((t[i]-mean)*(t[i]-mean))
+        }
+        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(Math.sqrt(sum/t.length)))
+        
+        var sortedTimes = t.sort()
+        console.log(sortedTimes)
+        $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime((sortedTimes[Math.ceil((sortedTimes.length-1)/2)]+sortedTimes[Math.floor((sortedTimes.length-1)/2)])/2))
     }
-    $("#sessionSolves").prop("innerHTML","Solves: "+DNFsolves+"/"+records.length)
-
+    $("#sessionSolves").prop("innerHTML","<b>Solves:</b> "+DNFsolves+"/"+records.length)
+        
     for (var i = 0;sessionStatsTable.rows.length>1;i++) {
         sessionStatsTable.deleteRow(-1)
     }

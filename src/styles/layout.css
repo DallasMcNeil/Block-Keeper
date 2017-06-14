@@ -417,10 +417,20 @@ table td:first-child {
 
 #sessionDetails td:first-child {
     width:125px;
+    font-family: workSans;
 }
 
 #sessionDetails td:nth-child(2) {
     width:125px;
+    font-family: workSans;
+}
+
+#sessionDetails td:first-child b {
+    font-family: workSansBold;
+}
+
+#sessionDetails td:nth-child(2) b {
+    font-family: workSansBold;
 }
 
 #sessionStats td:first-child {
