@@ -436,7 +436,6 @@ function updateRecords() {
         $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(Math.sqrt(sum/t.length)))
         
         var sortedTimes = t.sort()
-        console.log(sortedTimes)
         $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime((sortedTimes[Math.ceil((sortedTimes.length-1)/2)]+sortedTimes[Math.floor((sortedTimes.length-1)/2)])/2))
     }
     $("#sessionSolves").prop("innerHTML","<b>Solves:</b> "+DNFsolves+"/"+records.length)
@@ -643,7 +642,7 @@ function updateRecords() {
             }
         }
     })
-    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 200px))")
+    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 230px))")
     updateTool()
     saveSessions()
 }
@@ -662,6 +661,7 @@ function toggleSessionButtons() {
     if (sessionButtonsShowing) {
         var newElement = document.createElement("select")
         newElement.id = "sessionSelect"
+        newElement.title = "Session Select"
         newElement.onchange = setSession
         puzzles[currentPuzzle].sessions[currentSession].name = sessionSelect.value
         document.getElementById("sessionContainer").replaceChild(newElement,sessionSelect)
@@ -674,6 +674,7 @@ function toggleSessionButtons() {
     } else {
         var newElement = document.createElement("input")
         newElement.type = "text"
+        newElement.title = "Session Name"
         newElement.id = "sessionSelectText"
         newElement.value = puzzles[currentPuzzle].sessions[currentSession].name
         document.getElementById("sessionContainer").replaceChild(newElement,sessionSelect)

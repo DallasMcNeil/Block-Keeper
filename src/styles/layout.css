@@ -378,7 +378,7 @@ input[type="text"] {
     margin-top: 10px;
     width:248px;
     border: 1px solid #606060;
-    max-height:calc(100vh - 340px);
+    max-height:calc(100vh - 380px);
     display: block;
     overflow: auto;
     transition:0.1s;
