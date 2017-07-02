@@ -58,7 +58,11 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 1. Event Select: Used to select the current event
 2. Session Select: Used to select the current session
 3. Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session or delete the current session
-4. Solves and Mean: Number of valid solves (not including DNF solves) over number of solves. Total time of all valid solves over the number of valid solves, a mean of all valid solves
+4. Session Statistics
+    * Solves: Number of valid solves (not including DNF solves) over number of solves.
+    * Mean: Total time of all valid solves over the number of valid solves, a mean of all valid solves.
+    * Median: Middle time of all valid solves in order.
+    * Standard Deviation: Rough measure of average distance from mean time any time is.
 5. Best and Current: Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100
 6. Records Table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12
 7. Add Time: Shows dialog with option to add custom time to session
@@ -122,7 +126,7 @@ Pressing Escape before the timer begins will cancel the timer. Pressing Escape w
 
 ## Sessions
 
-Block Keeper divides sessions into event categories. Selecting an event from the event dropdown will show a list of it's sessions below in a seperate dropdown. All sessions created will be added to the current event. A scramble for the current event will also be shown. 
+Block Keeper divides sessions into event categories. Selecting an event from the event dropdown will show a list of it's sessions below in a separate dropdown. All sessions created will be added to the current event. A scramble for the current event will also be shown. 
 
 In this system, every session belongs to a specific event, keeping them organised and providing the correct scramble for every solve. 
 
@@ -155,8 +159,9 @@ Tools are selectable from the bottom right of the window and offer additional vi
 * WCA Inspection: Enable WCA inspection before solve. See the Timer Operation section
 * Split Timer Controls: Use 2 specific keys rather than the `spacebar` to operate the timer. See the Timer Operation section
 * Stop Timer with Split Keys: Require both split keys to be pressed to stop the timer rather than any key
-* Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
 * Use Stackmat Timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognise your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see [here](https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/)
+* Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
+* Video Autosave Location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.
 
 ### Interface
 
@@ -164,7 +169,7 @@ Tools are selectable from the bottom right of the window and offer additional vi
 * Scramble Font Size: Set the arbitrary font size of scrambles presented
 * Background Image: Specify a path to an image file which will be shown in the background. Image can be a .png and include transparency. Optionally the Select Image button will present a dialog to find an image using a file browser
 * Theme: Set color scheme of the application to predefined options or set to custom to use defined color scheme
-* Custom Theme Colors: Specify the color of specific UI elements. All colors specified should be in hexadecimal form (e.g `#FF0000` for red), rgb form (e.g `rgb(255,0,0)` for red) or rgba form (e.g `rgb(255,0,0,0.5)` for red at half opacity). If any values have been inputted incorrectly, the default theme (Dark) will be used.
+* Custom Theme Colors: Specify the color of specific UI elements. All colors specified should be in hexadecimal form (e.g `#FF0000` for red), rgb form (e.g `rgb(255,0,0)` for red) or rgba form (e.g `rgb(255,0,0,0.5)` for red at half opacity). If any values have been input incorrectly, the default theme (Dark) will be used.
 
 ### Import/Export
 
