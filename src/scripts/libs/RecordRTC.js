@@ -1,5 +1,8 @@
 'use strict';
 
+// Modified by Dallas McNeil for Block Keeper
+// Modified on 30 May 2017
+
 // Last time updated: 2016-08-11 4:09:01 PM UTC
 
 // Open-Sourced: https://github.com/muaz-khan/RecordRTC
@@ -77,7 +80,7 @@ function RecordRTC(mediaStream, config) {
                 initCallback = config.initCallback = null; // recordRTC.initRecorder should be call-backed once.
             };
         }
-
+ 
         var Recorder = new GetRecorderType(mediaStream, config);
 
         mediaRecorder = new Recorder(mediaStream, config);
@@ -2888,8 +2891,26 @@ function WhammyRecorder(mediaStream, config) {
             setTimeout(drawFrames, frameInterval, frameInterval);
         }
     }
-
+    
     function asyncLoop(o) {
+        var i = -1,
+            length = o.length;
+
+        (function loop() {
+            i++;
+            if (i === length) {
+                o.callback();
+                return;
+            }
+
+            // "setTimeout" added by Jim McLeod
+            setTimeout(function() {
+                o.functionToLoop(loop, i);
+            }, 1);
+        })();
+    }
+    
+    /*function asyncLoop(o) {
         var i = -1,
             length = o.length;
 
@@ -2902,7 +2923,7 @@ function WhammyRecorder(mediaStream, config) {
             o.functionToLoop(loop, i);
         };
         loop(); //init
-    }
+    }*/
 
 
     /**

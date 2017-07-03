@@ -212,7 +212,7 @@ function eventTrend() {
     var bests = []
     var bestAo5 = []
     for (var i = 0;i<sessions.length;i++) {    
-        var b = extractTimes(sessions[i].records).filter(function(t) {return t.time!=-1})
+        var b = extractTimes(sessions[i].records).filter(function(t) {return t!=-1})
         b = b.sort(function(a,b){return a-b})
         bests.push(b[0])
     

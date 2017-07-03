@@ -2,14 +2,13 @@
   "name": "blockKeeper",
   "productName": "Block Keeper",
   "main": "main.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Dallas McNeil",
   "dependencies": {
-    "electron": "^1.6.1",
+    "electron": "1.7.4",
     "electron-json-storage": "^2.1.0",
     "electron-shortcut": "^0.5.0",
     "electron-window-state": "^4.0.1",
-    "recordrtc": "^5.4.0",
     "less": "^2.7.2"
   }
 }

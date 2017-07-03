@@ -277,7 +277,7 @@ function closeTimeDialog() {
     $("#tool").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
     $("#tool").removeClass("disabled")
-    if (hasVideo && preferences.recordSolve) {
+    if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
@@ -423,12 +423,23 @@ function updateRecords() {
     }
     var mean = meanTimes(times.filter(function(t) {return t!=-1}))
     if (isNaN(mean)) {
-        $("#sessionMean").prop("innerHTML","Mean: 0.000")
+        $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(0))
+        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(0))
+        $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime(0))
     } else {
-        $("#sessionMean").prop("innerHTML","Mean: "+formatTime(mean))
+        $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(mean))
+        var sum = 0
+        var t = times.filter(function(t) {return t!=-1})
+        for (var i=0;i<t.length;i++) {
+            sum+=((t[i]-mean)*(t[i]-mean))
+        }
+        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(Math.sqrt(sum/t.length)))
+        
+        var sortedTimes = t.sort()
+        $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime((sortedTimes[Math.ceil((sortedTimes.length-1)/2)]+sortedTimes[Math.floor((sortedTimes.length-1)/2)])/2))
     }
-    $("#sessionSolves").prop("innerHTML","Solves: "+DNFsolves+"/"+records.length)
-
+    $("#sessionSolves").prop("innerHTML","<b>Solves:</b> "+DNFsolves+"/"+records.length)
+        
     for (var i = 0;sessionStatsTable.rows.length>1;i++) {
         sessionStatsTable.deleteRow(-1)
     }
@@ -631,7 +642,7 @@ function updateRecords() {
             }
         }
     })
-    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 200px))")
+    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 230px))")
     updateTool()
     saveSessions()
 }
@@ -650,6 +661,7 @@ function toggleSessionButtons() {
     if (sessionButtonsShowing) {
         var newElement = document.createElement("select")
         newElement.id = "sessionSelect"
+        newElement.title = "Session Select"
         newElement.onchange = setSession
         puzzles[currentPuzzle].sessions[currentSession].name = sessionSelect.value
         document.getElementById("sessionContainer").replaceChild(newElement,sessionSelect)
@@ -662,6 +674,7 @@ function toggleSessionButtons() {
     } else {
         var newElement = document.createElement("input")
         newElement.type = "text"
+        newElement.title = "Session Name"
         newElement.id = "sessionSelectText"
         newElement.value = puzzles[currentPuzzle].sessions[currentSession].name
         document.getElementById("sessionContainer").replaceChild(newElement,sessionSelect)

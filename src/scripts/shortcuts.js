@@ -33,7 +33,7 @@ require('electron').ipcRenderer.on('shortcut', function(event, message) {
     } else if (message=="CommandOrControl+P") {
         openPreferences()
     } else if (message=="CommandOrControl+R") {
-        if (hasVideo && preferences.recordSolve) {
+        if (hasVideo && preferences.recordSolve && !videoLoading) {
             showPreview()
         }
     }

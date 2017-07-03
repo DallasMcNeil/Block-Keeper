@@ -3,7 +3,7 @@
 // Block Keeper
 // Created by Dallas McNeil
 
-var RecordRTC = require('recordrtc');
+
 const {win} = require('electron')
 
 var hasVideo = false
@@ -55,7 +55,7 @@ function setupRecorder() {
                 mediaStream = stream;
                 recorder = RecordRTC(mediaStream,{
                     type: 'video',
-                    frameInterval: 20,
+                    frameInterval: 25,
                     recorderType: RecordRTC.WhammyRecorder
                 });
                 hasCamera = true
@@ -81,14 +81,35 @@ function startRecorder() {
     }
 }
 
+var videoLoading = false
 // Stop recording camera
-function stopRecorder() {
+function stopRecorder() {  
     if (hasCamera && preferences.recordSolve) {
-        recorder.stopRecording(function(vidurl) {
+        $("#previewButton").addClass("disabled")
+        $("#previewButton").prop("disabled",true)
+        $("#previewButton").addClass("loading")
+        videoLoading = true
+        
+        var finishedRecorder = recorder
+        recorder = RecordRTC(mediaStream,{
+            type: 'video',
+            frameInterval: 25,
+            width: 640,
+            height: 480,
+        
+            recorderType: RecordRTC.WhammyRecorder
+        });
+        
+        finishedRecorder.stopRecording(function(vidurl) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
+            $("#previewButton").removeClass("loading")
             hasVideo = true
+            videoLoading = false
             document.getElementById("previewVideo").src = vidurl;
+            if (preferences.autosaveLocation != "") {
+                autosaveVideo(finishedRecorder.blob)
+            }
         })
     }
 }
@@ -146,4 +167,30 @@ function closePreview() {
 // Save the preview to a .webm file
 function savePreview() {
     recorder.save(puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name)
+}
+
+// Saves the current video automatically to a set location
+function autosaveVideo(blob) {
+    var d = new Date()
+    var time = d.getHours()+"-"+d.getMinutes()
+    
+    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+".webm"
+    
+    var n = 1;
+    while (fs.existsSync(path)) {
+        path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+" "+n+".webm"
+        n++
+    }
+           
+    var reader = new FileReader()
+    reader.onload = function() {
+        var buffer = new Buffer(reader.result)
+        fs.writeFile(path, buffer, {}, (err, res) => {
+            if(err){
+                console.error(err)
+                return
+            }
+        })
+    }
+    reader.readAsArrayBuffer(blob)
 }

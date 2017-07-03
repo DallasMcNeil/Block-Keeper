@@ -11,6 +11,7 @@ Created by Dallas McNeil
     <title>Block Keeper</title>
     <link type="text/css" rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet/less" type="text/css" href="styles/base.less">
+    
     <script src="scripts/colorScheme.js"></script>
     <script>
         less = {
@@ -22,7 +23,7 @@ Created by Dallas McNeil
     <script src="scripts/libs/less.min.js"></script>
     <script src="scripts/libs/jQuery.js"></script>
     <script src="scripts/libs/jQuery UI.js"></script>
-    <script src="./node_modules/recordrtc/RecordRTC.js"></script>
+    <script src="scripts/libs/RecordRTC.js"></script>
     <script src="scripts/libs/raphael-min.js"></script>
     <script src="scripts/libs/scramble_222.js"></script>
     <script src="scripts/libs/scramble_333.js"></script>
@@ -49,25 +50,33 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id=scramble>F' R2 U2 F U2 B U2 F' D2 F L2 U F R2 D2 U R2 U' F' R' F'</p>
+    <p id=scramble></p>
         
     <div id="stats">
-        <select id="puzzleSelect" onchange="setPuzzle()"></select>
+        <select title="Event Select" id="puzzleSelect" onchange="setPuzzle()"></select>
         <div id="sessionContainer">
-            <select id="sessionSelect" onchange="setSession()"></select>
-            <button id="sessionButton" onclick="toggleSessionButtons()"></button>
+            <select title="Session Select" id="sessionSelect" onchange="setSession()"></select>
+            <button title="Edit Session" id="sessionButton" onclick="toggleSessionButtons()"></button>
         </div>
         <div id="sessionButtons">
-            <button id="newSessionButton" onclick="createSessionButton()">New</button>
-            <button id="deleteSessionButton" onclick="deleteSessionButton()">Delete</button>
+            <button title="Create a new session" id="newSessionButton" onclick="createSessionButton()">New</button>
+            <button title="Delete this session" id="deleteSessionButton" onclick="deleteSessionButton()">Delete</button>
         </div>
         <table id="sessionDetails">
             <tr>
                 <td>
-                    <p id="sessionSolves">Solves: 0/0</p>
+                    <p id="sessionSolves"><b>Solves:</b> 0/0</p>
                 </td>
                 <td>
-                    <p id="sessionMean">Mean: 0.000</p>
+                    <p id="sessionMean"><b>Mean:</b> 0.00</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p id="sessionSD"><b>σ (s.d):</b> 0.00</p>
+                </td>
+                <td>
+                    <p id="sessionMedian"><b>Median:</b> 0.00</p>
                 </td>
             </tr>
         </table>
@@ -99,7 +108,7 @@ Created by Dallas McNeil
         <table id="sessionRecords">
             <tr>
                 <td>
-                    <button id="addTimeButton" onclick="showTimeDialog()">+</button>
+                    <button title="Add Time" id="addTimeButton" onclick="showTimeDialog()">+</button>
                 </td>
                 <td>
                     <p>Time</p>
@@ -115,9 +124,9 @@ Created by Dallas McNeil
         </div>
     </div>
 
-    <button id="previewButton" onclick="showPreview()"></button>
-    <button id="preferencesButton" onclick="openPreferences()"></button>
-    <select id="toolSelect" onchange="updateTool()">
+    <button title="Video Preview" id="previewButton" onclick="showPreview()"></button>
+    <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
+    <select title="Tool Select" id="toolSelect" onchange="updateTool()">
         <option value="none">None</option>    
         <option value="scramble">Drawn Scramble</option>
         <option value="sessionTrend">Session Trend</option>
@@ -137,22 +146,22 @@ Created by Dallas McNeil
     </div>
     
     <div id="dialogRecord">
-        <button onclick="recordResultOK()">OK</button>
-        <button onclick="recordResult2()">+2</button>
-        <button onclick="recordResultDNF()">DNF</button>
-        <button style="margin-right:0px;" onclick="deleteRecord()">Delete</button>
-        <p id="recordScramble">R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L' R2 U L'</p>
+        <button title="Set result to OK" onclick="recordResultOK()">OK</button>
+        <button title="Set result to +2 penalty" onclick="recordResult2()">+2</button>
+        <button title="Set result to DNF penalty" onclick="recordResultDNF()">DNF</button>
+        <button title="Delete this time" style="margin-right:0px;" onclick="deleteRecord()">Delete</button>
+        <p id="recordScramble"></p>
     </div>
     
     <div id="dialogPreview">
         <button id="closePreview" class="cross" onclick="closePreview()"></button><br>
         <video id="previewVideo" controls></video>
-        <button id="savePreview" onclick="savePreview()">Save Video</button>
+        <button title="Save video as file" id="savePreview" onclick="savePreview()">Save Video</button>
     </div>
         
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
-        <button id="importCSTimer" onclick="importCSTime(true)">Import</button>
+        <button title="Import into selected session" id="importCSTimer" onclick="importCSTime(true)">Import</button>
     </div>
         
     <div id="dialogPreferences">
@@ -165,35 +174,36 @@ Created by Dallas McNeil
             </ul>
             <div id="tabs-1">
                 <form name="preferencesTimer">
-                    <p>Inspection Announcements: <select name="voice">
+                    <p title="'8 Seconds' and '12 Seconds' announcements during inspection">Inspection Announcements: <select name="voice">
                         <option value="none" selected>None</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select></p>
-                    <p>Time Detail:  <select name="timerDetail" style="width:52px">
+                    <p title="Decimal places after times">Time Detail:  <select name="timerDetail" style="width:52px">
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2" selected>2</option>
                         <option value="3">3</option>
                     </select></p>
-                    <p>Timer Start Delay:  <select name="timerDelay" style="width:100px">
+                    <p title="Time between timer keys being pressed and timer starting">Timer Start Delay:  <select name="timerDelay" style="width:100px">
                         <option value="0">None</option>
                         <option value="0.3">0.3</option>
                         <option value="0.55" selected>0.55</option>
                         <option value="1">1</option>
                     </select></p>
-                    <p><input type="checkbox" name="hideTiming" class="checkbox">Hide Timer While Solving</p>
-                    <p><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
-                    <p><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
-                    <p><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
-                    <p><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
-                    <p><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
-                    <p><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
+                    <p title="Time replaced with 'Solve' while solving"><input type="checkbox" name="hideTiming" class="checkbox">Hide Timer While Solving</p>
+                    <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
+                    <p title="15s of inspection before solving"><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
+                    <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
+                    <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
+                    <p title="Use external Stackmat timer to control timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
+                    <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
+                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
                 </form>
             </div>
             <div id="tabs-2">
                 <form name="preferencesInterface">
-                    <p>MBLD Scrambles:  <select name="MBLDscramlbes" style="width:70px">
+                    <p title="Number of multi-blindfold scrambles displayed">MBLD Scrambles:  <select name="MBLDscramlbes" style="width:70px">
                         <option value="5">5</option>
                         <option value="10" selected>10</option>
                         <option value="15">15</option>
@@ -203,7 +213,7 @@ Created by Dallas McNeil
                         <option value="40">40</option>
                         <option value="50">50</option>
                     </select></p>
-                    <p>Scramble Font Size:   <select name="scrambleSize" style="width:70px">
+                    <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4" selected>4</option>
@@ -213,7 +223,7 @@ Created by Dallas McNeil
                         <option value="10">10</option>
                         <option value="12">12</option>
                     </select></p>
-                    <p>Theme:  <select name="theme" onchange="previewStylesheet()" style="width:200px;">
+                    <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="previewStylesheet()" style="width:200px;">
                         <option value=0>Dark</option>
                         <option value=1>Light</option>
                         <option value=2>Black</option>
@@ -227,25 +237,25 @@ Created by Dallas McNeil
                         <option value=10>Neon Pink</option>
                         <option value=11>Neon Yellow</option>
                         <option value=12>Neon Blue</option>
-                        <option value="custom">Custom</option>
+                        <option value="custom">Custom...</option>
                     </select></p>
-                    <p>Background Image:   <input name="backgroundImage" type="text" style="width:140px">  <button onclick="selectImage(); return false;">Select Image</button></p>
-                    <p>Custom Theme Colors   <button onclick="previewStylesheet();return false;">Refresh Theme</button></p>
+                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
+                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="previewStylesheet();return false;">Refresh Theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
                     <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
                 </form>
             </div>
             <div id="tabs-3">
-                <p>Block Keeper:  <button onclick="importBK()">Import</button>  <button onclick="exportBK()">Export</button></p>
-                <p>csTimer:  <button onclick="importCS()">Import</button></p>
-                <p>CSV:  <button onclick="exportCSV()">Export</button></p>
-                <p>Current Session as Pretty Text:  <button onclick="exportPretty()">Export</button>  <button onclick="clipboardPretty()">Copy</button></p>
+                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="importBK()">Import</button>  <button onclick="exportBK()">Export</button></p>
+                <p title="Import csTimer Sessions">csTimer:  <button onclick="importCS()">Import</button></p>
+                <p title="Export all times as flat CSV file">CSV:  <button onclick="exportCSV()">Export</button></p>
+                <p title="Export the currently selected session as as readable text with session statistics and times">Current Session as Pretty Text:  <button onclick="exportPretty()">Export</button>  <button onclick="clipboardPretty()">Copy</button></p>
             </div>
         </div>
         
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
-        <button id="savePreferences" onclick="savePreferencesForm()">Save</button>
+        <button title="Save preferences and close" id="savePreferences" onclick="savePreferencesForm()">Save</button>
     </div>
         
     </div>

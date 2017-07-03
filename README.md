@@ -1,4 +1,4 @@
-# Block Keeper 1.0.1
+# Block Keeper 1.0.2
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -89,4 +89,4 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 
 ## License
 
-Block Keeper is licensed under the MIT license.
+Block Keeper is licensed under the GNU General Public License.
