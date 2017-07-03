@@ -46,6 +46,7 @@ $("#previewButton").addClass("disabled")
 $("#previewButton").prop("disabled",true)
 var mediaStream = null
 var recorder = null
+var finishedRecorder = null
 
 // Setup the recorder before recording
 function setupRecorder() {
@@ -56,6 +57,8 @@ function setupRecorder() {
                 recorder = RecordRTC(mediaStream,{
                     type: 'video',
                     frameInterval: 25,
+                    width: 640,
+                    height: 480,
                     recorderType: RecordRTC.WhammyRecorder
                 });
                 hasCamera = true
@@ -89,17 +92,15 @@ function stopRecorder() {
         $("#previewButton").prop("disabled",true)
         $("#previewButton").addClass("loading")
         videoLoading = true
-        
-        var finishedRecorder = recorder
+
+        finishedRecorder = recorder
         recorder = RecordRTC(mediaStream,{
             type: 'video',
             frameInterval: 25,
             width: 640,
             height: 480,
-        
             recorderType: RecordRTC.WhammyRecorder
         });
-        
         finishedRecorder.stopRecording(function(vidurl) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
@@ -166,7 +167,7 @@ function closePreview() {
 
 // Save the preview to a .webm file
 function savePreview() {
-    recorder.save(puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name)
+    finishedRecorder.save(puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name)
 }
 
 // Saves the current video automatically to a set location
@@ -174,11 +175,11 @@ function autosaveVideo(blob) {
     var d = new Date()
     var time = d.getHours()+"-"+d.getMinutes()
     
-    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+".webm"
+    var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace(new RegExp("/","g"),"-")+" "+time+".webm"
     
     var n = 1;
     while (fs.existsSync(path)) {
-        path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace("/","-")+" "+time+" "+n+".webm"
+        path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace(new RegExp("/","g"),"-")+" "+time+" "+n+".webm"
         n++
     }
            

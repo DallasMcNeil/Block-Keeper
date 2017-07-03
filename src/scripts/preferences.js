@@ -555,7 +555,7 @@ function selectImage() {
         if (fileNames === undefined) {
             return
         } else {
-            preferencesInterface.backgroundImage.value = fileNames[0].replace("\\","/")
+            preferencesInterface.backgroundImage.value = fileNames[0].replace(new RegExp("\\\\", "g"),"/")
         } 
     });
 }
@@ -569,7 +569,7 @@ function selectLocation() {
         if (fileNames === undefined) {
             return
         } else {
-            preferencesTimer.autosaveLocation.value = fileNames[0].replace("\\","/")
+            preferencesTimer.autosaveLocation.value = fileNames[0].replace(new RegExp("\\\\", "g"),"/")
         } 
     });
 }
