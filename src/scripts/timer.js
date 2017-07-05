@@ -137,11 +137,9 @@ function timerUpdate() {
                         rightIndicator.style.opacity = 1
                     }      
                 }
-                if (preferences.split && preferences.endSplit && !leftDown && !rightDown) {
+                if (preferences.split && !leftDown && !rightDown) {
                     cooldown = false
-                } else if (preferences.split && !preferences.endSplit && !leftDown && !rightDown) {
-                    cooldown = false
-                } else if (!preferences.endSplit && !preferences.split && !mainDown) {
+                } else if (!preferences.split && !preferences.endSplit && !mainDown) {
                     cooldown = false
                 }
             }
@@ -412,17 +410,8 @@ function submitTime() {
 // Get stackmat information is used and display it
 function SMCallback(state) {
     if (preferences.stackmat) {
-        if (state.leftHand) {
-            leftDown = true
-        } else {
-            leftDown = false
-        }
-
-        if (state.rightHand) {
-            rightDown = true
-        } else {
-            rightDown = false
-        }
+        leftDown = Boolean(state.leftHand)  // Boolean will guarantee the variable is not undefined
+        rightDown = Boolean(state.rightHand)
     
         document.getElementById("background").focus()
 
@@ -435,19 +424,18 @@ function SMCallback(state) {
         switch (timerState) {
             case "normal":       
                 if (!preferencesOpen && !sessionButtonsShowing) {
+                    leftIndicator.style.opacity = 1
                     if (leftDown) {
                         leftIndicator.style.backgroundColor = prepareColor
-                        leftIndicator.style.opacity = 1
                     } else {
                         leftIndicator.style.backgroundColor = normalColor
-                        leftIndicator.style.opacity = 1
                     }
+                    
+                    rightIndicator.style.opacity = 1
                     if (rightDown) {
                         rightIndicator.style.backgroundColor = prepareColor 
-                        rightIndicator.style.opacity = 1
                     } else {
                         rightIndicator.style.backgroundColor = normalColor
-                        rightIndicator.style.opacity = 1
                     }    
                 }
 

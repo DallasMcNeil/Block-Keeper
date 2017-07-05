@@ -119,31 +119,30 @@ function sessionTrend() {
     ctx.lineWidth = 2
     ctx.beginPath()
     for (var i = 0;i<times.length;i++) {
-        if (times[i].result == "OK") {
+        if (times[i].result == "OK" || times[i].result == "+2") {
+            var x = 50+(i*(240/(times.length-1)))
+            var y = 170-(((times[i].time-dis.min)/dis.range)*160)
             if (i==0) {
-                ctx.moveTo(50+(i*(240/(times.length-1))),(170-(((times[i].time-dis.min)/dis.range)*160)))
+                ctx.moveTo(x, y)
             } else {
-                ctx.lineTo(50+(i*(240/(times.length-1))),(170-(((times[i].time-dis.min)/dis.range)*160)))
-            }
-        } else if (times[i].result == "+2") {
-            if (i==0) {
-                ctx.moveTo(50+(i*(240/(times.length-1))),(170-(((times[i].time-dis.min+2)/dis.range)*160)))
-            } else {
-                ctx.lineTo(50+(i*(240/(times.length-1))),(170-(((times[i].time-dis.min+2)/dis.range)*160)))
+                ctx.lineTo(x, y)
             }
         }
     }
     ctx.stroke()
     
+    // This code block shows up 3 times in a row, it would be a good candidate as a function
     ctx.beginPath()
     ctx.strokeStyle = colours[0]
     for (var i = 2;i<times.length;i++) {
         var mean = meanTimes(extractTimes(times.slice(i-2,i+1)))
         if (mean != -1) {
+            var x = 50+(i*(240/(times.length-1)))
+            var y = 170-(((mean-dis.min)/dis.range)*160)
             if (i==2) {
-                ctx.moveTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.moveTo(x, y)
             } else {
-                ctx.lineTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.lineTo(x, y)
             }
         }
     }
@@ -154,10 +153,12 @@ function sessionTrend() {
     for (var i = 4;i<times.length;i++) {
         var mean = averageTimes(extractTimes(times.slice(i-4,i+1)))
         if (mean != -1) {
+            var x = 50+(i*(240/(times.length-1)))
+            var y = 170-(((mean-dis.min)/dis.range)*160)
             if (i==4) {
-                ctx.moveTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.moveTo(x, y)
             } else {
-                ctx.lineTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.lineTo(x, y)
             }
         }
     }
@@ -168,10 +169,12 @@ function sessionTrend() {
     for (var i = 11;i<times.length;i++) {
         var mean = averageTimes(extractTimes(times.slice(i-11,i+1)))
         if (mean != -1) {
+            var x = 50+(i*(240/(times.length-1)))
+            var y = 170-(((mean-dis.min)/dis.range)*160)
             if (i==11) {
-                ctx.moveTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.moveTo(x, y)
             } else {
-                ctx.lineTo(50+(i*(240/(times.length-1))),(170-(((mean-dis.min)/dis.range)*160)))
+                ctx.lineTo(x, y)
             }
         }
     }
@@ -332,8 +335,10 @@ function distribution() {
     ctx.fillStyle = mainColour 
     ctx.lineWidth = 1
     for (var s = 0;s<dis.segments;s++) {
+        var leftBound = (dis.divide*s) + dis.min
+        var rightBound = (dis.divide*(s+1)) + dis.min
         for (var i = 0;i<times.length;i++) {
-            if (((dis.divide*s)+dis.min <= times[i].time)&&((dis.divide*(s+1))+dis.min > times[i].time)) {
+            if (leftBound <= times[i].time && times[i].time < rightBound) {
                 totals[s]++
             }
         }
@@ -344,12 +349,13 @@ function distribution() {
     ctx.textAlign = "center";
     
     var max = Math.max.apply(null, totals);
+    var width = (270/dis.segments) 
     
     for (var i = 0;i<dis.segments+1;i++) {
         
         if (i!=dis.segments) {
             var height = 120*(totals[i]/max)
-            var width = (270/dis.segments)        
+
             ctx.fillStyle = secondColour
             ctx.fillRect(15+(i*width),140-(height),width,height)
             ctx.strokeRect(15+(i*width),140-(height),width,height)
