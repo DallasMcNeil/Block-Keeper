@@ -65,6 +65,8 @@ A debug console is available to use for debugging and other purposes. In `src/ma
 
 Dallas McNeil ([dallasmcneil.com](http://dallasmcneil.com))
 
+James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
+
 A huge thanks to the people who made these fantastic libraries, tools and assets, which make Block Keeper possible.
 
 ### Tools and Libraries
