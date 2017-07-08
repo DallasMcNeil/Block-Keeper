@@ -30,6 +30,7 @@ var preferences = {
     stackmat:false,
     leftKey:"z",
     rightKey:"/",
+    OHSplit:false,
     scrambleSize:4,
     backgroundImage:"",
     autosaveLocation:"",
@@ -85,7 +86,8 @@ function loadPreferences() {
             preferencesInterface.backgroundImage.value = preferences.backgroundImage
             preferencesTimer.timerDelay.value = preferences.timerDelay
             preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
-                
+            preferencesTimer.OHSplit.checked = preferences.OHSplit
+            
             timerText.innerHTML = (0).toFixed(preferences.timerDetail)
             writeTheme(preferences.customTheme) 
             $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
@@ -178,7 +180,8 @@ function closePreferences() {
     preferencesInterface.scrambleSize.value = preferences.scrambleSize
     preferencesInterface.backgroundImage.value = preferences.backgroundImage
     preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
-            
+    preferencesTimer.OHSplit.checked = preferences.OHSplit
+               
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
@@ -232,7 +235,8 @@ function savePreferencesForm() {
     preferences.backgroundImage = preferencesInterface.backgroundImage.value
     preferences.timerDelay = preferencesTimer.timerDelay.value
     preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
-            
+    preferences.OHSplit = preferencesTimer.OHSplit.checked 
+                  
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
