@@ -89,17 +89,15 @@ var puzzles = [{name:"3x3x3",sessions:[],scramble:scramble3x3},
                
                {name:"3x3x3 OH",sessions:[],scramble:scramble3x3},
                {name:"3x3x3 BLD",sessions:[],scramble:scramble3x3BLD},
-               {name:"3x3x3 MBLD",sessions:[],scramble:scramble3x3MBLD},
                {name:"4x4x4 BLD",sessions:[],scramble:scramble4x4},
                {name:"5x5x5 BLD",sessions:[],scramble:scramble5x5},
                {name:"3x3x3 FT",sessions:[],scramble:scramble3x3},
-               {name:"3x3x3 FM",sessions:[],scramble:scramble3x3},
                
                {name:"Other",sessions:[],scramble:scrambleNone},
              ]
 
 // Set the scamble function for each event
-var scrambleFunctions = [scramble3x3,scramble2x2,scramble4x4,scramble5x5,scramblePyraminx,scrambleSkewb,scrambleMegaminx,scrambleSquare1,scramble3x3,scramble3x3BLD,scrambleClock,scramble6x6,scramble7x7,scramble3x3MBLD,scramble4x4,scramble5x5,scramble3x3,scramble3x3,scrambleNone] 
+var scrambleFunctions = [scramble3x3,scramble2x2,scramble4x4,scramble5x5,scramblePyraminx,scrambleSkewb,scrambleMegaminx,scrambleSquare1,scramble3x3,scramble3x3BLD,scrambleClock,scramble6x6,scramble7x7,,scramble4x4,scramble5x5,scramble3x3,scrambleNone] 
 var currentPuzzle = 0
 var currentSession = 0
 var currentRecord = 0
@@ -164,6 +162,28 @@ function loadSessions() {
                             puzzles = mergeSessions(puzzles,object.puzzles)
                         }
                     }
+                    
+                    // Remove MBLD and FM if they are empty
+                    for (var i=0;i<puzzles.length;i++) {
+                        if (puzzles[i].name=="3x3x3 MBLD") {
+                            console.log(puzzles[i])
+                            if (puzzles[i].sessions.length == 0) {
+                                puzzles.splice(i,1)
+                                break
+                            }
+                        }
+                    }
+                    for (var i=0;i<puzzles.length;i++) {
+                        if (puzzles[i].name=="3x3x3 FM") {
+                            console.log(puzzles[i])
+                            if (puzzles[i].sessions.length == 0) {
+                                puzzles.splice(i,1)
+                                break
+                            }
+                        }
+                    }
+                    
+                    
                     if (object.puzzle != null) {
                         currentPuzzle = object.puzzle
                         if (currentPuzzle >= puzzles.length) {
@@ -642,7 +662,11 @@ function updateRecords() {
             }
         }
     })
-    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 230px))")
+
+    setTimeout(function() {
+        extraHeight+=$("#sessionDetails").height()
+        $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 170px))")
+    },10);
     updateTool()
     saveSessions()
 }

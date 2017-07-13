@@ -25,7 +25,6 @@ var preferences = {
     voice:"none",
     formatTime:true,
     recordSolve:false,
-    MBLDscramlbes:10,
     endSplit:false,
     stackmat:false,
     leftKey:"z",
@@ -34,7 +33,8 @@ var preferences = {
     scrambleSize:4,
     backgroundImage:"",
     autosaveLocation:"",
-    timerDelay:0.55
+    timerDelay:0.55,
+    scrambleAlign:"right"
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
@@ -49,7 +49,8 @@ function savePreferences() {
     storage.set("preferences",preferences,function(error){})
     setStylesheet()
     $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")') 
-    
+    $("#scramble").css("text-align",preferences.scrambleAlign)
+     
     if (preferences.voice != "none") {
         s7voice = new Audio("sounds/"+preferences.voice+"8s.mp3")
         s3voice = new Audio("sounds/"+preferences.voice+"12s.mp3")
@@ -81,17 +82,18 @@ function loadPreferences() {
             preferencesTimer.stackmat.checked = preferences.stackmat
             preferencesTimer.leftKey.value = preferences.leftKey  
             preferencesTimer.rightKey.value = preferences.rightKey 
-            preferencesInterface.MBLDscramlbes.value = preferences.MBLDscramlbes+""
             preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
             preferencesInterface.backgroundImage.value = preferences.backgroundImage
             preferencesTimer.timerDelay.value = preferences.timerDelay
             preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
             preferencesTimer.OHSplit.checked = preferences.OHSplit
-            
+            preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+         
             timerText.innerHTML = (0).toFixed(preferences.timerDetail)
             writeTheme(preferences.customTheme) 
             $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
-     
+            $("#scramble").css("text-align",preferences.scrambleAlign)
+            
             if (preferences.stackmat) {
                 stackmat.init()
                 stackmat.setCallBack(SMCallback)
@@ -172,7 +174,6 @@ function closePreferences() {
     preferencesTimer.voice.value = preferences.voice
     preferencesTimer.formatTime.checked = preferences.formatTime
     preferencesTimer.recordSolve.checked = preferences.recordSolve
-    preferencesInterface.MBLDscramlbes.value = preferences.MBLDscramlbes
     preferencesTimer.timerDelay.value = preferences.timerDelay
     preferencesTimer.stackmat.checked = preferences.stackmat  
     preferencesTimer.leftKey.value = preferences.leftKey  
@@ -181,7 +182,8 @@ function closePreferences() {
     preferencesInterface.backgroundImage.value = preferences.backgroundImage
     preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
     preferencesTimer.OHSplit.checked = preferences.OHSplit
-               
+    preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+              
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
@@ -192,6 +194,7 @@ function closePreferences() {
     }
     
     timerText.innerHTML = (0).toFixed(preferences.timerDetail)
+       
     $("#dialogPreferences").dialog("close")
     $("#stats").removeClass("disabled")
     $("#timer").removeClass("disabled")
@@ -229,13 +232,13 @@ function savePreferencesForm() {
     preferences.voice = preferencesTimer.voice.value
     preferences.formatTime = preferencesTimer.formatTime.checked
     preferences.recordSolve = preferencesTimer.recordSolve.checked
-    preferences.MBLDscramlbes = preferencesInterface.MBLDscramlbes.value
     preferences.stackmat = preferencesTimer.stackmat.checked 
     preferences.scrambleSize = preferencesInterface.scrambleSize.value 
     preferences.backgroundImage = preferencesInterface.backgroundImage.value
     preferences.timerDelay = preferencesTimer.timerDelay.value
     preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
     preferences.OHSplit = preferencesTimer.OHSplit.checked 
+    preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
                   
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value

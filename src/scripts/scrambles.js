@@ -114,24 +114,8 @@ function scramble3x3BLD() {
     scrambleState = scramblers[scrambleStr].getRandomScramble()
     scrambleState.scramble_string+=[" x"," x'"," x2",""][Math.floor(Math.random()*4)];
     scrambleState.scramble_string+=[" z"," z'"," z2",""][Math.floor(Math.random()*4)];
-    
 }
     
-function scramble3x3MBLD() {
-    scrambleStr = "333mbf"
-    var s = ""
-    for (var i = 1; i<(parseInt(preferences.MBLDscramlbes)+1);i++) {
-        s=s+"<b>("+i+")</b> "
-        scrambleState = scramblers[scrambleStr].getRandomScramble()
-        s=s+scrambleState.scramble_string
-        if (i!=parseInt(preferences.MBLDscramlbes)) {
-            s=s+"<br>"
-        }
-    }
-    scrambleState.scramble_string = s
-    
-}
-
 function scrambleNone() {
     scrambleStr = "Other"
     scrambleState = {scramble_string:""}

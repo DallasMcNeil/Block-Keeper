@@ -130,7 +130,7 @@ body {
     user-select: text;
     position: fixed;
     top:32px;
-    right: 20px;
+    left:300px;
     vertical-align:top;
     text-align: right;
     font-size:4vh;
@@ -399,10 +399,18 @@ td {
     padding-bottom: 0px;
     font-family: workSans;
     color:#D0D0D0;
-    line-height: 0px;
+    line-height: 15px;
     font-size: 15px;
     text-align: center;
     background-color: #303030;
+}
+
+td p {
+    background: clear;
+    margin-top: 7.5px;
+    margin-bottom:7.5px;
+    margin-left: 0px;
+    margin-right:0px;
 }
 
 table tr:first-child td {
@@ -471,8 +479,12 @@ td p {
     cursor: text;
 }
 
-#sessionRecords tr:first-child td,#sessionRecords tr:first-child td p {
+#sessionRecords tr:first-child td {
     background: #303030;
+    cursor: text;
+}
+
+#sessionRecords tr:first-child td p {
     cursor: text;
 }
 
