@@ -14,6 +14,7 @@ var secondColour = themeColours[0][4]
 
 var colours = ["#F20","#5F0","#0060FF"]
 
+
 // Update Tools based on new session data or scramble
 function updateTool() {
     if (preferencesInterface.theme.value == "custom") {
@@ -40,7 +41,9 @@ function updateTool() {
     } else if (toolSelect.value == "scramble") {
         drawScramble()
         return
-    }  
+    } else if (toolSelect.value == "eventStats") {
+        eventStats()
+    }
     hideScramble()
 }
 
@@ -92,6 +95,186 @@ function extractTimes(records) {
         }
     }
     return times
+}
+
+function eventStats() {
+    ctx.clearRect(0,0,300,200)
+    ctx.strokeStyle = secondColour
+    ctx.fillStyle = mainColour
+    ctx.lineWidth = 1
+    ctx.font = "20px workSansBold";
+    ctx.textAlign = "right";
+     
+    ctx.fillText("Time:",80,60) 
+    ctx.fillText("Mo3:",80,90) 
+    ctx.fillText("Ao5:",80,120) 
+    ctx.fillText("Ao12:",80,150) 
+    ctx.fillText("Mean:",80,180) 
+    
+    ctx.textAlign = "left";
+    ctx.fillText("Current",100,30)
+    ctx.fillText("Best",200,30)
+    ctx.font = "20px workSans";
+
+    var stime = -1
+    var smo3 = -1
+    var sao5 = -1
+    var sao12 = -1
+    var smean = -1
+      
+    var ctime = -1
+    var cmo3 = -1
+    var cao5 = -1
+    var cao12 = -1
+    var cmean = -1 
+    
+    for (var s=0;s<puzzles[currentPuzzle].sessions.length;s++) {
+        var time = -1
+        var mo3 = -1
+        var ao5 = -1
+        var ao12 = -1
+        var mean = meanTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records).filter(function (t){return t!=-1}))
+        
+        var rtime = -1
+        var rmo3 = -1
+        var rao5 = -1
+        var rao12 = -1
+        
+        for (var r=0;r<puzzles[currentPuzzle].sessions[s].records.length;r++) {
+            rtime = rawTimes([puzzles[currentPuzzle].sessions[s].records[r]])[0]
+            if ((rtime<time||time==-1)&&rtime!=-1) {
+                time = rtime
+            }
+
+            if (r>1) {
+                rmo3 = meanTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-2,r+1)))
+                if ((rmo3 < mo3||mo3==-1)&&(rmo3!=-1)) {
+                    mo3 = rmo3
+                 }
+            }
+            if (r>3) {
+                rao5 = averageTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-4,r+1)))
+                if ((rao5 < ao5||ao5==-1)&&(rao5!=-1)) {
+                    ao5 = rao5
+                }
+            }
+            if (r>10) {
+                rao12 = averageTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-11,r+1)))
+                if ((rao12 < ao12||ao12==-1)&&(rao12!=-1)) {
+                    ao12 = rao12
+                }
+            }
+        }
+        if (s == currentSession) {
+            ctime = rtime
+            cmo3 = rmo3
+            cao5 = rao5
+            cao12 = rao12
+            cmean = mean
+        }
+        
+        if ((time<stime||stime==-1)&&time!=-1) {
+            stime = time
+        }
+        if ((mo3<smo3||smo3==-1)&&mo3!=-1) {
+            smo3 = mo3
+        }
+        if ((ao5<sao5||sao5==-1)&&ao5!=-1) {
+            sao5 = ao5
+        }
+        if ((ao12<sao12||sao12==-1)&&ao12!=-1) {
+            sao12 = ao12
+        }
+        if ((mean<smean||smean==-1)&&mean!=-1) {
+            smean = mean
+        }
+    }
+    console.log(sao5)
+    if (stime==ctime) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (ctime!=-1) {
+        ctx.fillText(formatTime(ctime),100,60) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,60) 
+    }
+    if (stime!=-1) {
+        ctx.fillText(formatTime(stime),200,60) 
+    } else {
+        ctx.fillText("-",200,60) 
+    }
+    
+    if (smo3==cmo3) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cmo3!=-1) {
+        ctx.fillText(formatTime(cmo3),100,90) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,90) 
+    }
+    if (smo3!=-1) {
+        ctx.fillText(formatTime(smo3),200,90) 
+    } else {
+        ctx.fillText("-",200,90) 
+    }
+
+    if (sao5==cao5) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cao5!=-1) {
+        ctx.fillText(formatTime(cao5),100,120) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,120) 
+    }
+    if (sao5!=-1) {
+        ctx.fillText(formatTime(sao5),200,120) 
+    } else {
+        ctx.fillText("-",200,120) 
+    }
+    
+    if (sao12==cao12) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cao12!=-1) {
+        ctx.fillText(formatTime(cao12),100,150) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,150) 
+    }
+    if (sao12!=-1) {
+        ctx.fillText(formatTime(sao12),200,150) 
+    } else {
+        ctx.fillText("-",200,150) 
+    }
+    
+    if (smean==cmean) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cmean!=-1) {
+        ctx.fillText(formatTime(cmean),100,180)
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,180) 
+    }
+    if (smean!=-1) {
+        ctx.fillText(formatTime(smean),200,180)
+    } else {
+        ctx.fillText("-",200,180) 
+    }
+  
 }
 
 // Draw a trendline of current session

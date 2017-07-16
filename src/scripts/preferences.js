@@ -34,7 +34,8 @@ var preferences = {
     backgroundImage:"",
     autosaveLocation:"",
     timerDelay:0.55,
-    scrambleAlign:"right"
+    scrambleAlign:"right",
+    showBestTime:true
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
@@ -88,7 +89,7 @@ function loadPreferences() {
             preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
             preferencesTimer.OHSplit.checked = preferences.OHSplit
             preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
-         
+            preferencesInterface.showBestTime.checked = preferences.showBestTime
             timerText.innerHTML = (0).toFixed(preferences.timerDetail)
             writeTheme(preferences.customTheme) 
             $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
@@ -183,6 +184,7 @@ function closePreferences() {
     preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
     preferencesTimer.OHSplit.checked = preferences.OHSplit
     preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+    preferencesInterface.showBestTime.checked = preferences.showBestTime
               
     writeTheme(preferences.customTheme)
     
@@ -239,7 +241,8 @@ function savePreferencesForm() {
     preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
     preferences.OHSplit = preferencesTimer.OHSplit.checked 
     preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
-                  
+    preferences.showBestTime = preferencesInterface.showBestTime.checked
+    
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
@@ -386,6 +389,8 @@ function importCS() {
             $("#tool").prop('disabled', true)
             $("#toolSelect").addClass("disabled")
             $("#tool").addClass("disabled")
+            $("#addTimeButton").prop('disabled', true)
+            $("#addTimeButton").addClass("disabled")
                 
             $("#dialogCSTimer").dialog("open")
 
@@ -413,32 +418,39 @@ var currentCS = 0
 
 // Imports csTimer session into selected event
 function importCSTime(doImport) {
-    if (doImport) {
-        createSession()
-        puzzles[currentPuzzle].sessions[currentSession].name = "csTimer Import"
-        for (var i=0;i<CSData[currentCS].length;i++) {
-            if (CSData[currentCS][i][0][0] == 0) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"OK")
-            } else if (CSData[currentCS][i][0][0] == 2000) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"+2")
-            } else if (CSData[currentCS][i][0][0] == -1) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"DNF")
-            } else {
-                break
-            }
-            puzzles[currentPuzzle].sessions[currentSession].records[i].scramble = CSData[currentCS][i][1]
-        }
-        updateSessions()
-        currentCS++
-    }
     if (currentCS < CSData.length) {
-        var str = (CSData[currentCS][0][0][1]/1000)
-        if ((CSData[currentCS][0][0][0] == 2000)) {
-            str = ((CSData[currentCS][0][0][1]/1000)+2)+"+"
-        } else if ((CSData[currentCS][0][0][0] == -1)) {
-            str = "DNF ("+(CSData[currentCS][0][0][1]/1000)+")"
+        if (doImport) {
+            createSession()
+            puzzles[currentPuzzle].sessions[currentSession].name = "csTimer Import"
+            disableUpdate = true
+            for (var i=0;i<CSData[currentCS].length;i++) {
+                if (CSData[currentCS][i][0][0] == 0) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"OK")
+                } else if (CSData[currentCS][i][0][0] == 2000) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"+2")
+                } else if (CSData[currentCS][i][0][0] == -1) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"DNF")
+                } else {
+                    break
+                }
+                puzzles[currentPuzzle].sessions[currentSession].records[i].scramble = CSData[currentCS][i][1]
+            }
+            disableUpdate = false
+            updateSessions()
+            currentCS++
         }
-        $("#messageCSTimer").prop("innerHTML","Session begins with following time<br><br>"+str+"<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.")
+        if (CSData[currentCS].length > 0) {
+            var str = (CSData[currentCS][0][0][1]/1000)
+            if ((CSData[currentCS][0][0][0] == 2000)) {
+                str = ((CSData[currentCS][0][0][1]/1000)+2)+"+"
+            } else if ((CSData[currentCS][0][0][0] == -1)) {
+                str = "DNF ("+(CSData[currentCS][0][0][1]/1000)+")"
+            }
+            $("#messageCSTimer").prop("innerHTML","Session begins with following time<br><br>"+str+"<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.")
+        } else {
+            currentCS++
+            importCSTime(false)
+        }
     } else {
         preferencesOpen = false
         $("#dialogCSTimer").dialog("close")
@@ -468,7 +480,9 @@ function importCSTime(doImport) {
         $("#tool").prop('disabled', false)
         $("#toolSelect").removeClass("disabled")
         $("#tool").removeClass("disabled")
-        
+        $("#addTimeButton").prop('disabled', false)
+        $("#addTimeButton").removeClass("disabled")
+                
         if (hasVideo && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)

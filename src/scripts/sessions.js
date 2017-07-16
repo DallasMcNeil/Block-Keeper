@@ -51,6 +51,9 @@ function averageTimes(times) {
 // Get the mean of all times
 function meanTimes(times) {
     var sum = 0
+    if (times.length == 0) {
+        return -1;
+    }
     for( var i = 0; i < times.length; i++ ){
         sum = sum + times[i]
         if (times[i] == -1) {
@@ -166,7 +169,6 @@ function loadSessions() {
                     // Remove MBLD and FM if they are empty
                     for (var i=0;i<puzzles.length;i++) {
                         if (puzzles[i].name=="3x3x3 MBLD") {
-                            console.log(puzzles[i])
                             if (puzzles[i].sessions.length == 0) {
                                 puzzles.splice(i,1)
                                 break
@@ -175,7 +177,6 @@ function loadSessions() {
                     }
                     for (var i=0;i<puzzles.length;i++) {
                         if (puzzles[i].name=="3x3x3 FM") {
-                            console.log(puzzles[i])
                             if (puzzles[i].sessions.length == 0) {
                                 puzzles.splice(i,1)
                                 break
@@ -243,13 +244,63 @@ function deleteSession() {
     }
 }
 
+var disableUpdate = false
 // Create a record in the current session
 function createRecord(time,result) {
+    // Find best time
+    if (!disableUpdate&&preferences.showBestTime) {
+        var btime = -1
+        for (var s=0;s<puzzles[currentPuzzle].sessions.length;s++) {
+            for (var r=0;r<puzzles[currentPuzzle].sessions[s].records.length;r++) {
+                var t = puzzles[currentPuzzle].sessions[s].records[r].time
+                if (puzzles[currentPuzzle].sessions[s].records[r].result == "+2") {
+                    t=t+2
+                } else if (puzzles[currentPuzzle].sessions[s].records[r].result == "DNF") {
+                    continue
+                }
+                if (t<btime||btime==-1) {
+                    btime = t
+                }
+            }
+        }
+        
+        if (time<btime&&btime!=-1) {
+            // New PB, launch the confetti
+            $("#announcement").animate({opacity:1},500)
+            $("#confetti").animate({opacity:1},500)
+            confettiCanvas = Confetti.createCanvas(
+              document.getElementById('background'),
+              document.getElementById('confetti')
+            );
+            confettiCanvas.halt = false;
+            confettiCanvas.canvas.halt = false;
+
+            var particles = Array.apply(null, Array(Math.floor(confettiCanvas.width/8))).map(function (_, i) {return i;}).map(function () {
+              return Confetti.create({
+                x: Confetti.randomFrom(0, confettiCanvas.width),
+                y: Confetti.randomFrom(-confettiCanvas.height, 0),
+                c:Math.floor(Math.random()*6),
+                r: Confetti.randomFrom(10, 30),
+                tilt: Confetti.randomFrom(-10, 10),
+                tiltAngle: 0,
+                tiltAngleIncrement: Confetti.randomFrom(0.05, 0.12, 100)
+              });
+            });
+            confettiCanvas.step(particles, confettiConfig)();
+            setTimeout(function(){
+                $("#announcement").animate({opacity:0},2000)
+                $("#confetti").animate({opacity:0},2000,function(){
+                     confettiCanvas.destroy()
+                })   
+            },5000)
+        }
+    }
     var record = {time:time,scramble:currentScramble,result:result}
     puzzles[currentPuzzle].sessions[currentSession].records.push(record)
     $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER+"px"},100)
-    updateRecords()
-    saveBackup()
+    if (!disableUpdate) {
+        updateRecords()
+    }
 }
 
 // Show time dialog to add a custom time
@@ -315,6 +366,7 @@ function addTime() {
         return
     }
     createRecord(t,"OK")
+    timerText.innerHTML = formatTime(t)
     scramble()
     closeTimeDialog()
 }
@@ -360,18 +412,39 @@ function setSession() {
 
 // Update all records displayed on screen
 function updateRecords() {
+    var debugTime = new Date().getTime()
+    console.log("Start: "+debugTime)
+    
     var records = puzzles[currentPuzzle].sessions[currentSession].records
     var length = sessionRecordsTable.rows.length-1
-    for (var i = 0;i<length;i++) {
-        sessionRecordsTable.deleteRow(-1)
+    if (records.length < length) {
+        for (var i = 0;i<length-records.length;i++) {
+            sessionRecordsTable.deleteRow(-1)
+        }
+    } else if (length < records.length) {
+        for (var i = 0;i<records.length-length;i++) {
+            var row = sessionRecordsTable.insertRow(-1)
+            var cell = row.insertCell(-1)
+            cell.appendChild(document.createElement("p")) 
+            cell = row.insertCell(-1)
+            cell.appendChild(document.createElement("p"))
+            cell = row.insertCell(-1)
+            cell.appendChild(document.createElement("p"))
+            cell = row.insertCell(-1)
+            cell.appendChild(document.createElement("p"))   
+        }
     }
-    var times = []
-    var mo3s = []
-    var ao5s = []
-    var ao12s = []
-    var ao50s = []
-    var ao100s = []
+    
+    console.log("Setup: "+(new Date().getTime()-debugTime))
+    
+    var times = records.length>0 ? new Array(records.length) : []
+    var mo3s = records.length>2 ? new Array(records.length-2) : []
+    var ao5s = records.length>4 ? new Array(records.length-4) : []
+    var ao12s = records.length>11 ? new Array(records.length-11) : []
+    var ao50s = records.length>49 ? new Array(records.length-49) : []
+    var ao100s = records.length>99 ? new Array(records.length-99) : []
     var DNFsolves = 0
+    console.log("Preallocation: "+(new Date().getTime()-debugTime))
     for (var i = 0;i<records.length;i++) {
         if (records[i].result != "DNF") {
             DNFsolves++
@@ -382,67 +455,55 @@ function updateRecords() {
         } else if (records[i].result == "+2") {
             tResult=tResult+2
         }
-        times.push(tResult)
+        times[i] = tResult
         var ao5t = "-"
         var ao12t = "-"
         if (i >= 2) {
-            mo3s.push(meanTimes(times.slice(-3,times.length)))
+            mo3s[i-2] = (meanTimes(times.slice(i-2,i+1)))
         }
         if (i >= 4) {
-            ao5s.push(averageTimes(times.slice(-5,times.length)))
-            ao5t = ao5s[ao5s.length-1]
+            ao5s[i-4] = (averageTimes(times.slice(i-4,i+1)))
+            ao5t = ao5s[i-4]
         }
         if (i >= 11) {
-            ao12s.push(averageTimes(times.slice(-12,times.length)))
-            ao12t = ao12s[ao12s.length-1]
+            ao12s[i-11] = (averageTimes(times.slice(i-11,i+1)))
+            ao12t = ao12s[i-11]
         }
         if (i >= 49) {
-            ao50s.push(averageTimes(times.slice(-50,times.length)))
+            ao50s[i-49] = (averageTimes(times.slice(i-49,i+1)))
         }
         if (i >= 99) {
-            ao100s.push(averageTimes(times.slice(-100,times.length)))
+            ao100s[i-99] = (averageTimes(times.slice(i-99,i+1)))
         } 
-        var row = sessionRecordsTable.insertRow(-1)
-        var num = row.insertCell(-1)
-        var numP = document.createElement("p")
-        numP.innerHTML = i+1
-        num.appendChild(numP) 
-        
-        var time = row.insertCell(-1)
-        var timeP = document.createElement("p")
+        sessionRecordsTable.rows[i+1].cells[0].children[0].innerHTML = i+1
+
         if (times[i] == -1) {
-            timeP.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = "DNF"
         } else if (records[i].result == "+2") {
-            timeP.innerHTML = formatTime(times[i]) + "+"
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = formatTime(times[i]) + "+"
         } else {
-            timeP.innerHTML = formatTime(times[i])
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = formatTime(times[i])
         }
-        time.appendChild(timeP)
         
-        var ao5 = row.insertCell(-1)
-        var ao5P = document.createElement("p")
         if (ao5t == -1) {
-            ao5P.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = "DNF"
         } else if (ao5t == "-") {
-            ao5P.innerHTML = ao5t
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = ao5t
         } else {
-            ao5P.innerHTML = formatTime(ao5t)
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = formatTime(ao5t)
         }
-        ao5.appendChild(ao5P)
         
-        var ao12 = row.insertCell(-1)
-        var ao12P = document.createElement("p")
         if (ao12t == -1) {
-            ao12P.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = "DNF"
         } else if (ao12t == "-") {
-            ao12P.innerHTML = ao12t
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = ao12t
         } else {
-            ao12P.innerHTML = formatTime(ao12t)
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = formatTime(ao12t)
         }
-        ao12.appendChild(ao12P)
     }
+    console.log("Stats: "+(new Date().getTime()-debugTime))
     var mean = meanTimes(times.filter(function(t) {return t!=-1}))
-    if (isNaN(mean)) {
+    if (mean == -1) {
         $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(0))
         $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(0))
         $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime(0))
@@ -661,14 +722,17 @@ function updateRecords() {
                 }
             }
         }
-    })
+    })    
 
     setTimeout(function() {
         extraHeight+=$("#sessionDetails").height()
         $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 170px))")
     },10);
+    
+    console.log("Update Done: "+(new Date().getTime()-debugTime))
     updateTool()
     saveSessions()
+    console.log("All Done: "+(new Date().getTime()-debugTime))
 }
 
 var sessionButtonsShowing = false
@@ -850,5 +914,58 @@ $("#dialogAddTime").dialog({
     }
     evt.stopPropagation();
 });
+
+// Confetti functions
+
+var confettiCanvas;
+var confettiConfig = {
+    angle: 0.01,
+    tiltAngle: 0.1,
+    draw: confettiDraw,
+    updatePosition: confettiUpdatePosition,
+    updateState: confettiUpdateState
+};
+function confettiDraw(confetti) {
+  confettiCanvas.context.beginPath();
+  confettiCanvas.context.lineWidth = confetti.r / 2;
+  confettiCanvas.context.strokeStyle = colorScheme[confetti.c];
+  confettiCanvas.context.moveTo(confetti.x + confetti.tilt + (confetti.r / 4),
+    confetti.y);
+  confettiCanvas.context.lineTo(confetti.x + confetti.tilt, confetti.y +
+    confetti.tilt + (confetti.r / 4));
+  confettiCanvas.context.stroke();
+}
+
+function confettiUpdatePosition(confetti, idx) {
+  confetti.tiltAngle += confetti.tiltAngleIncrement;
+  confetti.y += (Math.cos(confettiConfig.angle + confetti.d) + 1 + confetti.r / 2) / 2;
+  confetti.x += Math.sin(confettiConfig.angle);
+  confetti.tilt = 15 * Math.sin(confetti.tiltAngle - idx / 3);
+
+  if (confetti.isFlakeExiting(confettiCanvas)) {
+    if (idx % 5 > 0 || idx % 2 === 0) {
+      confetti.x = Confetti.randomFrom(0, confettiCanvas.width);
+      confetti.y = -10;
+      confetti.tilt = Confetti.randomFrom(-10, 0);
+
+    } else {
+      if (Math.sin(confettiConfig.angle) > 0) {
+        confetti.x = -5;
+        confetti.y = Confetti.randomFrom(0, confettiCanvas.height);
+        confetti.tilt = Confetti.randomFrom(-10, 0);
+      } else {
+        confetti.x = confettiCanvas.width + 5;
+        confetti.y = Confetti.randomFrom(0, confettiCanvas.height);
+        confetti.tilt = Confetti.randomFrom(-10, 0);
+      }
+    }
+  }
+}
+
+function confettiUpdateState() {
+  this.angle += 0.01;
+  this.tiltAngle += 0.1;
+}
+
 
 loadSessions()

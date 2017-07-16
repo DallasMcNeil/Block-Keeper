@@ -120,7 +120,7 @@ body {
     background-color:@background;
 }
 
-#timer {
+#timer,#announcement {
     color:@timer;
 }
 

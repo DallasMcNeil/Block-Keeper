@@ -5,8 +5,6 @@
 
 var leftIndicator = document.getElementById("leftIndicator")
 var rightIndicator = document.getElementById("rightIndicator")
-var statsPanel = document.getElementById("stats")
-var statsPanel = document.getElementById("timer")
 
 var prepareColor = "#FF0000"
 var inspectColor = "#FFFF00"

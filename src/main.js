@@ -4,7 +4,7 @@
 // Created by Dallas McNeil
 
 // Set to true to enable development console
-var debug = true;
+var debug = false;
 
 'use strict';
 const {app, BrowserWindow,Menu,localShortcut,TouchBar,nativeImage} = require('electron')
