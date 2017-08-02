@@ -8,6 +8,7 @@ var remote = require('electron').remote;
 const {remote:{dialog}} = require('electron');
 var fs = require('fs');
 const {clipboard} = require('electron')
+const app = remote.app
 
 // Default preferences overrided by loaded preferences
 var preferences = {
@@ -35,7 +36,8 @@ var preferences = {
     autosaveLocation:"",
     timerDelay:0.55,
     scrambleAlign:"right",
-    showBestTime:true
+    showBestTime:true,
+    useMouse:false
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
@@ -47,11 +49,18 @@ timerText.innerHTML = (0).toFixed(preferences.timerDetail)
 
 // Saves preferences to file
 function savePreferences() {
+    /*fs.writeFile(app.getAppPath()+"/data/preferences.json", JSON.stringify(preferences), function(err) {
+        if (err) {
+            return console.log(err);
+        }
+    })*/
     storage.set("preferences",preferences,function(error){})
     setStylesheet()
     $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")') 
     $("#scramble").css("text-align",preferences.scrambleAlign)
-     
+    $("#scramble").css("font-size",preferences.scrambleSize+"vh")
+    $("#scramble").css("line-height",preferences.scrambleSize+"vh")
+    
     if (preferences.voice != "none") {
         s7voice = new Audio("sounds/"+preferences.voice+"8s.mp3")
         s3voice = new Audio("sounds/"+preferences.voice+"12s.mp3")
@@ -60,54 +69,68 @@ function savePreferences() {
 
 // Loads preferences from file and fills in preferences forms
 function loadPreferences() {
-    storage.get("preferences",function(error,object) {
-        if (!error) {
-            preferences = Object.assign({},preferences,object)
-            setStylesheet()
-            savePreferences()
-            
-            if (!isNaN(parseInt(preferences.theme))||preferences.theme == "custom") {
-                preferencesInterface.theme.value = preferences.theme
-            } else {
-                preferencesInterface.theme.value = 0
-            }
-            
-            preferencesTimer.inspection.checked = preferences.inspection
-            preferencesTimer.splitMode.checked = preferences.split
-            preferencesTimer.endSplit.checked = preferences.endSplit
-            preferencesTimer.timerDetail.value = preferences.timerDetail
-            preferencesTimer.hideTiming.checked = preferences.hideTiming
-            preferencesTimer.recordSolve.checked = preferences.recordSolve
-            preferencesTimer.voice.value = preferences.voice
-            preferencesTimer.formatTime.checked = preferences.formatTime
-            preferencesTimer.stackmat.checked = preferences.stackmat
-            preferencesTimer.leftKey.value = preferences.leftKey  
-            preferencesTimer.rightKey.value = preferences.rightKey 
-            preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
-            preferencesInterface.backgroundImage.value = preferences.backgroundImage
-            preferencesTimer.timerDelay.value = preferences.timerDelay
-            preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
-            preferencesTimer.OHSplit.checked = preferences.OHSplit
-            preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
-            preferencesInterface.showBestTime.checked = preferences.showBestTime
-            timerText.innerHTML = (0).toFixed(preferences.timerDetail)
-            writeTheme(preferences.customTheme) 
-            $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
-            $("#scramble").css("text-align",preferences.scrambleAlign)
-            
-            if (preferences.stackmat) {
-                stackmat.init()
-                stackmat.setCallBack(SMCallback)
-            }
-            
-            if (preferences.recordSolve) {
-                setupRecorder()
-            }
-            
+    var setup = function () {
+        setStylesheet()
+        savePreferences()
+
+        if (!isNaN(parseInt(preferences.theme))||preferences.theme == "custom") {
+            preferencesInterface.theme.value = preferences.theme
         } else {
-            savePreferences()
+            preferencesInterface.theme.value = 0
         }
-    })
+
+        preferencesTimer.inspection.checked = preferences.inspection
+        preferencesTimer.splitMode.checked = preferences.split
+        preferencesTimer.endSplit.checked = preferences.endSplit
+        preferencesTimer.timerDetail.value = preferences.timerDetail
+        preferencesTimer.hideTiming.checked = preferences.hideTiming
+        preferencesTimer.recordSolve.checked = preferences.recordSolve
+        preferencesTimer.voice.value = preferences.voice
+        preferencesTimer.formatTime.checked = preferences.formatTime
+        preferencesTimer.stackmat.checked = preferences.stackmat
+        preferencesTimer.leftKey.value = preferences.leftKey  
+        preferencesTimer.rightKey.value = preferences.rightKey 
+        preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
+        preferencesInterface.backgroundImage.value = preferences.backgroundImage
+        preferencesTimer.timerDelay.value = preferences.timerDelay
+        preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+        preferencesTimer.OHSplit.checked = preferences.OHSplit
+        preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+        preferencesInterface.showBestTime.checked = preferences.showBestTime
+        preferencesTimer.useMouse.checked = preferences.useMouse
+
+        timerText.innerHTML = (0).toFixed(preferences.timerDetail)
+        writeTheme(preferences.customTheme) 
+        $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
+        $("#scramble").css("text-align",preferences.scrambleAlign)
+
+        if (preferences.stackmat) {
+            stackmat.init()
+            stackmat.setCallBack(SMCallback)
+        }
+
+        if (preferences.recordSolve) {
+            setupRecorder()
+        }
+    }
+    
+    //fs.readFile(app.getAppPath()+"/data/preferences.json",function (err,data) {
+    //    if (err) {
+            // Look in default location, if data hasn't been setup in data folder yet
+            storage.get("preferences",function(error,object) {
+                if (error) {
+                    savePreferences()
+                } else {
+                    preferences = Object.assign({},preferences,object)
+                }
+                setup()
+            })
+    /*    } else {
+            var object = JSON.parse(data)
+            preferences = Object.assign({},preferences,object)
+            setup()
+        }
+    })*/
 }
 
 // Initialise preferences dialog
@@ -185,7 +208,8 @@ function closePreferences() {
     preferencesTimer.OHSplit.checked = preferences.OHSplit
     preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
     preferencesInterface.showBestTime.checked = preferences.showBestTime
-              
+    preferencesTimer.useMouse.checked = preferences.useMouse
+                      
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
@@ -242,7 +266,8 @@ function savePreferencesForm() {
     preferences.OHSplit = preferencesTimer.OHSplit.checked 
     preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
     preferences.showBestTime = preferencesInterface.showBestTime.checked
-    
+    preferences.useMouse = preferencesTimer.useMouse.checked
+            
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
@@ -537,7 +562,7 @@ function exportPretty() {
         str += "\n"+document.getElementById("sessionSD").innerHTML
 
         for (var r=0;r<puzzles[currentPuzzle].sessions[currentSession].records.length;r++) {
-            str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+            str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scrambletrim()+")"
         }
         
         str = str.replace(new RegExp("<b>", 'g'),"").replace(new RegExp("</b>", 'g'),"").replace(new RegExp("<br>", 'g'),"\n")

@@ -126,14 +126,17 @@ body {
 
 #scramble {
     color:@scramble;
-    font-size:@scrambleSize;
-    line-height:@scrambleSize;
 }
 
-button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],td,#dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td {
+button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td {
     color:@text;
     background-color: @base;
     border-color: @border;
+}
+
+#sessionRecordsContainer {
+    border-color: @border;
+    background-color: @base;
 }
 
 button:hover, select:hover,input[type="checkbox"]:hover {
@@ -194,9 +197,8 @@ select:hover {
     color: darken(@text,@darken,relative);
 }    
 
-#sessionRecordsContainer {
-    border-color: @border;
-    background-color: @base;
+.selectable:hover, .selectable p:hover {
+    background: darken(@base,@darken,relative);
 }
 
 #sessionRecords tr:first-child td {
@@ -256,10 +258,14 @@ button, select, input, #tool, #sessionRecords,#sessionStats,#sessionDetails,#ses
     -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
 }
 
-#previewButton.loading {
-    background-image: url('data:image/svg+xml;utf8,<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="24" height="24" fill="@{base}"></rect><circle cx="12" cy="12" r="8" stroke-dasharray="30 10" stroke="@{text}" fill="none" stroke-width="2"><animateTransform attributeName="transform" type="rotate" values="0 12 12;180 12 12;360 12 12;" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite" begin="0s"></animateTransform></circle></svg>');
-    background-position: 45% 50%;
+.loading {
     background-color: @base;
+    background: url('data:image/svg+xml;utf8,<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="24" height="24" fill="@{base}"></rect><circle cx="12" cy="12" r="8" stroke-dasharray="30 10" stroke="@{text}" fill="none" stroke-width="2"><animateTransform attributeName="transform" type="rotate" values="0 12 12;180 12 12;360 12 12;" keyTimes="0;0.5;1" dur="1s" repeatCount="indefinite" begin="0s"></animateTransform></circle></svg>');
+    background-position: 45% 50%;
+}
+
+#messageShowInfo {
+    border-top-color: @border;
 }
 
 `, function (e, output) {

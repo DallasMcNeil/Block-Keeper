@@ -73,8 +73,16 @@ function rangeForTimes(times) {
         divide = 2
     } else if (range <= 40) {
         divide = 5
-    } else {
+    } else if (range <= 80) {
         divide = 10
+    } else if (range <= 120) {
+        divide = 15
+    } else if (range <= 160) {
+        divide = 20
+    } else if (range <= 240) {
+        divide = 30
+    } else {
+        divide = 60
     }
     var fmin = Math.floor(min/divide)*divide
     var fmax = Math.ceil(max/divide)*divide

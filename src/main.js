@@ -121,19 +121,19 @@ template[3].submenu = [
 
 const OKButton = new TouchBarButton({
     label: ' OK ',
-    backgroundColor:"#00DD00",
+    backgroundColor:"#22BB22",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+1')}
 })
 
 const plus2Button = new TouchBarButton({
     label: ' +2 ',
-    backgroundColor:"#FF9900",
+    backgroundColor:"#DD8822",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+2')}
 })
 
 const DNFButton = new TouchBarButton({
     label: ' DNF ',
-    backgroundColor:"#DD0000",
+    backgroundColor:"#CC2222",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+3')}
 })
 

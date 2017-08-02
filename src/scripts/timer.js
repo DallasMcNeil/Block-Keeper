@@ -70,6 +70,10 @@ window.onkeydown = function(e) {
                 }
             }
         }
+    } else {
+        if (e.key == mainKey) {
+            mainDown = true
+        }
     }
 
     if(e.keyCode == 32 && !sessionButtonsShowing) {
@@ -92,10 +96,32 @@ window.onkeyup = function(e) {
                 mainDown = false
             }
         }
+    } else {
+        if (e.key == mainKey) {
+            mainDown = false
+        }
     }
+    
     if(e.keyCode == 32) {
         e.preventDefault();
         return false;
+    } 
+}
+
+document.getElementById("background").onmousedown = function(e) {
+    if (preferences.useMouse) {
+        if (e.button == 0) {
+            mainDown = true
+        }
+        if (timerState == "timing") {
+            stopTimer()
+        }
+    }
+}
+
+document.getElementById("background").onmouseup = function(e) {
+    if (e.button == 0) {
+        mainDown = false
     }
 }
 
@@ -327,6 +353,7 @@ function readyInspection() {
 function startInspection() {
     timerState = "inspecting"
     timerText.style.color = inspectColor 
+    timerText.innerHTML = "15"
     inspectionTime = currentTime.getTime()
     timerResult = "OK"
     $("#stats").fadeOut()
@@ -434,7 +461,10 @@ function SMCallback(state) {
 
         if (state.on) {
         switch (timerState) {
-            case "normal":       
+            case "normal":      
+                if (mainDown) {
+                    readyInspection()
+                }
                 if (!preferencesOpen && !sessionButtonsShowing) {
                     leftIndicator.style.opacity = 1
                     if (leftDown) {
@@ -479,6 +509,79 @@ function SMCallback(state) {
                 }
 
                 break
+            case "inspectReady":
+                timerText.style.color = readyColor
+                if (!mainDown) {
+                    currentTime = new Date()
+                    timeLastUpdate = currentTime.getTime()
+                    startInspection()
+                }
+                break
+            case "inspecting":
+                timerText.style.color = prepareColor
+                var timeRemaining = Math.ceil(15+(inspectionTime - timeLastUpdate)/1000)
+                if (timeRemaining<=-2 && inspectionEnabled) {
+                    timerText.innerHTML = "DNF"
+                    timerResult = "DNF"
+                } else if (timeRemaining<=0 && inspectionEnabled) {
+                    timerText.innerHTML = "+2"
+                    timerResult = "+2"
+                } else if (timeRemaining<=3 && s3 && inspectionEnabled) {
+                    if (preferences.voice != "none") {
+                        s3voice.play()
+                        s3 = false
+                    }
+                } else if (timeRemaining<=7 && s7 && inspectionEnabled) {
+                    if (preferences.voice != "none") {
+                        s7voice.play()
+                        s7 = false
+                    }
+                }
+                if (timeRemaining>0) {
+                    timerText.innerHTML = timeRemaining
+                }
+                
+                if (leftDown) {
+                    leftIndicator.style.backgroundColor = inspectColor
+                    leftIndicator.style.opacity = 1
+                }
+                if (rightDown) {
+                    rightIndicator.style.backgroundColor = inspectColor
+                    rightIndicator.style.opacity = 1
+                }
+                
+                if (leftDown && rightDown && (state.time_milli == 0)){
+                    timerText.style.color = prepareColor
+                    leftIndicator.style.backgroundColor = prepareColor
+                    leftIndicator.style.opacity = 1
+                    rightIndicator.style.backgroundColor = prepareColor
+                    rightIndicator.style.opacity = 1
+                } else {
+                    timerText.style.color = inspectColor
+                }
+                
+                if (state.greenLight) {
+                    timerText.style.color = readyColor
+                    leftIndicator.style.backgroundColor = readyColor
+                    rightIndicator.style.backgroundColor = readyColor
+                    leftIndicator.style.opacity = 1
+                    rightIndicator.style.opacity = 1
+                }
+                
+                if (state.running) {
+                    timerState = "timing"
+                    $("#stats").fadeOut()
+                    $("#scramble").fadeOut()
+                    $("#preferencesButton").fadeOut()
+                    $("#tool").fadeOut()
+                    $("#toolSelect").fadeOut()
+                    $("#previewButton").fadeOut()
+                    startRecorder()
+                    timerText.style.color = normalColor
+                }
+                timeLastUpdate = new Date().getTime()
+                break
+            
             case "timing":
                 if (preferences.endSplit&&splitEnabled) {
                     if (leftDown) {
@@ -521,6 +624,7 @@ function SMCallback(state) {
                     $("#previewButton").fadeIn()
                     stopRecorder()
                 }   
+                
                 break
             }
         } else {

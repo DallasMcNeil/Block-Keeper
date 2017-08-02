@@ -163,6 +163,11 @@ Created by Dallas McNeil
         <button title="Save video as file" id="savePreview" onclick="savePreview()">Save Video</button>
     </div>
         
+    <div id="dialogShowInfo">
+        <button id="closeShowInfo" class="cross" onclick="closeShowInfo()"></button><br>
+        <p id="messageShowInfo">Hello World!</p>
+    </div>
+        
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
         <button title="Import into selected session" id="importCSTimer" onclick="importCSTime(true)">Import</button>
@@ -198,6 +203,8 @@ Created by Dallas McNeil
                     <p title="Time replaced with 'Solve' while solving"><input type="checkbox" name="hideTiming" class="checkbox">Hide Timer While Solving</p>
                     <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
                     <p title="15s of inspection before solving"><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
+                    <p title="Use primary mouse button to use timer, like spacebar, with cursor over background"><input type="checkbox" name="useMouse" class="checkbox">Use Mouse For Timer</p>
+                    
                     <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
                     <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
                     <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH Split Keys</p>

@@ -145,7 +145,7 @@ body {
     text-align: right;
     font-size:4vh;
     line-height:4vh;
-    max-width:calc(95vw - 250px);
+    max-width:calc(100vw - 320px);
     max-height:30vh;
     color:#C0C0C0;
     font-family: workSansLight;
@@ -158,7 +158,7 @@ body {
 #stats {
     display: block;
     position: absolute;
-    width: 254px;
+    width: 284px;
     left:10px;
     top:10px;
     background-color: rgba(0,0,0,0);
@@ -223,7 +223,7 @@ button:active {
     padding: 0px;
     position: absolute;
     top:40px;
-    left:210px;
+    left:240px;
 }
 
 #preferencesButton,#previewButton {
@@ -250,13 +250,13 @@ button:active {
 }
 
 #newSessionButton {
-    width:118px;
+    width:133px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
 #deleteSessionButton {
-    width:118px;
+    width:133px;
     margin-bottom: 10px;
 }
 
@@ -296,7 +296,7 @@ button.disabled:active {
 
 select {
     -webkit-appearance: none;
-    width: 250px;
+    width: 280px;
     height: 30px;
     border-color:#606060;
     border-width:2px;
@@ -322,7 +322,7 @@ select:hover {
 }
 
 #sessionSelect {
-    width:210px;
+    width:240px;
     position: absolute;
     top:40px;
     left:0px;
@@ -335,7 +335,7 @@ select:hover {
 }
 
 input[type="text"] {
-    width: 197px;
+    width: 227px;
     height: 24px;
     border-color:#606060;
     border-width:2px;
@@ -362,14 +362,14 @@ input[type="text"] {
 }
 
 #sessionSolvesTable {
-    width:250px;
+    width:280px;
     border-collapse: collapse;
     border: 2px solid #606060;
     transition:0.1s;
 }
 
 #sessionDetails {
-    width:250px;
+    width:280px;
     border-collapse: collapse;
     border: 2px solid #606060;
     border-bottom: 0;
@@ -377,7 +377,7 @@ input[type="text"] {
 } 
 
 #sessionStats {
-    width:250px;
+    width:280px;
     border-collapse: collapse;
     border: 2px solid #606060;
     border-top:0;
@@ -386,7 +386,7 @@ input[type="text"] {
 
 #sessionRecordsContainer {
     margin-top: 10px;
-    width:248px;
+    width:278px;
     border: 1px solid #606060;
     max-height:calc(100vh - 380px);
     display: block;
@@ -395,7 +395,7 @@ input[type="text"] {
 }
 
 #sessionRecords {
-    width:240px;
+    width:270px;
     border-collapse: collapse;
     overflow:auto;
     display: block;
@@ -434,12 +434,12 @@ table td:first-child {
 }
 
 #sessionDetails td:first-child {
-    width:125px;
+    width:140px;
     font-family: workSans;
 }
 
 #sessionDetails td:nth-child(2) {
-    width:125px;
+    width:140px;
     font-family: workSans;
 }
 
@@ -455,20 +455,20 @@ table td:first-child {
     width:70px;
 }
 #sessionStats td:nth-child(2) {
-    width:90px;
+    width:105px;
 }
 #sessionStats td:nth-child(3) {
-    width:90px;
+    width:105px;
 }
 
 #sessionRecords td:first-child {
-    width:25px;
+    width:28px;
     margin-left: 0px;
     margin-right:0px;
 }
 
 #sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
-    width:73px;
+    width:82px;
     cursor:pointer;
 }
 
@@ -477,10 +477,10 @@ table td:first-child {
 }    
 
 #sessionRecords td:nth-child(3) {
-    width:73px;
+    width:82px;
 }
 #sessionRecords td:nth-child(4) {
-    width:73px;
+    width:82px;
 }
 
 td p {
@@ -500,6 +500,11 @@ td p {
 
 #sessionRecords tr:first-child td:hover {
     background: #303030;
+}
+
+.selectable:hover, .selectable p:hover {
+    background: #202020;
+    cursor: pointer;
 }
 
 #addTimeButton {
@@ -522,7 +527,7 @@ td p {
     cursor:default;
 }
 
-#dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
+#dialogShowInfo, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -539,6 +544,21 @@ td p {
 #dialogCSTimer,#dialogAddTime {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+#messageShowInfo {
+    margin:0px;
+    -webkit-user-select:text;
+    margin-top:30px;
+    width:616px;
+    padding:10px;
+    max-height: 365px;
+    overflow-y:scroll;
+    user-select:text;
+    cursor:text;
+    border-top-width:2px;
+    border-top-style: solid;
+    border-top-color: #505050;
 }
 
 #dialogPreferences select {
@@ -560,7 +580,7 @@ td p {
     float:left;
 }
 
-#closePreferences ,#closePreview {
+#closePreferences ,#closePreview,#closeShowInfo {
     display: block;
     margin-top:10px;
     margin-right: 10px;
@@ -617,7 +637,7 @@ td p {
     overflow-y: scroll;
     word-wrap:normal;
     max-width: 193px;
-    max-height: 68px;
+    max-height: 88px;
 }
 
 input[type="checkbox"] {
