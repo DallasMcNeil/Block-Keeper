@@ -108,13 +108,30 @@ var currentRecord = 0
 
 // Save events to a file
 function saveSessions() {
-    /*fs.writeFile(app.getAppPath()+"/data/puzzles.json", JSON.stringify({puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value}), function(error) {
+    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {if (error) {console.log(error)}})
+
+}
+
+// Save events to a seperate backup file
+function closeApp() {
+    console.log("Closing 2")
+    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {
         if (error) {
             console.log(error)
         }
-    })*/
-    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {if (error) {console.log(error)}})
+        console.log("Closing 4")
+        letClose = true
+        remote.getCurrentWindow().close();
+    })
+}
 
+var letClose = false
+window.onbeforeunload = function (e) {
+    console.log("Closing 1")
+    if (!letClose) {
+        closeApp()
+        return false
+    }
 }
 
 // Merge two sets of events, overriding x with y
@@ -201,21 +218,60 @@ function loadSessions() {
         setPuzzleOptions()
         setPuzzle()
     }
-    
-    //fs.readFile(app.getAppPath()+"/data/puzzles.json",function (err,data) {
-        //if (err) {
-            // Look in default location, if data hasn't been setup in data folder yet
-            storage.get("puzzles",function(error,object) {
-                if (error) {
-                    saveSessions()
+
+
+    var load = function() {
+        storage.get("puzzles",function(error,object) {
+            if (error) {
+                storage.get("puzzlesBackup",function(error,object) {
+                    if (error) {
+                         if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                            letClose = true
+                            remote.getCurrentWindow().close();
+                         } else {
+                             setup({})
+                         }
+                    } else {
+                        setup(object)
+                        alert("Sessions were restored from backup. Some recent records may be missing.")
+                    }
+                })
+            } else {
+                setup(object)
+            }
+        })
+    }
+    var loadBackup = function() {
+       storage.get("puzzlesBackup",function(error,object) {
+            if (error) {
+                 if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                     //QUIT
+                 } else {
+                     saveSessions()
+                 }
+            } else {
+                alert("Sessions were restored from backup. Some recent records may be missing.")
+                setup(object)
+            }
+        })
+    }
+    storage.has("puzzles", function(error, hasKey) {
+        console.log(error)
+        console.log(hasKey)
+        if (hasKey) {
+            load()
+        } else {
+            storage.has("puzzlesBackup", function(error, hasKey) {
+                console.log(error)
+                console.log(hasKey)
+                if (hasKey) {
+                    loadBackup()
                 } else {
-                    setup(object)
+                    setup({})
                 }
             })
-        /*} else {
-            setup(JSON.parse(data))
         }
-    })*/
+    })
 }
 
 // Create a new session in current event
