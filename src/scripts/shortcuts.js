@@ -5,7 +5,7 @@
 
 // Recieve shortcuts and perform the acording actions
 require('electron').ipcRenderer.on('shortcut', function(event, message) { 
-    if (timerState == "normal") {
+    if (timerState == "normal"&&!preferencesOpen) {
         if (message=="CommandOrControl+1") {
             currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length-1
             recordResultOK()

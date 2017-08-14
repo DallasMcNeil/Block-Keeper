@@ -58,7 +58,7 @@ const template = [{
     role: 'help',
     submenu: [
         { label: 'Block Keeper Guide',
-        click () { require('electron').shell.openExternal('http://dallasmcneil.com/projects/blockkeeper/guide')}}]
+        click () { require('electron').shell.openExternal('https://dallasmcneil.com/projects/blockkeeper/guide')}}]
 }]
 
 if (process.platform === 'darwin') {

@@ -114,12 +114,10 @@ function saveSessions() {
 
 // Save events to a seperate backup file
 function closeApp() {
-    console.log("Closing 2")
     storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {
         if (error) {
             console.log(error)
         }
-        console.log("Closing 4")
         letClose = true
         remote.getCurrentWindow().close();
     })
@@ -127,7 +125,6 @@ function closeApp() {
 
 var letClose = false
 window.onbeforeunload = function (e) {
-    console.log("Closing 1")
     if (!letClose) {
         closeApp()
         return false
@@ -256,14 +253,10 @@ function loadSessions() {
         })
     }
     storage.has("puzzles", function(error, hasKey) {
-        console.log(error)
-        console.log(hasKey)
         if (hasKey) {
             load()
         } else {
             storage.has("puzzlesBackup", function(error, hasKey) {
-                console.log(error)
-                console.log(hasKey)
                 if (hasKey) {
                     loadBackup()
                 } else {
@@ -328,7 +321,7 @@ function createRecord(time,result) {
             }
         }
         
-        if (time<btime&&btime!=-1) {
+        if (time<btime&&btime!=-1&&result!="DNF") {
             // New PB, launch the confetti
             $("#announcement").animate({opacity:1},500)
             $("#confetti").animate({opacity:1},500)

@@ -73,7 +73,12 @@ window.onkeydown = function(e) {
     } else {
         if (e.key == mainKey) {
             mainDown = true
+        } else if (e.key == "Escape") {
+            if (timerState == "inspecting"||timerState == "readyInspection") {
+                cancelTimer()
+            }
         }
+        
     }
 
     if(e.keyCode == 32 && !sessionButtonsShowing) {
@@ -462,7 +467,7 @@ function SMCallback(state) {
         if (state.on) {
         switch (timerState) {
             case "normal":      
-                if (mainDown) {
+                if (mainDown&&inspectionEnabled) {
                     readyInspection()
                 }
                 if (!preferencesOpen && !sessionButtonsShowing) {

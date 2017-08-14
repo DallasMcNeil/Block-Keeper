@@ -21,7 +21,7 @@ If you encounter any bugs, issues or want to suggest any improvements, please le
 
 ## Documentation
 
-An extensive guide for using Block Keeper is available [here](http://dallasmcneil.com/projects/blockkeeper/guide).
+An extensive guide for using Block Keeper is available [here](https://dallasmcneil.com/projects/blockkeeper/guide).
   
 ## Download
 
@@ -63,7 +63,7 @@ A debug console is available to use for debugging and other purposes. In `src/ma
 
 ## Contributors
 
-Dallas McNeil ([dallasmcneil.com](http://dallasmcneil.com))
+Dallas McNeil ([dallasmcneil.com](https://dallasmcneil.com))
 
 James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
 
