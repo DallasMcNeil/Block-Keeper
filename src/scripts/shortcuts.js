@@ -31,7 +31,7 @@ require('electron').ipcRenderer.on('shortcut', function(event, message) {
             scramble()
         } else if (message=="CommandOrControl+T") {
             showTimeDialog()
-        } else if (message=="CommandOrControl+P") {
+        } else if (message=="CommandOrControl+,") {
             openPreferences()
         } else if (message=="CommandOrControl+R") {
             if (hasVideo && preferences.recordSolve && !videoLoading) {

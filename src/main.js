@@ -71,7 +71,7 @@ if (process.platform === 'darwin') {
         {
         type: 'separator'
         },
-        {label: "Preferences...", accelerator: "CmdOrCtrl+P",click () {win.webContents.send('shortcut', 'CommandOrControl+P')}}
+        {label: "Preferences...", accelerator: "CmdOrCtrl+,",click () {win.webContents.send('shortcut', 'CommandOrControl+,')}}
         ,{
         type: 'separator'
         }, 
