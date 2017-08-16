@@ -8,6 +8,7 @@ var remote = require('electron').remote;
 const {remote:{dialog}} = require('electron');
 var fs = require('fs');
 const {clipboard} = require('electron')
+const app = remote.app
 
 // Default preferences overrided by loaded preferences
 var preferences = {
@@ -25,15 +26,18 @@ var preferences = {
     voice:"none",
     formatTime:true,
     recordSolve:false,
-    MBLDscramlbes:10,
     endSplit:false,
     stackmat:false,
     leftKey:"z",
     rightKey:"/",
+    OHSplit:false,
     scrambleSize:4,
     backgroundImage:"",
     autosaveLocation:"",
-    timerDelay:0.55
+    timerDelay:0.55,
+    scrambleAlign:"right",
+    showBestTime:true,
+    useMouse:false
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
@@ -45,9 +49,17 @@ timerText.innerHTML = (0).toFixed(preferences.timerDetail)
 
 // Saves preferences to file
 function savePreferences() {
+    /*fs.writeFile(app.getAppPath()+"/data/preferences.json", JSON.stringify(preferences), function(err) {
+        if (err) {
+            return console.log(err);
+        }
+    })*/
     storage.set("preferences",preferences,function(error){})
     setStylesheet()
     $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")') 
+    $("#scramble").css("text-align",preferences.scrambleAlign)
+    $("#scramble").css("font-size",preferences.scrambleSize+"vh")
+    $("#scramble").css("line-height",preferences.scrambleSize+"vh")
     
     if (preferences.voice != "none") {
         s7voice = new Audio("sounds/"+preferences.voice+"8s.mp3")
@@ -57,52 +69,68 @@ function savePreferences() {
 
 // Loads preferences from file and fills in preferences forms
 function loadPreferences() {
-    storage.get("preferences",function(error,object) {
-        if (!error) {
-            preferences = Object.assign({},preferences,object)
-            setStylesheet()
-            savePreferences()
-            
-            if (!isNaN(parseInt(preferences.theme))||preferences.theme == "custom") {
-                preferencesInterface.theme.value = preferences.theme
-            } else {
-                preferencesInterface.theme.value = 0
-            }
-            
-            preferencesTimer.inspection.checked = preferences.inspection
-            preferencesTimer.splitMode.checked = preferences.split
-            preferencesTimer.endSplit.checked = preferences.endSplit
-            preferencesTimer.timerDetail.value = preferences.timerDetail
-            preferencesTimer.hideTiming.checked = preferences.hideTiming
-            preferencesTimer.recordSolve.checked = preferences.recordSolve
-            preferencesTimer.voice.value = preferences.voice
-            preferencesTimer.formatTime.checked = preferences.formatTime
-            preferencesTimer.stackmat.checked = preferences.stackmat
-            preferencesTimer.leftKey.value = preferences.leftKey  
-            preferencesTimer.rightKey.value = preferences.rightKey 
-            preferencesInterface.MBLDscramlbes.value = preferences.MBLDscramlbes+""
-            preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
-            preferencesInterface.backgroundImage.value = preferences.backgroundImage
-            preferencesTimer.timerDelay.value = preferences.timerDelay
-            preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
-                
-            timerText.innerHTML = (0).toFixed(preferences.timerDetail)
-            writeTheme(preferences.customTheme) 
-            $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
-     
-            if (preferences.stackmat) {
-                stackmat.init()
-                stackmat.setCallBack(SMCallback)
-            }
-            
-            if (preferences.recordSolve) {
-                setupRecorder()
-            }
-            
+    var setup = function () {
+        setStylesheet()
+        savePreferences()
+
+        if (!isNaN(parseInt(preferences.theme))||preferences.theme == "custom") {
+            preferencesInterface.theme.value = preferences.theme
         } else {
-            savePreferences()
+            preferencesInterface.theme.value = 0
         }
-    })
+
+        preferencesTimer.inspection.checked = preferences.inspection
+        preferencesTimer.splitMode.checked = preferences.split
+        preferencesTimer.endSplit.checked = preferences.endSplit
+        preferencesTimer.timerDetail.value = preferences.timerDetail
+        preferencesTimer.hideTiming.checked = preferences.hideTiming
+        preferencesTimer.recordSolve.checked = preferences.recordSolve
+        preferencesTimer.voice.value = preferences.voice
+        preferencesTimer.formatTime.checked = preferences.formatTime
+        preferencesTimer.stackmat.checked = preferences.stackmat
+        preferencesTimer.leftKey.value = preferences.leftKey  
+        preferencesTimer.rightKey.value = preferences.rightKey 
+        preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
+        preferencesInterface.backgroundImage.value = preferences.backgroundImage
+        preferencesTimer.timerDelay.value = preferences.timerDelay
+        preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+        preferencesTimer.OHSplit.checked = preferences.OHSplit
+        preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+        preferencesInterface.showBestTime.checked = preferences.showBestTime
+        preferencesTimer.useMouse.checked = preferences.useMouse
+
+        timerText.innerHTML = (0).toFixed(preferences.timerDetail)
+        writeTheme(preferences.customTheme) 
+        $("#centreBackground").css("background-image",'url("'+preferences.backgroundImage+'")')
+        $("#scramble").css("text-align",preferences.scrambleAlign)
+
+        if (preferences.stackmat) {
+            stackmat.init()
+            stackmat.setCallBack(SMCallback)
+        }
+
+        if (preferences.recordSolve) {
+            setupRecorder()
+        }
+    }
+    
+    //fs.readFile(app.getAppPath()+"/data/preferences.json",function (err,data) {
+    //    if (err) {
+            // Look in default location, if data hasn't been setup in data folder yet
+            storage.get("preferences",function(error,object) {
+                if (error) {
+                    savePreferences()
+                } else {
+                    preferences = Object.assign({},preferences,object)
+                }
+                setup()
+            })
+    /*    } else {
+            var object = JSON.parse(data)
+            preferences = Object.assign({},preferences,object)
+            setup()
+        }
+    })*/
 }
 
 // Initialise preferences dialog
@@ -170,7 +198,6 @@ function closePreferences() {
     preferencesTimer.voice.value = preferences.voice
     preferencesTimer.formatTime.checked = preferences.formatTime
     preferencesTimer.recordSolve.checked = preferences.recordSolve
-    preferencesInterface.MBLDscramlbes.value = preferences.MBLDscramlbes
     preferencesTimer.timerDelay.value = preferences.timerDelay
     preferencesTimer.stackmat.checked = preferences.stackmat  
     preferencesTimer.leftKey.value = preferences.leftKey  
@@ -178,7 +205,11 @@ function closePreferences() {
     preferencesInterface.scrambleSize.value = preferences.scrambleSize
     preferencesInterface.backgroundImage.value = preferences.backgroundImage
     preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
-            
+    preferencesTimer.OHSplit.checked = preferences.OHSplit
+    preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
+    preferencesInterface.showBestTime.checked = preferences.showBestTime
+    preferencesTimer.useMouse.checked = preferences.useMouse
+                      
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
@@ -189,6 +220,7 @@ function closePreferences() {
     }
     
     timerText.innerHTML = (0).toFixed(preferences.timerDetail)
+       
     $("#dialogPreferences").dialog("close")
     $("#stats").removeClass("disabled")
     $("#timer").removeClass("disabled")
@@ -226,12 +258,15 @@ function savePreferencesForm() {
     preferences.voice = preferencesTimer.voice.value
     preferences.formatTime = preferencesTimer.formatTime.checked
     preferences.recordSolve = preferencesTimer.recordSolve.checked
-    preferences.MBLDscramlbes = preferencesInterface.MBLDscramlbes.value
     preferences.stackmat = preferencesTimer.stackmat.checked 
     preferences.scrambleSize = preferencesInterface.scrambleSize.value 
     preferences.backgroundImage = preferencesInterface.backgroundImage.value
     preferences.timerDelay = preferencesTimer.timerDelay.value
     preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
+    preferences.OHSplit = preferencesTimer.OHSplit.checked 
+    preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
+    preferences.showBestTime = preferencesInterface.showBestTime.checked
+    preferences.useMouse = preferencesTimer.useMouse.checked
             
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
@@ -379,6 +414,8 @@ function importCS() {
             $("#tool").prop('disabled', true)
             $("#toolSelect").addClass("disabled")
             $("#tool").addClass("disabled")
+            $("#addTimeButton").prop('disabled', true)
+            $("#addTimeButton").addClass("disabled")
                 
             $("#dialogCSTimer").dialog("open")
 
@@ -406,32 +443,39 @@ var currentCS = 0
 
 // Imports csTimer session into selected event
 function importCSTime(doImport) {
-    if (doImport) {
-        createSession()
-        puzzles[currentPuzzle].sessions[currentSession].name = "csTimer Import"
-        for (var i=0;i<CSData[currentCS].length;i++) {
-            if (CSData[currentCS][i][0][0] == 0) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"OK")
-            } else if (CSData[currentCS][i][0][0] == 2000) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"+2")
-            } else if (CSData[currentCS][i][0][0] == -1) {
-                createRecord(CSData[currentCS][i][0][1]/1000,"DNF")
-            } else {
-                break
-            }
-            puzzles[currentPuzzle].sessions[currentSession].records[i].scramble = CSData[currentCS][i][1]
-        }
-        updateSessions()
-        currentCS++
-    }
     if (currentCS < CSData.length) {
-        var str = (CSData[currentCS][0][0][1]/1000)
-        if ((CSData[currentCS][0][0][0] == 2000)) {
-            str = ((CSData[currentCS][0][0][1]/1000)+2)+"+"
-        } else if ((CSData[currentCS][0][0][0] == -1)) {
-            str = "DNF ("+(CSData[currentCS][0][0][1]/1000)+")"
+        if (doImport) {
+            createSession()
+            puzzles[currentPuzzle].sessions[currentSession].name = "csTimer Import"
+            disableUpdate = true
+            for (var i=0;i<CSData[currentCS].length;i++) {
+                if (CSData[currentCS][i][0][0] == 0) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"OK")
+                } else if (CSData[currentCS][i][0][0] == 2000) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"+2")
+                } else if (CSData[currentCS][i][0][0] == -1) {
+                    createRecord(CSData[currentCS][i][0][1]/1000,"DNF")
+                } else {
+                    break
+                }
+                puzzles[currentPuzzle].sessions[currentSession].records[i].scramble = CSData[currentCS][i][1]
+            }
+            disableUpdate = false
+            updateSessions()
+            currentCS++
         }
-        $("#messageCSTimer").prop("innerHTML","Session begins with following time<br><br>"+str+"<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.")
+        if (CSData[currentCS].length > 0) {
+            var str = (CSData[currentCS][0][0][1]/1000)
+            if ((CSData[currentCS][0][0][0] == 2000)) {
+                str = ((CSData[currentCS][0][0][1]/1000)+2)+"+"
+            } else if ((CSData[currentCS][0][0][0] == -1)) {
+                str = "DNF ("+(CSData[currentCS][0][0][1]/1000)+")"
+            }
+            $("#messageCSTimer").prop("innerHTML","Session begins with following time<br><br>"+str+"<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.")
+        } else {
+            currentCS++
+            importCSTime(false)
+        }
     } else {
         preferencesOpen = false
         $("#dialogCSTimer").dialog("close")
@@ -461,7 +505,9 @@ function importCSTime(doImport) {
         $("#tool").prop('disabled', false)
         $("#toolSelect").removeClass("disabled")
         $("#tool").removeClass("disabled")
-        
+        $("#addTimeButton").prop('disabled', false)
+        $("#addTimeButton").removeClass("disabled")
+                
         if (hasVideo && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
@@ -516,7 +562,7 @@ function exportPretty() {
         str += "\n"+document.getElementById("sessionSD").innerHTML
 
         for (var r=0;r<puzzles[currentPuzzle].sessions[currentSession].records.length;r++) {
-            str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+            str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scrambletrim()+")"
         }
         
         str = str.replace(new RegExp("<b>", 'g'),"").replace(new RegExp("</b>", 'g'),"").replace(new RegExp("<br>", 'g'),"\n")

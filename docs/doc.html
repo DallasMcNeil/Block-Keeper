@@ -62,8 +62,8 @@
 <li>Median: Middle time of all valid solves in order.</li>
 <li>Standard Deviation: Rough measure of average distance from mean time any time is.</li>
 </ul></li>
-<li>Best and Current: Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100</li>
-<li>Records Table: Ordered table of records presenting times of solves. A <code>+</code> on the end of a time indicates a <code>+2</code> time penalty which is already added to the time and a <code>DNF</code> indicates a <code>DNF</code> penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A <code>-</code> indicates that there are not enough solves to calculate a Ao5 or Ao12</li>
+<li>Best and Current: Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result.</li>
+<li>Records Table: Ordered table of records presenting times of solves. A <code>+</code> on the end of a time indicates a <code>+2</code> time penalty which is already added to the time and a <code>DNF</code> indicates a <code>DNF</code> penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A <code>-</code> indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking any average results will present the list of times and scrambles used to generate the average.</li>
 <li>Add Time: Shows dialog with option to add custom time to session</li>
 <li>Solve Details: Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely</li>
 </ol>
@@ -103,10 +103,14 @@
 <td>Create new session</td>
 </tr>
 <tr class="odd">
+<td><code>CTRL + S</code></td>
+<td>Generate a new scramble</td>
+</tr>
+<tr class="even">
 <td><code>CTRL + E</code></td>
 <td>Edit current Session</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>CTRL + R</code></td>
 <td>View video recording of last solve</td>
 </tr>
@@ -145,7 +149,7 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>Command + P</code></td>
+<td><code>Command + ,</code></td>
 <td>Open preferences</td>
 </tr>
 <tr class="even">
@@ -186,6 +190,7 @@
 <li>Drawn Scramble: Shows the current scramble for the current event applied to a solved puzzle. Some events such as Skewb and MBLD are not supported.</li>
 <li>Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.</li>
 <li>Event Trend: Shows a trend-line of session stats within the currently selected event for best time, best Ao5 and mean. This shows your progress in an event.</li>
+<li>Event Statistics: Shows a table of current and best time, Mo3, Ao5, Ao12 and session means for the current event.</li>
 <li>Distribution: Shows a histogram of times within the currently selected session, showing the number of times within certain ranges.</li>
 </ul>
 <h2 id="preferences">Preferences</h2>
@@ -197,19 +202,22 @@
 <li>Hide Timer While Solving: Current time during solve is replaced with <code>solve</code>, hiding the time</li>
 <li>Format Time: Times shown throughout the application will have a format of <code>mm:ss</code> rather than just seconds (e.g <code>1:34.23</code> instead of <code>94.23</code>)</li>
 <li>WCA Inspection: Enable WCA inspection before solve. See the Timer Operation section</li>
+<li>Use Mouse for Timer: Use primary mouse button like <code>spacebar</code> to control the timer by clicking on timer</li>
 <li>Split Timer Controls: Use 2 specific keys rather than the <code>spacebar</code> to operate the timer. See the Timer Operation section</li>
 <li>Stop Timer with Split Keys: Require both split keys to be pressed to stop the timer rather than any key</li>
+<li>OH Split Keys: Enable split keys for the 3x3x3 OH event and require one key to be held down during a solve or receive a <code>DNF</code> penalty</li>
 <li>Use Stackmat Timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognise your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see <a href="https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/">here</a></li>
 <li>Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section</li>
 <li>Video Autosave Location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.</li>
 </ul>
 <h3 id="interface-1">Interface</h3>
 <ul>
-<li>MBLD Scrambles: Set the number of multi-blindfolded scrambles to show when the event is selected</li>
+<li>Announce Best Time: When best time for event is beaten, displays <code>New Best Time!</code> under timer and causes confetti to fall.</li>
 <li>Scramble Font Size: Set the arbitrary font size of scrambles presented</li>
-<li>Background Image: Specify a path to an image file which will be shown in the background. Image can be a .png and include transparency. Optionally the Select Image button will present a dialog to find an image using a file browser</li>
+<li>Scramble Text Alignment: Set text alignment of scramble text to left, right of center.</li>
+<li>Background Image: Specify a path to an image file which will be shown in the background. Image can be a .png and include transparency to the standard background. Optionally the Select Image button will present a dialog to find an image using a file browser.</li>
 <li>Theme: Set color scheme of the application to predefined options or set to custom to use defined color scheme</li>
-<li>Custom Theme Colors: Specify the color of specific UI elements. All colors specified should be in hexadecimal form (e.g <code>#FF0000</code> for red), rgb form (e.g <code>rgb(255,0,0)</code> for red) or rgba form (e.g <code>rgb(255,0,0,0.5)</code> for red at half opacity). If any values have been input incorrectly, the default theme (Dark) will be used.</li>
+<li>Custom Theme Colors: Specify the color of specific UI elements. All colors specified should be in hexadecimal form (e.g <code>#FF0000</code> for red), rgb form (e.g <code>rgb(255,0,0)</code> for red) or rgba form (e.g <code>rgba(255,0,0,0.5)</code> for red at half opacity). If any values have been input incorrectly, the default theme (Dark) will be used.</li>
 </ul>
 <h3 id="importexport">Import/Export</h3>
 <ul>

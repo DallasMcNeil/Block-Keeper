@@ -1,3 +1,4 @@
 #!/bin/bash
 mkdir release
+
 src/node_modules/.bin/electron-packager src "Block Keeper" --icon="icons/BlockKeeper" --out="release" --overwrite

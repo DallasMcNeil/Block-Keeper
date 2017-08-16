@@ -51,6 +51,9 @@ function averageTimes(times) {
 // Get the mean of all times
 function meanTimes(times) {
     var sum = 0
+    if (times.length == 0) {
+        return -1;
+    }
     for( var i = 0; i < times.length; i++ ){
         sum = sum + times[i]
         if (times[i] == -1) {
@@ -89,29 +92,43 @@ var puzzles = [{name:"3x3x3",sessions:[],scramble:scramble3x3},
                
                {name:"3x3x3 OH",sessions:[],scramble:scramble3x3},
                {name:"3x3x3 BLD",sessions:[],scramble:scramble3x3BLD},
-               {name:"3x3x3 MBLD",sessions:[],scramble:scramble3x3MBLD},
                {name:"4x4x4 BLD",sessions:[],scramble:scramble4x4},
                {name:"5x5x5 BLD",sessions:[],scramble:scramble5x5},
                {name:"3x3x3 FT",sessions:[],scramble:scramble3x3},
-               {name:"3x3x3 FM",sessions:[],scramble:scramble3x3},
                
                {name:"Other",sessions:[],scramble:scrambleNone},
              ]
 
 // Set the scamble function for each event
-var scrambleFunctions = [scramble3x3,scramble2x2,scramble4x4,scramble5x5,scramblePyraminx,scrambleSkewb,scrambleMegaminx,scrambleSquare1,scramble3x3,scramble3x3BLD,scrambleClock,scramble6x6,scramble7x7,scramble3x3MBLD,scramble4x4,scramble5x5,scramble3x3,scramble3x3,scrambleNone] 
+var scrambleFunctions = [scramble3x3,scramble2x2,scramble4x4,scramble5x5,scramblePyraminx,scrambleSkewb,scrambleMegaminx,scrambleSquare1,scramble3x3,scramble3x3BLD,scrambleClock,scramble6x6,scramble7x7,,scramble4x4,scramble5x5,scramble3x3,scrambleNone] 
 var currentPuzzle = 0
 var currentSession = 0
 var currentRecord = 0
 
-// Save events to file
+
+// Save events to a file
 function saveSessions() {
-    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {console.log(error)})
+    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {if (error) {console.log(error)}})
+
 }
 
-// Save events to a second file which isn't read
-function saveBackup() {
-    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error){})
+// Save events to a seperate backup file
+function closeApp() {
+    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {
+        if (error) {
+            console.log(error)
+        }
+        letClose = true
+        remote.getCurrentWindow().close();
+    })
+}
+
+var letClose = false
+window.onbeforeunload = function (e) {
+    if (!letClose) {
+        closeApp()
+        return false
+    }
 }
 
 // Merge two sets of events, overriding x with y
@@ -153,38 +170,99 @@ function mergeSessions(x,y) {
 
 // Load session from file
 function loadSessions() {
-    storage.has("puzzles",function(error) {
-        if (!error) {
-            storage.get("puzzles",function(error,object) {
-                if (error) {
-                    // TODO investigate load management
-                } else {
-                    if (object.puzzles != null) {
-                        if (object.puzzles.length != 0) {
-                            puzzles = mergeSessions(puzzles,object.puzzles)
-                        }
-                    }
-                    if (object.puzzle != null) {
-                        currentPuzzle = object.puzzle
-                        if (currentPuzzle >= puzzles.length) {
-                            currentPuzzle = 0
-                        }
-                    }
-                    if (object.session != null) {
-                        currentSession = object.session
-                        if (currentSession >= puzzles[currentPuzzle].sessions.length) {
-                            currentSession = 0
-                        }
-                    }
-                    if (object.tool != null) {
-                        toolSelect.value = object.tool
-                    }
+    var setup = function (object) {
+        if (object.puzzles != null) {
+            if (object.puzzles.length != 0) {
+                puzzles = mergeSessions(puzzles,object.puzzles)
+            }
+        }
+
+        // Remove MBLD and FM if they are empty
+        for (var i=0;i<puzzles.length;i++) {
+            if (puzzles[i].name=="3x3x3 MBLD") {
+                if (puzzles[i].sessions.length == 0) {
+                    puzzles.splice(i,1)
+                    break
                 }
-                setPuzzleOptions()
-                setPuzzle()
-            })
+            }
+        }
+        for (var i=0;i<puzzles.length;i++) {
+            if (puzzles[i].name=="3x3x3 FM") {
+                if (puzzles[i].sessions.length == 0) {
+                    puzzles.splice(i,1)
+                    break
+                }
+            }
+        }
+
+
+        if (object.puzzle != null) {
+            currentPuzzle = object.puzzle
+            if (currentPuzzle >= puzzles.length) {
+                currentPuzzle = 0
+            }
+        }
+        if (object.session != null) {
+            currentSession = object.session
+            if (currentSession >= puzzles[currentPuzzle].sessions.length) {
+                currentSession = 0
+            }
+        }
+        if (object.tool != null) {
+            toolSelect.value = object.tool
+        }
+    
+        setPuzzleOptions()
+        setPuzzle()
+    }
+
+
+    var load = function() {
+        storage.get("puzzles",function(error,object) {
+            if (error) {
+                storage.get("puzzlesBackup",function(error,object) {
+                    if (error) {
+                         if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                            letClose = true
+                            remote.getCurrentWindow().close();
+                         } else {
+                             setup({})
+                         }
+                    } else {
+                        setup(object)
+                        alert("Sessions were restored from backup. Some recent records may be missing.")
+                    }
+                })
+            } else {
+                setup(object)
+            }
+        })
+    }
+    var loadBackup = function() {
+       storage.get("puzzlesBackup",function(error,object) {
+            if (error) {
+                 if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                     //QUIT
+                 } else {
+                     saveSessions()
+                 }
+            } else {
+                alert("Sessions were restored from backup. Some recent records may be missing.")
+                setup(object)
+            }
+        })
+    }
+    storage.has("puzzles", function(error, hasKey) {
+        if (hasKey) {
+            load()
         } else {
-            saveSessions()
+            storage.has("puzzlesBackup", function(error, hasKey) {
+                if (hasKey) {
+                    loadBackup()
+                } else {
+                    setup({})
+                }
+            })
         }
     })
 }
@@ -223,13 +301,63 @@ function deleteSession() {
     }
 }
 
+var disableUpdate = false
 // Create a record in the current session
 function createRecord(time,result) {
+    // Find best time
+    if (!disableUpdate&&preferences.showBestTime) {
+        var btime = -1
+        for (var s=0;s<puzzles[currentPuzzle].sessions.length;s++) {
+            for (var r=0;r<puzzles[currentPuzzle].sessions[s].records.length;r++) {
+                var t = puzzles[currentPuzzle].sessions[s].records[r].time
+                if (puzzles[currentPuzzle].sessions[s].records[r].result == "+2") {
+                    t=t+2
+                } else if (puzzles[currentPuzzle].sessions[s].records[r].result == "DNF") {
+                    continue
+                }
+                if (t<btime||btime==-1) {
+                    btime = t
+                }
+            }
+        }
+        
+        if (time<btime&&btime!=-1&&result!="DNF") {
+            // New PB, launch the confetti
+            $("#announcement").animate({opacity:1},500)
+            $("#confetti").animate({opacity:1},500)
+            confettiCanvas = Confetti.createCanvas(
+              document.getElementById('background'),
+              document.getElementById('confetti')
+            );
+            confettiCanvas.halt = false;
+            confettiCanvas.canvas.halt = false;
+
+            var particles = Array.apply(null, Array(Math.floor(confettiCanvas.width/8))).map(function (_, i) {return i;}).map(function () {
+              return Confetti.create({
+                x: Confetti.randomFrom(0, confettiCanvas.width),
+                y: Confetti.randomFrom(-confettiCanvas.height, 0),
+                c:Math.floor(Math.random()*6),
+                r: Confetti.randomFrom(10, 30),
+                tilt: Confetti.randomFrom(-10, 10),
+                tiltAngle: 0,
+                tiltAngleIncrement: Confetti.randomFrom(0.05, 0.12, 100)
+              });
+            });
+            confettiCanvas.step(particles, confettiConfig)();
+            setTimeout(function(){
+                $("#announcement").animate({opacity:0},2000)
+                $("#confetti").animate({opacity:0},2000,function(){
+                     confettiCanvas.destroy()
+                })   
+            },5000)
+        }
+    }
     var record = {time:time,scramble:currentScramble,result:result}
     puzzles[currentPuzzle].sessions[currentSession].records.push(record)
     $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER+"px"},100)
-    updateRecords()
-    saveBackup()
+    if (!disableUpdate) {
+        updateRecords()
+    }
 }
 
 // Show time dialog to add a custom time
@@ -295,6 +423,7 @@ function addTime() {
         return
     }
     createRecord(t,"OK")
+    timerText.innerHTML = formatTime(t)
     scramble()
     closeTimeDialog()
 }
@@ -340,18 +469,51 @@ function setSession() {
 
 // Update all records displayed on screen
 function updateRecords() {
+    var debugTime = new Date().getTime()
+ 
     var records = puzzles[currentPuzzle].sessions[currentSession].records
     var length = sessionRecordsTable.rows.length-1
-    for (var i = 0;i<length;i++) {
-        sessionRecordsTable.deleteRow(-1)
+    if (records.length < length) {
+        for (var i = 0;i<length-records.length;i++) {
+            sessionRecordsTable.deleteRow(-1)
+        }
+    } else if (length < records.length) {
+        for (var i = 0;i<records.length-length;i++) {
+            (function () {
+                var row = sessionRecordsTable.insertRow(-1)
+                var cell = row.insertCell(-1)
+                cell.appendChild(document.createElement("p")) 
+                cell = row.insertCell(-1)
+                cell.appendChild(document.createElement("p"))
+                cell = row.insertCell(-1)
+                cell.appendChild(document.createElement("p"))
+                var n = sessionRecordsTable.rows.length-1
+                if (n>4) {
+                    cell.className+=" selectable"
+                }
+                cell.onclick = function(){
+                    openShowInfo("Ao5",n);
+                }   
+                cell = row.insertCell(-1)
+                if (n>11) {
+                    cell.className+=" selectable"
+                }
+                cell.appendChild(document.createElement("p"))  
+                cell.onclick = function(){
+                    openShowInfo("Ao12",n);
+                } 
+            }())
+        }
     }
-    var times = []
-    var mo3s = []
-    var ao5s = []
-    var ao12s = []
-    var ao50s = []
-    var ao100s = []
+
+    var times = records.length>0 ? new Array(records.length) : []
+    var mo3s = records.length>2 ? new Array(records.length-2) : []
+    var ao5s = records.length>4 ? new Array(records.length-4) : []
+    var ao12s = records.length>11 ? new Array(records.length-11) : []
+    var ao50s = records.length>49 ? new Array(records.length-49) : []
+    var ao100s = records.length>99 ? new Array(records.length-99) : []
     var DNFsolves = 0
+
     for (var i = 0;i<records.length;i++) {
         if (records[i].result != "DNF") {
             DNFsolves++
@@ -362,67 +524,55 @@ function updateRecords() {
         } else if (records[i].result == "+2") {
             tResult=tResult+2
         }
-        times.push(tResult)
+        times[i] = tResult
         var ao5t = "-"
         var ao12t = "-"
         if (i >= 2) {
-            mo3s.push(meanTimes(times.slice(-3,times.length)))
+            mo3s[i-2] = (meanTimes(times.slice(i-2,i+1)))
         }
         if (i >= 4) {
-            ao5s.push(averageTimes(times.slice(-5,times.length)))
-            ao5t = ao5s[ao5s.length-1]
+            ao5s[i-4] = (averageTimes(times.slice(i-4,i+1)))
+            ao5t = ao5s[i-4]
         }
         if (i >= 11) {
-            ao12s.push(averageTimes(times.slice(-12,times.length)))
-            ao12t = ao12s[ao12s.length-1]
+            ao12s[i-11] = (averageTimes(times.slice(i-11,i+1)))
+            ao12t = ao12s[i-11]
         }
         if (i >= 49) {
-            ao50s.push(averageTimes(times.slice(-50,times.length)))
+            ao50s[i-49] = (averageTimes(times.slice(i-49,i+1)))
         }
         if (i >= 99) {
-            ao100s.push(averageTimes(times.slice(-100,times.length)))
+            ao100s[i-99] = (averageTimes(times.slice(i-99,i+1)))
         } 
-        var row = sessionRecordsTable.insertRow(-1)
-        var num = row.insertCell(-1)
-        var numP = document.createElement("p")
-        numP.innerHTML = i+1
-        num.appendChild(numP) 
-        
-        var time = row.insertCell(-1)
-        var timeP = document.createElement("p")
+        sessionRecordsTable.rows[i+1].cells[0].children[0].innerHTML = i+1
+
         if (times[i] == -1) {
-            timeP.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = "DNF"
         } else if (records[i].result == "+2") {
-            timeP.innerHTML = formatTime(times[i]) + "+"
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = formatTime(times[i]) + "+"
         } else {
-            timeP.innerHTML = formatTime(times[i])
+            sessionRecordsTable.rows[i+1].cells[1].children[0].innerHTML = formatTime(times[i])
         }
-        time.appendChild(timeP)
         
-        var ao5 = row.insertCell(-1)
-        var ao5P = document.createElement("p")
         if (ao5t == -1) {
-            ao5P.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = "DNF"
         } else if (ao5t == "-") {
-            ao5P.innerHTML = ao5t
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = ao5t
         } else {
-            ao5P.innerHTML = formatTime(ao5t)
+            sessionRecordsTable.rows[i+1].cells[2].children[0].innerHTML = formatTime(ao5t)
         }
-        ao5.appendChild(ao5P)
         
-        var ao12 = row.insertCell(-1)
-        var ao12P = document.createElement("p")
         if (ao12t == -1) {
-            ao12P.innerHTML = "DNF"
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = "DNF"
         } else if (ao12t == "-") {
-            ao12P.innerHTML = ao12t
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = ao12t
         } else {
-            ao12P.innerHTML = formatTime(ao12t)
+            sessionRecordsTable.rows[i+1].cells[3].children[0].innerHTML = formatTime(ao12t)
         }
-        ao12.appendChild(ao12P)
     }
+
     var mean = meanTimes(times.filter(function(t) {return t!=-1}))
-    if (isNaN(mean)) {
+    if (mean == -1) {
         $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(0))
         $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(0))
         $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime(0))
@@ -452,6 +602,10 @@ function updateRecords() {
     name.appendChild(nameP)
 
     var current = row.insertCell(-1)
+    current.className+=" selectable"
+    current.onclick = function(){
+        openShowInfo("Current",1);
+    } 
     var currentP = document.createElement("p")
     if (times.length == 0) {
         currentP.innerHTML = "-"
@@ -463,6 +617,10 @@ function updateRecords() {
     current.appendChild(currentP)
 
     var best = row.insertCell(-1)
+    best.className+=" selectable"
+    best.onclick = function(){
+        openShowInfo("Best",1);
+    } 
     var bestP = document.createElement("p")
     if (times.length == 0) {
         bestP.innerHTML = "-"
@@ -485,6 +643,10 @@ function updateRecords() {
         name.appendChild(nameP)
         
         var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",3);
+        } 
         var currentP = document.createElement("p")
         if (mo3s[mo3s.length-1] == -1) {
             currentP.innerHTML = "DNF"
@@ -494,6 +656,10 @@ function updateRecords() {
         current.appendChild(currentP)
         
         var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",3);
+        } 
         var bestP = document.createElement("p")
         var t = Math.min.apply(null,mo3s.filter(function(t) {return t!=-1}))
         if (t == Infinity) {
@@ -513,6 +679,10 @@ function updateRecords() {
         name.appendChild(nameP)
         
         var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",5);
+        } 
         var currentP = document.createElement("p")
         if (ao5s[ao5s.length-1] == -1) {
             currentP.innerHTML = "DNF"
@@ -522,6 +692,10 @@ function updateRecords() {
         current.appendChild(currentP)
         
         var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",5);
+        } 
         var bestP = document.createElement("p")
         var t = Math.min.apply(null,ao5s.filter(function(t) {return t!=-1}))
         if (t == Infinity) {
@@ -540,6 +714,10 @@ function updateRecords() {
         name.appendChild(nameP)
         
         var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",12);
+        }
         var currentP = document.createElement("p")
         if (ao12s[ao12s.length-1] == -1) {
             currentP.innerHTML = "DNF"
@@ -549,6 +727,10 @@ function updateRecords() {
         current.appendChild(currentP)
         
         var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",12);
+        } 
         var bestP = document.createElement("p")
         var t = Math.min.apply(null,ao12s.filter(function(t) {return t!=-1}))
         if (t == Infinity) {
@@ -563,11 +745,16 @@ function updateRecords() {
         var row = sessionStatsTable.insertRow(-1)
         
         var name = row.insertCell(-1)
+        
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao50"
         name.appendChild(nameP)
         
         var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",50);
+        }
         var currentP = document.createElement("p")
         if (ao50s[ao50s.length-1] == -1) {
             currentP.innerHTML = "DNF"
@@ -577,6 +764,10 @@ function updateRecords() {
         current.appendChild(currentP)
         
         var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",50);
+        } 
         var bestP = document.createElement("p")
         var t = Math.min.apply(null,ao50s.filter(function(t) {return t!=-1}))
         if (t == Infinity) {
@@ -596,6 +787,10 @@ function updateRecords() {
         name.appendChild(nameP)
         
         var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",100);
+        }
         var currentP = document.createElement("p")
         if (ao100s[ao100s.length-1] == -1) {
             currentP.innerHTML = "DNF"
@@ -605,6 +800,10 @@ function updateRecords() {
         current.appendChild(currentP)
         
         var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",100);
+        } 
         var bestP = document.createElement("p")
         var t = Math.min.apply(null,ao100s.filter(function(t) {return t!=-1}))
         if (t == Infinity) {
@@ -626,7 +825,7 @@ function updateRecords() {
                     modal : true,
                     hide: "fade",
                     width: "199",
-                    height: "100",
+                    height: "120",
                     position: {
                         my:"left top",
                         at:"right top",
@@ -641,8 +840,13 @@ function updateRecords() {
                 }
             }
         }
-    })
-    $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 230px))")
+    })    
+
+    setTimeout(function() {
+        extraHeight+=$("#sessionDetails").height()
+        $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 170px))")
+    },10);
+    
     updateTool()
     saveSessions()
 }
@@ -826,5 +1030,424 @@ $("#dialogAddTime").dialog({
     }
     evt.stopPropagation();
 });
+
+
+$("#dialogShowInfo").dialog({
+    autoOpen : false,
+    modal : true,    
+    position: {
+        my:"center",
+        at:"center",
+        of:"#background"
+    },
+    width: "640",
+    height: "480",
+    show:"fade",
+    hide:"fade"
+})
+
+function openShowInfo(type,a) {
+    if (preferencesOpen) {
+        return
+    }
+    var str = ""
+    if (type == "Ao5") {
+        if (a < 5) {
+            return
+        }
+        var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(a-5,a)
+        var ao5 = (averageTimes(extractTimes(r)))
+        if (ao5 == -1) {
+            str = "Ao5: DNF<br>"
+        } else {
+            str = "Ao5: "+formatTime(ao5)+"<br>"
+        }
+        var ts = extractTimes(r)
+        var sts = ts.slice();
+        sts.sort((a,b)=>{
+            if (a==-1) {
+                return -1
+            } else if (b==-1) {
+                return 1
+            } else {
+                return a-b
+            }
+        });
+        var min = sts[0]
+        var max = sts[4]
+        for (var i=0;i<5;i++) {
+            str+=("<br>"+(i+1)+". ")
+            
+            if (ts[i] == max) {
+                str+="("
+            } else if (ts[i] == min) {
+                str+="("
+            }
+            if (r[i].result == "OK") {
+                str+=(formatTime(r[i].time))
+            } else if (r[i].result == "+2") {
+                str+=(formatTime(r[i].time+2)+"+")
+            } else {
+                str+="DNF"
+            }
+            if (ts[i] == max) {
+                str+=")"
+                max = -2
+            } else if (ts[i] == min) {
+                str+=")"
+                min = -2
+            }
+            str+=(" ("+r[i].scramble.trim()+")")
+        }   
+        
+    } else if (type == "Ao12") {
+        if (a < 12) {
+            return
+        }
+        var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(a-12,a)
+        var ao12 = (averageTimes(extractTimes(r)))
+        if (ao12 == -1) {
+            str = "Ao12: DNF<br>"
+        } else {
+            str = "Ao12: "+formatTime(ao12)+"<br>"
+        }
+        var ts = extractTimes(r)
+        var sts = ts.slice();
+        sts.sort((a,b)=>{
+            if (a==-1) {
+                return -1
+            } else if (b==-1) {
+                return 1
+            } else {
+                return a-b
+            }
+        });
+        var min = sts[0]
+        var max = sts[11]
+        for (var i=0;i<12;i++) {
+            str+=("<br>"+(i+1)+". ")
+            
+            if (ts[i] == max) {
+                str+="("
+            } else if (ts[i] == min) {
+                str+="("
+            }
+            if (r[i].result == "OK") {
+                str+=(formatTime(r[i].time))
+            } else if (r[i].result == "+2") {
+                str+=(formatTime(r[i].time+2)+"+")
+            } else {
+                str+="DNF"
+            }
+            if (ts[i] == max) {
+                str+=")"
+                max = -2
+            } else if (ts[i] == min) {
+                str+=")"
+                min = -2
+            }
+            str+=(" ("+r[i].scramble.trim()+")")
+        }   
+    } else if (type == "Current") {
+        if (a == 1) {
+            var r = puzzles[currentPuzzle].sessions[currentSession].records[puzzles[currentPuzzle].sessions[currentSession].records.length-1]
+            str+=("1. ")
+
+            if (r.result == "OK") {
+                str+=(formatTime(r.time))
+            } else if (r.result == "+2") {
+                str+=(formatTime(r.time+2)+"+")
+            } else {
+                str+="DNF"
+            }
+            str+=(" ("+r.scramble.trim()+")")
+        } else if (a == 3) {
+            var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-3)
+            var mo3 = (meanTimes(extractTimes(r)))
+            if (mo3 == -1) {
+                str = "Mo3: DNF<br>"
+            } else {
+                str = "Mo3: "+formatTime(mo3)+"<br>"
+            }
+            var ts = extractTimes(r)
+            
+            for (var i=0;i<a;i++) {
+                str+=("<br>"+(i+1)+". ")
+
+                if (r[i].result == "OK") {
+                    str+=(formatTime(r[i].time))
+                } else if (r[i].result == "+2") {
+                    str+=(formatTime(r[i].time+2)+"+")
+                } else {
+                    str+="DNF"
+                }
+                str+=(" ("+r[i].scramble.trim()+")")
+            }   
+        } else {
+            var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-a)
+            var aoa = (averageTimes(extractTimes(r)))
+            if (aoa == -1) {
+                str = "Ao"+a+": DNF<br>"
+            } else {
+                str = "Ao"+a+": "+formatTime(aoa)+"<br>"
+            }
+            var ts = extractTimes(r)
+            var sts = ts.slice();
+            sts.sort((a,b)=>{
+                if (a==-1) {
+                    return -1
+                } else if (b==-1) {
+                    return 1
+                } else {
+                    return a-b
+                }
+            });
+            var min = sts[0]
+            var max = sts[a-1]
+            for (var i=0;i<a;i++) {
+                str+=("<br>"+(i+1)+". ")
+
+                if (ts[i] == max) {
+                    str+="("
+                } else if (ts[i] == min) {
+                    str+="("
+                }
+                if (r[i].result == "OK") {
+                    str+=(formatTime(r[i].time))
+                } else if (r[i].result == "+2") {
+                    str+=(formatTime(r[i].time+2)+"+")
+                } else {
+                    str+="DNF"
+                }
+                if (ts[i] == max) {
+                    str+=")"
+                    max = -2
+                } else if (ts[i] == min) {
+                    str+=")"
+                    min = -2
+                }
+                str+=(" ("+r[i].scramble.trim()+")")
+            }   
+        }
+        
+    } else if (type == "Best") {
+        
+        if (a == 1) {
+            var best = -1
+            var index = 0
+            for (var i=0;i<puzzles[currentPuzzle].sessions[currentSession].records.length;i++) {
+                var t = extractTimes([puzzles[currentPuzzle].sessions[currentSession].records[i]])
+                if (t!=-1&&(t<best||best==-1)) {
+                    best = t
+                    index = i
+                }
+            }
+            var r = puzzles[currentPuzzle].sessions[currentSession].records[index]
+            str+=("1. ")
+
+            if (r.result == "OK") {
+                str+=(formatTime(r.time))
+            } else if (r.result == "+2") {
+                str+=(formatTime(r.time+2)+"+")
+            } else {
+                str+="DNF"
+            }
+            str+=(" ("+r.scramble.trim()+")")
+        } else if (a == 3) {
+            var best = -1
+            var index = 0
+            for (var i=0;i<puzzles[currentPuzzle].sessions[currentSession].records.length-2;i++) {
+                var t = meanTimes(extractTimes(puzzles[currentPuzzle].sessions[currentSession].records.slice(i,i+3)))
+                if (t!=-1&&(t<best||best==-1)) {
+                    best = t
+                    index = i
+                }
+            }
+            
+            var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(index,index+3)
+            var mo3 = (meanTimes(extractTimes(r)))
+            if (mo3 == -1) {
+                str = "Mo3: DNF<br>"
+            } else {
+                str = "Mo3: "+formatTime(mo3)+"<br>"
+            }
+            var ts = extractTimes(r)
+            
+            for (var i=0;i<a;i++) {
+                str+=("<br>"+(i+1)+". ")
+
+                if (r[i].result == "OK") {
+                    str+=(formatTime(r[i].time))
+                } else if (r[i].result == "+2") {
+                    str+=(formatTime(r[i].time+2)+"+")
+                } else {
+                    str+="DNF"
+                }
+                str+=(" ("+r[i].scramble.trim()+")")
+            }   
+        
+        } else {
+            var best = -1
+            var index = 0
+            for (var i=0;i<puzzles[currentPuzzle].sessions[currentSession].records.length-a;i++) {
+                var t = averageTimes(extractTimes(puzzles[currentPuzzle].sessions[currentSession].records.slice(i,i+a)))
+                if (t!=-1&&(t<best||best==-1)) {
+                    best = t
+                    index = i
+                }
+            }
+            
+            var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(index,index+a)
+            
+            var aoa = (averageTimes(extractTimes(r)))
+            if (aoa == -1) {
+                str = "Ao"+a+": DNF<br>"
+            } else {
+                str = "Ao"+a+": "+formatTime(aoa)+"<br>"
+            }
+            var ts = extractTimes(r)
+            var sts = ts.slice();
+            sts.sort((a,b)=>{
+                if (a==-1) {
+                    return -1
+                } else if (b==-1) {
+                    return 1
+                } else {
+                    return a-b
+                }
+            });
+            var min = sts[0]
+            var max = sts[a-1]
+            for (var i=0;i<a;i++) {
+                str+=("<br>"+(i+1)+". ")
+
+                if (ts[i] == max) {
+                    str+="("
+                } else if (ts[i] == min) {
+                    str+="("
+                }
+                if (r[i].result == "OK") {
+                    str+=(formatTime(r[i].time))
+                } else if (r[i].result == "+2") {
+                    str+=(formatTime(r[i].time+2)+"+")
+                } else {
+                    str+="DNF"
+                }
+                if (ts[i] == max) {
+                    str+=")"
+                    max = -2
+                } else if (ts[i] == min) {
+                    str+=")"
+                    min = -2
+                }
+                str+=(" ("+r[i].scramble.trim()+")")
+            }   
+        
+        }
+    }
+    
+    $("#messageShowInfo").html(str)
+    $("#dialogShowInfo").dialog("open")
+    $("#preferencesButton").addClass("disabled")
+    $("#preferencesButton").prop("disabled",true)
+    $("#stats").addClass("disabled")
+    $("#timer").addClass("disabled")
+    $("#scramble").addClass("disabled")
+    $("#previewButton").addClass("disabled")
+    $("#stats").prop("disabled",true)
+    $("#timer").prop("disabled",true)
+    $("#scramble").prop("disabled",true)
+    $("#previewButton").prop("disabled",true)
+    $("#puzzleSelect").prop('disabled', true)
+    $("#sessionSelect").prop('disabled', true)
+    $("#sessionButton").prop('disabled', true)
+    $("#toolSelect").prop('disabled', true)
+    $("#tool").prop('disabled', true)
+    $("#toolSelect").addClass("disabled")
+    $("#tool").addClass("disabled")
+
+    if (timerState == "inspectReady") {
+        cancelTimer()
+    }
+    preferencesOpen = true
+}
+
+function closeShowInfo() {
+    $("#dialogShowInfo").dialog("close")
+    $("#preferencesButton").removeClass("disabled")
+    $("#preferencesButton").prop("disabled",false)
+    $("#stats").removeClass("disabled")
+    $("#timer").removeClass("disabled")
+    $("#scramble").removeClass("disabled")
+    $("#stats").prop("disabled",false)
+    $("#timer").prop("disabled",false)
+    $("#scramble").prop("disabled",false)
+    $("#puzzleSelect").prop('disabled', false)
+    $("#sessionSelect").prop('disabled', false)
+    $("#sessionButton").prop('disabled', false)
+    $("#toolSelect").prop('disabled', false)
+    $("#tool").prop('disabled', false)
+    $("#toolSelect").removeClass("disabled")
+    $("#tool").removeClass("disabled")
+    
+    if (hasVideo && preferences.recordSolve && !videoLoading) {
+        $("#previewButton").removeClass("disabled")
+        $("#previewButton").prop("disabled",false)
+    }
+    preferencesOpen = false
+}
+
+// Confetti functions
+var confettiCanvas;
+var confettiConfig = {
+    angle: 0.01,
+    tiltAngle: 0.1,
+    draw: confettiDraw,
+    updatePosition: confettiUpdatePosition,
+    updateState: confettiUpdateState
+};
+
+function confettiDraw(confetti) {
+  confettiCanvas.context.beginPath();
+  confettiCanvas.context.lineWidth = confetti.r / 2;
+  confettiCanvas.context.strokeStyle = colorScheme[confetti.c];
+  confettiCanvas.context.moveTo(confetti.x + confetti.tilt + (confetti.r / 4),
+    confetti.y);
+  confettiCanvas.context.lineTo(confetti.x + confetti.tilt, confetti.y +
+    confetti.tilt + (confetti.r / 4));
+  confettiCanvas.context.stroke();
+}
+
+function confettiUpdatePosition(confetti, idx) {
+  confetti.tiltAngle += confetti.tiltAngleIncrement;
+  confetti.y += (Math.cos(confettiConfig.angle + confetti.d) + 1 + confetti.r / 2) / 2;
+  confetti.x += Math.sin(confettiConfig.angle);
+  confetti.tilt = 15 * Math.sin(confetti.tiltAngle - idx / 3);
+
+  if (confetti.isFlakeExiting(confettiCanvas)) {
+    if (idx % 5 > 0 || idx % 2 === 0) {
+      confetti.x = Confetti.randomFrom(0, confettiCanvas.width);
+      confetti.y = -10;
+      confetti.tilt = Confetti.randomFrom(-10, 0);
+
+    } else {
+      if (Math.sin(confettiConfig.angle) > 0) {
+        confetti.x = -5;
+        confetti.y = Confetti.randomFrom(0, confettiCanvas.height);
+        confetti.tilt = Confetti.randomFrom(-10, 0);
+      } else {
+        confetti.x = confettiCanvas.width + 5;
+        confetti.y = Confetti.randomFrom(0, confettiCanvas.height);
+        confetti.tilt = Confetti.randomFrom(-10, 0);
+      }
+    }
+  }
+}
+
+function confettiUpdateState() {
+  this.angle += 0.01;
+  this.tiltAngle += 0.1;
+}
+
 
 loadSessions()

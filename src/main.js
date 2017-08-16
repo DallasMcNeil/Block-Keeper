@@ -58,7 +58,7 @@ const template = [{
     role: 'help',
     submenu: [
         { label: 'Block Keeper Guide',
-        click () { require('electron').shell.openExternal('http://dallasmcneil.com/projects/blockkeeper/guide')}}]
+        click () { require('electron').shell.openExternal('https://dallasmcneil.com/projects/blockkeeper/guide')}}]
 }]
 
 if (process.platform === 'darwin') {
@@ -71,7 +71,7 @@ if (process.platform === 'darwin') {
         {
         type: 'separator'
         },
-        {label: "Preferences...", accelerator: "CmdOrCtrl+P",click () {win.webContents.send('shortcut', 'CommandOrControl+P')}}
+        {label: "Preferences...", accelerator: "CmdOrCtrl+,",click () {win.webContents.send('shortcut', 'CommandOrControl+,')}}
         ,{
         type: 'separator'
         }, 
@@ -121,19 +121,19 @@ template[3].submenu = [
 
 const OKButton = new TouchBarButton({
     label: ' OK ',
-    backgroundColor:"#00DD00",
+    backgroundColor:"#22BB22",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+1')}
 })
 
 const plus2Button = new TouchBarButton({
     label: ' +2 ',
-    backgroundColor:"#FF9900",
+    backgroundColor:"#DD8822",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+2')}
 })
 
 const DNFButton = new TouchBarButton({
     label: ' DNF ',
-    backgroundColor:"#DD0000",
+    backgroundColor:"#CC2222",
     click: () => {win.webContents.send('shortcut', 'CommandOrControl+3')}
 })
 

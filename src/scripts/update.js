@@ -4,7 +4,7 @@
 // Created by Dallas McNeil
 
 // Check current version online and show banner if so
-$.getJSON("http://dallasmcneil.com/projects/blockkeeper/version.json?nocache="+(new Date()).getTime(), function(data) {
+$.getJSON("https://dallasmcneil.com/projects/blockkeeper/version.json?nocache="+(new Date()).getTime(), function(data) {
     var version = data.version
     var current = require('electron').remote.getGlobal('sharedObj').version
     $("#versionLabel").prop("innerHTML","Version "+current)
@@ -20,6 +20,6 @@ function closeVersion() {
 
 // Open download page in web browser 
 function downloadLatestVersion() {
-    require('electron').shell.openExternal('http://dallasmcneil.com/projects/blockkeeper')
+    require('electron').shell.openExternal('https://dallasmcneil.com/projects/blockkeeper')
     closeVersion()
 }

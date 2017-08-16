@@ -1,4 +1,4 @@
-# Block Keeper 1.0.2
+# Block Keeper 1.1.0
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -21,7 +21,7 @@ If you encounter any bugs, issues or want to suggest any improvements, please le
 
 ## Documentation
 
-An extensive guide for using Block Keeper is available [here](http://dallasmcneil.com/projects/blockkeeper/guide).
+An extensive guide for using Block Keeper is available [here](https://dallasmcneil.com/projects/blockkeeper/guide).
   
 ## Download
 
@@ -63,7 +63,7 @@ A debug console is available to use for debugging and other purposes. In `src/ma
 
 ## Contributors
 
-Dallas McNeil ([dallasmcneil.com](http://dallasmcneil.com))
+Dallas McNeil ([dallasmcneil.com](https://dallasmcneil.com))
 
 James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
 
@@ -83,6 +83,7 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [jquery/jquery-ui](https://github.com/jquery/jquery-ui)
 - [cubing/jsss](https://github.com/cubing/jsss)
 - [nickcolley/scrambo](https://github.com/nickcolley/scrambo)
+- [wesleycho/confetti.js](https://github.com/wesleycho/confetti.js/)
 
 ### Fonts
 

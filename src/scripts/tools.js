@@ -14,6 +14,7 @@ var secondColour = themeColours[0][4]
 
 var colours = ["#F20","#5F0","#0060FF"]
 
+
 // Update Tools based on new session data or scramble
 function updateTool() {
     if (preferencesInterface.theme.value == "custom") {
@@ -40,7 +41,9 @@ function updateTool() {
     } else if (toolSelect.value == "scramble") {
         drawScramble()
         return
-    }  
+    } else if (toolSelect.value == "eventStats") {
+        eventStats()
+    }
     hideScramble()
 }
 
@@ -70,8 +73,16 @@ function rangeForTimes(times) {
         divide = 2
     } else if (range <= 40) {
         divide = 5
-    } else {
+    } else if (range <= 80) {
         divide = 10
+    } else if (range <= 120) {
+        divide = 15
+    } else if (range <= 160) {
+        divide = 20
+    } else if (range <= 240) {
+        divide = 30
+    } else {
+        divide = 60
     }
     var fmin = Math.floor(min/divide)*divide
     var fmax = Math.ceil(max/divide)*divide
@@ -92,6 +103,229 @@ function extractTimes(records) {
         }
     }
     return times
+}
+
+function eventStats() {
+    ctx.clearRect(0,0,300,200)
+    ctx.strokeStyle = secondColour
+    ctx.fillStyle = mainColour
+    ctx.lineWidth = 1
+    ctx.font = "20px workSansBold";
+    ctx.textAlign = "right";
+     
+    ctx.fillText("Time:",80,60) 
+    ctx.fillText("Mo3:",80,90) 
+    ctx.fillText("Ao5:",80,120) 
+    ctx.fillText("Ao12:",80,150) 
+    ctx.fillText("Mean:",80,180) 
+    
+    ctx.textAlign = "left";
+    ctx.fillText("Current",100,30)
+    ctx.fillText("Best",200,30)
+    ctx.font = "20px workSans";
+
+    var stime = -2
+    var smo3 = -2
+    var sao5 = -2
+    var sao12 = -2
+    var smean = -2
+      
+    var ctime = -2
+    var cmo3 = -2
+    var cao5 = -2
+    var cao12 = -2
+    var cmean = -2 
+    
+    for (var s=0;s<puzzles[currentPuzzle].sessions.length;s++) {
+        var time = -2
+        var mo3 = -2
+        var ao5 = -2
+        var ao12 = -2
+        var mean = meanTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records).filter(function (t){return t!=-1}))
+        if (mean==-1) {
+            mean = -2
+        }
+        
+        var rtime = -2
+        var rmo3 = -2
+        var rao5 = -2
+        var rao12 = -2
+        
+        for (var r=0;r<puzzles[currentPuzzle].sessions[s].records.length;r++) {
+            rtime = extractTimes([puzzles[currentPuzzle].sessions[s].records[r]])[0]
+            if ((rtime<time||time==-2||time==-1)&&rtime!=-2&&rtime!=-1) {
+                time = rtime
+            }
+
+            if (r>1) {
+                rmo3 = meanTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-2,r+1)))
+                if ((rmo3 < mo3||mo3==-2||mo3==-1)&&(rmo3!=-2&&rmo3!=-1)) {
+                    mo3 = rmo3
+                 }
+            }
+            if (r>3) {
+                rao5 = averageTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-4,r+1)))
+                if ((rao5 < ao5||ao5==-2||ao5==-1)&&(rao5!=-2&&rao5!=-1)) {
+                    ao5 = rao5
+                }
+            }
+            if (r>10) {
+                rao12 = averageTimes(extractTimes(puzzles[currentPuzzle].sessions[s].records.slice(r-11,r+1)))
+                if ((rao12 < ao12||ao12==-2||ao12==-1)&&(rao12!=-2&&rao12!=-1)) {
+                    ao12 = rao12
+                }
+            }
+        }
+        if (s == currentSession) {
+            ctime = rtime
+            cmo3 = rmo3
+            cao5 = rao5
+            cao12 = rao12
+            cmean = mean
+        }
+        
+        if ((time<stime||stime==-2||stime==-1)&&time!=-2) {
+            stime = time
+        }
+        if ((mo3<smo3||smo3==-2||stime==-1)&&mo3!=-2) {
+            smo3 = mo3
+        }
+        if ((ao5<sao5||sao5==-2||stime==-1)&&ao5!=-2) {
+            sao5 = ao5
+        }
+        if ((ao12<sao12||sao12==-2||stime==-1)&&ao12!=-2) {
+            sao12 = ao12
+        }
+        if ((mean<smean||smean==-2)&&(mean!=-2)) {
+            smean = mean
+        }
+    }
+    
+    if (stime==ctime) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (ctime==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,60) 
+    } else if (ctime==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",100,60) 
+    } else {
+        ctx.fillText(formatTime(ctime),100,60) 
+    }
+    if (stime==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",200,60) 
+    } else if (stime==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",200,60) 
+    } else {
+        ctx.fillText(formatTime(time),200,60) 
+    }
+    
+    if (smo3==cmo3) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cmo3==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,90) 
+    } else if (cmo3==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",100,90) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(cmo3),100,90) 
+    }
+    if (smo3==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",200,90) 
+    } else if (smo3==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",200,90) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(smo3),200,90) 
+    }
+
+    if (sao5==cao5) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cao5==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,120) 
+    } else if (cao5==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",100,120) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(cao5),100,120) 
+    }
+    if (sao5==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",200,120) 
+    } else if (sao5==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",200,120) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(sao5),200,120) 
+    }
+    
+    if (sao12==cao12) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cao12==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,150) 
+    } else if (cao12==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",100,150) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(cao12),100,150) 
+    }
+    if (sao12==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",200,150) 
+    } else if (sao12==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",200,150) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(sao12),200,150) 
+    }
+    
+    if (smean==cmean) {
+        ctx.fillStyle = "#00FF00"
+    } else {
+        ctx.fillStyle = mainColour
+    }
+    if (cmean==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",100,180) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(cmean),100,180) 
+    }
+    if (smean==-2) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("-",200,180) 
+    } else if (smean==-1) {
+        ctx.fillStyle = mainColour
+        ctx.fillText("DNF",200,180) 
+    } else {
+        ctx.fillStyle = mainColour
+        ctx.fillText(formatTime(smean),200,180) 
+    }
+  
 }
 
 // Draw a trendline of current session
@@ -237,7 +471,7 @@ function eventTrend() {
             bestAo5.push(ao5s.sort(function(a,b){return a-b})[0])
         }
     }
-    var dis = rangeForTimes(means.concat(bests))
+    var dis = rangeForTimes(means.concat(bests).filter(function(n){return !isNaN(n)&&n}))
     
     ctx.strokeStyle = secondColour
     ctx.fillStyle = mainColour
@@ -259,7 +493,7 @@ function eventTrend() {
     ctx.beginPath()
     for (var i = 0;i<means.length;i++) {
         
-        if (means[i] != -1) {
+        if (means[i]!=-1) {
             if (i==0) {
                 ctx.moveTo(50+(i*(240/(means.length-1))),(170-(((means[i]-dis.min)/dis.range)*160)))
             } else {
@@ -272,7 +506,7 @@ function eventTrend() {
     ctx.beginPath()
     ctx.strokeStyle = colours[1]
     for (var i = 0;i<bestAo5.length;i++) {
-        if (bestAo5[i] != -1) {
+        if (bestAo5[i]!=-1) {
             if (i==0) {
                 ctx.moveTo(50+(i*(240/(bestAo5.length-1))),(170-(((bestAo5[i]-dis.min)/dis.range)*160)))
             } else {
