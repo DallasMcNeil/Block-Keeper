@@ -130,7 +130,6 @@ Created by Dallas McNeil
     <button title="Video Preview" id="previewButton" onclick="showPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
     <select title="Tool Select" id="toolSelect" onchange="updateTool()">
-        <option value="none">None</option>    
         <option value="scramble">Drawn Scramble</option>
         <option value="sessionTrend">Session Trend</option>
         <option value="distribution">Distribution</option>
@@ -138,10 +137,10 @@ Created by Dallas McNeil
         <option value="eventStats">Event Statistics</option>
     </select>
 
-    <div id="tool">
-        <div id="scrambleImage"></div>
-        <canvas id="toolCanvas" width="300" height="200"></canvas>
+    <div id="tools">
     </div>
+    <button title="Add Tool" id="addToolButton" onclick="addTool()"></button>
+    
         
     <div id="dialogAddTime">
         <p>Add Time (in seconds)

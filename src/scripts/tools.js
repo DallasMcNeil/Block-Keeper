@@ -5,15 +5,57 @@
 
 
 var toolSelect = document.getElementById("toolSelect")
-var tool = document.getElementById("tool")
-var canvas = document.getElementById("toolCanvas")
-var ctx = canvas.getContext("2d")
+var tools = document.getElementById("tools")
+var canvases = []
+var toolTypes = []
 
 var mainColour = themeColours[0][5]
 var secondColour = themeColours[0][4]
 
 var colours = ["#F20","#5F0","#0060FF"]
 
+function deleteTool(index) {
+    tools.removeChild(canvases[index].parentNode)
+    canvases.splice(index,1)
+    toolTypes.splice(index,1)
+}
+
+function addTool() {
+    var tool = document.createElement("div"); 
+    toolTypes.push(toolSelect.value)
+    tool.className = "tool"
+    var toolClose = document.createElement("button"); 
+    toolClose.className = "cross closeTool"
+    toolClose.title = "Remove Tool"
+    toolClose.onclick = function() {
+        console.log("Remove")
+        for (var i=0;i<tools.children.length;i++) {
+            if (tools.children[i] === tool) {
+                deleteTool(i)
+                break
+            }
+        }
+    }
+    tool.appendChild(toolClose)
+    
+    var toolCanvas
+    if (toolSelect.value == "scramble") {
+        var toolCanvas = document.createElement("div"); 
+    } else {
+        var toolCanvas = document.createElement("canvas"); 
+        toolCanvas.width = 300*2
+        toolCanvas.height = 200*2
+        toolCanvas.style.width = "300px"
+        toolCanvas.style.height = "200px"
+        toolCanvas.getContext("2d").scale(2,2)
+    }
+    
+    tool.appendChild(toolCanvas)
+    canvases.push(toolCanvas)
+    
+    tools.appendChild(tool)
+    updateTool()
+}
 
 // Update Tools based on new session data or scramble
 function updateTool() {
@@ -25,27 +67,31 @@ function updateTool() {
         secondColour = themeColours[preferencesInterface.theme.value][4]
     }
     
-    if (toolSelect.value == "none") {
-        $("#tool").hide()
-        return
-    } else {
-        $("#tool").show()
+    for (var i=0;i<canvases.length;i++) {
+        if (toolTypes[i] == "sessionTrend") {
+            var ctx = canvases[i].getContext("2d")
+            sessionTrend(ctx)
+        } else if (toolTypes[i] == "eventTrend") {
+            var ctx = canvases[i].getContext("2d")
+            eventTrend(ctx)
+        } else if (toolTypes[i] == "distribution") {
+            var ctx = canvases[i].getContext("2d")
+            distribution(ctx)
+        } else if (toolTypes[i] == "scramble") {
+            drawScramble(canvases[i])
+        } else if (toolTypes[i] == "eventStats") {
+            var ctx = canvases[i].getContext("2d")
+            eventStats(ctx)
+        }
     }
-    
-    if (toolSelect.value == "sessionTrend") {
-        sessionTrend()
-    } else if (toolSelect.value == "eventTrend") {
-        eventTrend()
-    } else if (toolSelect.value == "distribution") {
-        distribution()
-    } else if (toolSelect.value == "scramble") {
-        drawScramble()
-        return
-    } else if (toolSelect.value == "eventStats") {
-        eventStats()
-    }
-    hideScramble()
 }
+
+function setupTools(list) {
+    for (var i=0;i<list.length;i++) {
+        toolSelect.value = list[i]
+        addTool()
+    }
+} 
 
 // Shortcut to get current session times
 function sessionTimes() {
@@ -105,7 +151,7 @@ function extractTimes(records) {
     return times
 }
 
-function eventStats() {
+function eventStats(ctx) {
     ctx.clearRect(0,0,300,200)
     ctx.strokeStyle = secondColour
     ctx.fillStyle = mainColour
@@ -329,7 +375,7 @@ function eventStats() {
 }
 
 // Draw a trendline of current session
-function sessionTrend() {
+function sessionTrend(ctx) {
     ctx.clearRect(0,0,300,200)
     
     var times = sessionTimes()
@@ -440,7 +486,7 @@ function sessionTrend() {
 }
 
 // Draw trendline for current event
-function eventTrend() {
+function eventTrend(ctx) {
     
     ctx.clearRect(0,0,300,200)
     
@@ -554,7 +600,7 @@ function eventTrend() {
 }
 
 // Draw distribution of current session
-function distribution() {
+function distribution(ctx) {
     ctx.clearRect(0,0,300,200)
 
     var times = sessionTimes()

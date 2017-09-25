@@ -687,7 +687,7 @@ input[type="checkbox"]:active {
     left:0px;
     width:100vw;
     background-color: #4444FF;
-    transition: 0.2s;
+    transition: 0.1s;
 }
 
 #versionBanner:hover {
@@ -766,18 +766,28 @@ ul {
 
 
 #toolSelect {
-    width:304px;
+    width:264px;
     position:fixed;
-    bottom: 10px;
-    right:10px;
+    bottom:10px;
+    right:50px;
 }
 
-#tool {
-    width:300px;
-    height: 200px;
+#tools {
+    width:304zpx;
     position:fixed;
     bottom: 50px;
     right:10px;
+    display: block;
+}
+
+.tool {
+    width:300px;
+    height: 200px;
+    position:relative;
+    margin-bottom:0px;
+    margin-right: 0px;
+    margin-top:10px;
+    margin-left:0px;
     border-color:#505050;
     border-width:2px;
     border-radius: 0px;
@@ -786,10 +796,32 @@ ul {
     background-color: #282828;
 }
 
-#toolCanvas {
-    margin: 0px;
-    width:300px;
-    height:200px;
+.closeTool {
+    display: block;
+    position: absolute;
+    top:10px;
+    right:10px;
+    height:30px;
+    width:30px;
+    opacity:0.4;
+    z-index:1;
+    transition:0.1s;
+}
+
+.closeTool:hover {
+    opacity:1;
+    transition:0.1s;
+}
+
+#addToolButton {
+    width:30px;
+    height:30px;
+    position: fixed;
+    right:10px;
+    bottom:10px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='6,12 18,12'></polyline></svg>"); 
+    background-color: #303030;
+    padding: 0px;
 }
 
 #previewButton.loading {

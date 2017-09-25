@@ -108,13 +108,18 @@ var currentRecord = 0
 
 // Save events to a file
 function saveSessions() {
-    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {if (error) {console.log(error)}})
+    storage.set("puzzles",{puzzles:puzzles, puzzle:currentPuzzle,session:currentSession, tools:toolTypes},
+    function(error) {
+        if (error) {
+            console.log(error)
+        }
+    })
 
 }
 
 // Save events to a seperate backup file
 function closeApp() {
-    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {
+    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tools:toolTypes},function(error) {
         if (error) {
             console.log(error)
         }
@@ -208,8 +213,8 @@ function loadSessions() {
                 currentSession = 0
             }
         }
-        if (object.tool != null) {
-            toolSelect.value = object.tool
+        if (object.tools != null) {
+            setupTools(object.tools)
         }
     
         setPuzzleOptions()

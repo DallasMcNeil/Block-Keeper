@@ -16,10 +16,6 @@ function scramble() {
         if (scrambleState.scramble_string != "") {
             scrambleText.innerHTML = scrambleState.scramble_string
             currentScramble = scrambleState.scramble_string
-            if (scrambleState.state != undefined) {
-                drawScramble()
-                return
-            }
         } else {
             currentScramble = ""
             scrambleText.innerHTML = ""
@@ -28,29 +24,17 @@ function scramble() {
         currentScramble = ""
         scrambleText.innerHTML = "" 
     }
-    hideScramble()
+    updateTool()
 }
 
 // Draw the current scramble in the tool canvas
-function drawScramble() {
+function drawScramble(ctx) {
     if (scramblers[scrambleStr] == undefined || (scrambleStr == "333mbf")) {
-        hideScramble()
-    } else if (toolSelect.value == "scramble") {
-        scrambleImage.innerHTML = ""
-        ctx.clearRect(0,0,300,200)
-        scrambleImage.style.display = "block"
-        canvas.style.display = "none"
-        scramblers[scrambleStr].drawScramble(scrambleImage, scrambleState.state, 300, 200);
+        ctx.innerHTML = ""
     } else {
-        scrambleImage.style.display = "none"
-        canvas.style.display = "block"
+        ctx.innerHTML = ""
+        scramblers[scrambleStr].drawScramble(ctx, scrambleState.state, 300, 200);
     }
-}
-
-// Hide the scramble from the tool
-function hideScramble() {
-    scrambleImage.style.display = "none"
-    canvas.style.display = "block"
 }
 
 // Calls to get a scramble for each puzzle available
