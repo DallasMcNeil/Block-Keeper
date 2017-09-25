@@ -230,6 +230,9 @@ function eventStats(ctx) {
             cmean = mean
         }
         
+        console.log(rtime)
+        console.log(stime)
+        
         if ((time<stime||stime==-2||stime==-1)&&time!=-2) {
             stime = time
         }
@@ -245,7 +248,12 @@ function eventStats(ctx) {
         if ((mean<smean||smean==-2)&&(mean!=-2)) {
             smean = mean
         }
+        console.log(stime)
     }
+    
+    console.log("Times")
+    console.log(sao5)
+    console.log(cao5)
     
     if (stime==ctime) {
         ctx.fillStyle = "#00FF00"
@@ -268,10 +276,10 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,60) 
     } else {
-        ctx.fillText(formatTime(time),200,60) 
+        ctx.fillText(formatTime(stime),200,60) 
     }
     
-    if (smo3==cmo3) {
+    if (Math.abs(smo3-cmo3)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -283,7 +291,6 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,90) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cmo3),100,90) 
     }
     if (smo3==-2) {
@@ -293,11 +300,12 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,90) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(smo3),200,90) 
     }
 
-    if (sao5==cao5) {
+    console.log(Math.abs(sao5-cao5)<0.001)
+    if (Math.abs(sao5-cao5)<0.001) {
+        console.log("Yep")
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -309,7 +317,6 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,120) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cao5),100,120) 
     }
     if (sao5==-2) {
@@ -319,11 +326,10 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,120) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(sao5),200,120) 
     }
     
-    if (sao12==cao12) {
+    if (Math.abs(sao12-cao12)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -335,7 +341,6 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,150) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cao12),100,150) 
     }
     if (sao12==-2) {
@@ -345,11 +350,10 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,150) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(sao12),200,150) 
     }
     
-    if (smean==cmean) {
+    if (Math.abs(smean-cmean)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -358,7 +362,6 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("-",100,180) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cmean),100,180) 
     }
     if (smean==-2) {
@@ -368,7 +371,6 @@ function eventStats(ctx) {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,180) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(smean),200,180) 
     }
   
@@ -517,6 +519,7 @@ function eventTrend(ctx) {
             bestAo5.push(ao5s.sort(function(a,b){return a-b})[0])
         }
     }
+    
     var dis = rangeForTimes(means.concat(bests).filter(function(n){return !isNaN(n)&&n}))
     
     ctx.strokeStyle = secondColour

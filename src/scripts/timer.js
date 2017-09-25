@@ -364,7 +364,8 @@ function startInspection() {
     $("#stats").fadeOut()
     $("#scramble").fadeOut()
     $("#preferencesButton").fadeOut()
-    $("#tool").fadeOut()
+    $("#tools").fadeOut()
+    $("#addToolButton").fadeOut()
     $("#toolSelect").fadeOut()
     $("#previewButton").fadeOut()
     s3 = true
@@ -391,7 +392,8 @@ function readyTimer() {
     $("#stats").fadeOut()
     $("#scramble").fadeOut()
     $("#preferencesButton").fadeOut()
-    $("#tool").fadeOut()
+    $("#tools").fadeOut()
+    $("#addToolButton").fadeOut()
     $("#toolSelect").fadeOut()
     $("#previewButton").fadeOut()
 }
@@ -420,9 +422,9 @@ function stopTimer() {
     $("#scramble").fadeIn()
     $("#preferencesButton").fadeIn()
     $("#toolSelect").fadeIn()
-    if (toolSelect.value != "none") {
-        $("#tool").fadeIn()
-    }
+    $("#tools").fadeIn()
+    $("#addToolButton").fadeIn()
+    
     $("#previewButton").fadeIn()
     cooldown = true
     timerResult = "OK";
@@ -441,7 +443,8 @@ function cancelTimer() {
     $("#stats").fadeIn()
     $("#scramble").fadeIn()
     $("#preferencesButton").fadeIn()
-    $("#tool").fadeIn()
+    $("#tools").fadeIn()
+    $("#addToolButton").fadeIn()
     $("#toolSelect").fadeIn()
     $("#previewButton").fadeIn()
 }
@@ -506,7 +509,8 @@ function SMCallback(state) {
                     $("#stats").fadeOut()
                     $("#scramble").fadeOut()
                     $("#preferencesButton").fadeOut()
-                    $("#tool").fadeOut()
+                    $("#tools").fadeOut()
+                    $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
                     startRecorder()
@@ -578,7 +582,8 @@ function SMCallback(state) {
                     $("#stats").fadeOut()
                     $("#scramble").fadeOut()
                     $("#preferencesButton").fadeOut()
-                    $("#tool").fadeOut()
+                    $("#tools").fadeOut()
+                    $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
                     startRecorder()
@@ -623,9 +628,9 @@ function SMCallback(state) {
                     $("#scramble").fadeIn()
                     $("#preferencesButton").fadeIn()
                     $("#toolSelect").fadeIn()
-                    if (toolSelect.value != "none") {
-                        $("#tool").fadeIn()
-                    }
+                    $("#tools").fadeIn()
+                    $("#addToolButton").fadeIn()
+                    
                     $("#previewButton").fadeIn()
                     stopRecorder()
                 }   
@@ -642,9 +647,9 @@ function SMCallback(state) {
                 $("#scramble").fadeIn()
                 $("#preferencesButton").fadeIn()
                 $("#toolSelect").fadeIn()
-                if (toolSelect.value != "none") {
-                    $("#tool").fadeIn()
-                }
+                $("#tools").fadeIn()
+                $("#addToolButton").fadeIn()
+                
                 $("#previewButton").fadeIn()
                 stopRecorder()
             }

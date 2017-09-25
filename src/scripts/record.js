@@ -133,9 +133,11 @@ function showPreview() {
         $("#sessionSelect").prop('disabled', true)
         $("#sessionButton").prop('disabled', true)
         $("#toolSelect").prop('disabled', true)
-        $("#tool").prop('disabled', true)
+        $("#tools").prop('disabled', true)
         $("#toolSelect").addClass("disabled")
-        $("#tool").addClass("disabled")
+        $("#tools").addClass("disabled")
+        $("#addToolButton").prop('disabled', true)
+        $("#addToolButton").addClass("disabled")
         
         preferencesOpen = true
         if (timerState == "inspectReady") {
@@ -159,9 +161,12 @@ function closePreview() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     preferencesOpen = false
 }
 

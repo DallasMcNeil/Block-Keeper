@@ -175,10 +175,12 @@ function openPreferences() {
         $("#sessionSelect").prop('disabled', true)
         $("#sessionButton").prop('disabled', true)
         $("#toolSelect").prop('disabled', true)
-        $("#tool").prop('disabled', true)
+        $("#tools").prop('disabled', true)
         $("#toolSelect").addClass("disabled")
-        $("#tool").addClass("disabled")
+        $("#tools").addClass("disabled")
         
+        $("#addToolButton").prop('disabled', true)
+        $("#addToolButton").addClass("disabled")
         if (timerState == "inspectReady") {
             cancelTimer()
         }
@@ -232,10 +234,12 @@ function closePreferences() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
-    
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
@@ -411,12 +415,13 @@ function importCS() {
             $("#sessionButton").prop('disabled', true)
             $("#sessionButton").addClass("disabled")
             $("#toolSelect").prop('disabled', true)
-            $("#tool").prop('disabled', true)
+            $("#tools").prop('disabled', true)
             $("#toolSelect").addClass("disabled")
-            $("#tool").addClass("disabled")
+            $("#tools").addClass("disabled")
             $("#addTimeButton").prop('disabled', true)
             $("#addTimeButton").addClass("disabled")
-                
+            $("#addToolButton").prop('disabled', true)
+            $("#addToolButton").addClass("disabled")
             $("#dialogCSTimer").dialog("open")
 
             importCSTime(false) 
@@ -502,11 +507,14 @@ function importCSTime(doImport) {
         $("#sessionButton").prop('disabled', false)
         $("#sessionButton").removeClass("disabled")
         $("#toolSelect").prop('disabled', false)
-        $("#tool").prop('disabled', false)
+        $("#tools").prop('disabled', false)
         $("#toolSelect").removeClass("disabled")
-        $("#tool").removeClass("disabled")
+        $("#tools").removeClass("disabled")
+        $("#addToolButton").prop('disabled', false)
+        $("#addToolButton").removeClass("disabled")
         $("#addTimeButton").prop('disabled', false)
         $("#addTimeButton").removeClass("disabled")
+        
                 
         if (hasVideo && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")

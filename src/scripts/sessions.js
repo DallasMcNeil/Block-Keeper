@@ -326,7 +326,7 @@ function createRecord(time,result) {
             }
         }
         
-        if (time<btime&&btime!=-1&&result!="DNF") {
+        if (time<=btime&&btime!=-1&&result!="DNF") {
             // New PB, launch the confetti
             $("#announcement").animate({opacity:1},500)
             $("#confetti").animate({opacity:1},500)
@@ -386,9 +386,12 @@ function showTimeDialog() {
     $("#sessionSelect").prop('disabled', true)
     $("#sessionButton").prop('disabled', true)
     $("#toolSelect").prop('disabled', true)
-    $("#tool").prop('disabled', true)
+    $("#tools").prop('disabled', true)
     $("#toolSelect").addClass("disabled")
-    $("#tool").addClass("disabled")
+    $("#tools").addClass("disabled")
+    
+    $("#addToolButton").prop('disabled', true)
+    $("#addToolButton").addClass("disabled")
     preferencesOpen = true
 }
 
@@ -407,9 +410,12 @@ function closeTimeDialog() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
@@ -1367,10 +1373,11 @@ function openShowInfo(type,a) {
     $("#sessionSelect").prop('disabled', true)
     $("#sessionButton").prop('disabled', true)
     $("#toolSelect").prop('disabled', true)
-    $("#tool").prop('disabled', true)
+    $("#tools").prop('disabled', true)
     $("#toolSelect").addClass("disabled")
-    $("#tool").addClass("disabled")
-
+    $("#tools").addClass("disabled")
+    $("#addToolButton").prop('disabled', true)
+    $("#addToolButton").addClass("disabled")
     if (timerState == "inspectReady") {
         cancelTimer()
     }
@@ -1391,10 +1398,12 @@ function closeShowInfo() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
-    
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
