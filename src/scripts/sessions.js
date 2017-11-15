@@ -434,6 +434,7 @@ function addTime() {
         return
     }
     createRecord(t,"OK")
+    puzzles[currentPuzzle].sessions[currentSession].records[puzzles[currentPuzzle].sessions[currentSession].records.length-1].scramble = document.getElementById("addScrambleInput").value
     timerText.innerHTML = formatTime(t)
     scramble()
     closeTimeDialog()
@@ -1028,8 +1029,8 @@ $("#dialogRecord").dialog({
 $("#dialogAddTime").dialog({
     autoOpen : false,
     modal : true,
-    width: "225",
-    height: "144",
+    width: "307",
+    height: "265",
     show:"fade",
     hide:"fade"
 }).on('keydown', function(evt) {
@@ -1055,6 +1056,14 @@ $("#dialogShowInfo").dialog({
     height: "480",
     show:"fade",
     hide:"fade"
+}).on('keydown',function(evt) {
+    if (evt.keyCode === $.ui.keyCode.ESCAPE) {
+        closeShowInfo()
+    } else if (evt.keyCode === 13) {
+        closeShowInfo()
+        evt.preventDefault();
+    }        
+    evt.stopPropagation();
 })
 
 function openShowInfo(type,a) {
@@ -1108,7 +1117,9 @@ function openShowInfo(type,a) {
                 str+=")"
                 min = -2
             }
-            str+=(" ("+r[i].scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r[i].scramble.trim()+")")
+            }
         }   
         
     } else if (type == "Ao12") {
@@ -1157,7 +1168,9 @@ function openShowInfo(type,a) {
                 str+=")"
                 min = -2
             }
-            str+=(" ("+r[i].scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r[i].scramble.trim()+")")
+            }
         }   
     } else if (type == "Current") {
         if (a == 1) {
@@ -1171,7 +1184,9 @@ function openShowInfo(type,a) {
             } else {
                 str+="DNF"
             }
-            str+=(" ("+r.scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r.scramble.trim()+")")
+            }
         } else if (a == 3) {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-3)
             var mo3 = (meanTimes(extractTimes(r)))
@@ -1192,7 +1207,9 @@ function openShowInfo(type,a) {
                 } else {
                     str+="DNF"
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         } else {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-a)
@@ -1237,7 +1254,9 @@ function openShowInfo(type,a) {
                     str+=")"
                     min = -2
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }   
             }   
         }
         
@@ -1263,7 +1282,9 @@ function openShowInfo(type,a) {
             } else {
                 str+="DNF"
             }
-            str+=(" ("+r.scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r.scramble.trim()+")")
+            }
         } else if (a == 3) {
             var best = -1
             var index = 0
@@ -1294,7 +1315,9 @@ function openShowInfo(type,a) {
                 } else {
                     str+="DNF"
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         
         } else {
@@ -1351,7 +1374,9 @@ function openShowInfo(type,a) {
                     str+=")"
                     min = -2
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         
         }

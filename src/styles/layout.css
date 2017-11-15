@@ -334,7 +334,7 @@ select:hover {
     left: 0px;
 }
 
-input[type="text"] {
+input[type="text"],textarea {
     width: 227px;
     height: 24px;
     border-color:#606060;
@@ -355,7 +355,15 @@ input[type="text"] {
 }
 
 #addTimeInput {
-    width:100px;
+    width:70px;
+    margin-bottom:0px;
+    margin-top:0px;
+    margin-left: 0px;
+}
+
+#addScrambleInput {
+    width:273px;
+    height:90px;
     margin-bottom:0px;
     margin-top:12px;
     margin-left: 0px;
@@ -837,4 +845,45 @@ ul {
     top:0px;
     left:0px;
     z-index: -2;
+}
+
+#metronomeStartStopButton {
+    margin-top:50px;
+    margin-left:30px;
+    width:100px;
+    height:50px;
+}
+
+#metronomeBPMLabel {
+    position: absolute;
+    top:50px;
+    right:50px;
+    font-size:40px;
+    line-height:40px;
+    margin-top:5px;
+    color:#F0F0F0;
+    font-family: workSansLight;
+}
+
+#metronomeBPMSlider {
+    width:260px;
+    margin-top:40px;
+    margin-left:20px;
+    -webkit-appearance: none; 
+    appearance: none;
+    height: 8px; 
+    background: #606060;
+    outline: none;
+    cursor: pointer;
+}
+
+#metronomeBPMSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px; 
+    height: 23px; 
+    border-radius: 50%; 
+    background: #F0F0F0;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.4);
 }

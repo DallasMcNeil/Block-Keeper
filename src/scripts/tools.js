@@ -8,6 +8,7 @@ var toolSelect = document.getElementById("toolSelect")
 var tools = document.getElementById("tools")
 var canvases = []
 var toolTypes = []
+var toolOptions = []
 
 var mainColour = themeColours[0][5]
 var secondColour = themeColours[0][4]
@@ -16,8 +17,19 @@ var colours = ["#F20","#5F0","#0060FF"]
 
 function deleteTool(index) {
     tools.removeChild(canvases[index].parentNode)
+    toolSelect.options.add(toolOptions[index])
     canvases.splice(index,1)
     toolTypes.splice(index,1)
+    toolOptions.splice(index,1)
+    $("#toolSelect").html($("#toolSelect option").sort(function (a, b) {
+        if (a.text == b.text) {
+            return 0
+        } else if (a.text < b.text) {
+            return -1
+        } else {
+            return 1
+        }
+    }))
 }
 
 function addTool() {
@@ -28,7 +40,6 @@ function addTool() {
     toolClose.className = "cross closeTool"
     toolClose.title = "Remove Tool"
     toolClose.onclick = function() {
-        console.log("Remove")
         for (var i=0;i<tools.children.length;i++) {
             if (tools.children[i] === tool) {
                 deleteTool(i)
@@ -40,9 +51,30 @@ function addTool() {
     
     var toolCanvas
     if (toolSelect.value == "scramble") {
-        var toolCanvas = document.createElement("div"); 
+        var toolCanvas = document.createElement("div")
+    } else if (toolSelect.value == "metronome") {
+        var toolCanvas = document.createElement("div");
+        var startStopButton = document.createElement("button")
+        startStopButton.onclick = startStopMetronome
+        startStopButton.id = "metronomeStartStopButton"
+        startStopButton.innerHTML = "Start"
+        var BPMSlider = document.createElement("input")
+        BPMSlider.type = "range"
+        BPMSlider.min = "20"
+        BPMSlider.max = "240"
+        BPMSlider.value = "90"
+        BPMSlider.id = "metronomeBPMSlider"
+        var BPMLabel = document.createElement("p")
+        BPMLabel.id = "metronomeBPMLabel"
+        BPMLabel.innerHTML = "90<span style='font-size:15px'>BPM</span>"
+        BPMSlider.oninput = function () {
+            BPMLabel.innerHTML = BPMSlider.value+"<span style='font-size:15px'>BPM</span>"
+        }
+        toolCanvas.appendChild(startStopButton)
+        toolCanvas.appendChild(BPMLabel)
+        toolCanvas.appendChild(BPMSlider)
     } else {
-        var toolCanvas = document.createElement("canvas"); 
+        var toolCanvas = document.createElement("canvas")
         toolCanvas.width = 300*2
         toolCanvas.height = 200*2
         toolCanvas.style.width = "300px"
@@ -52,8 +84,15 @@ function addTool() {
     
     tool.appendChild(toolCanvas)
     canvases.push(toolCanvas)
-    
     tools.appendChild(tool)
+    var option = 0;
+    for (var i=0;i<toolSelect.options.length;i++) {
+        if (toolSelect.options[i].value == toolSelect.value) {
+            option = i
+        }
+    }
+    toolOptions.push(toolSelect.options[option])
+    toolSelect.remove(option)
     updateTool()
 }
 
@@ -92,6 +131,24 @@ function setupTools(list) {
         addTool()
     }
 } 
+
+var metronomeID
+var metronomePlaying = false
+var clickSound = new Audio("sounds/click1.wav")
+
+function startStopMetronome() {
+    if (metronomePlaying) {
+        metronomePlaying = false
+        clearInterval(metronomeID)
+        $("#metronomeStartStopButton")[0].innerHTML = "Start"
+    } else {
+        metronomePlaying = true
+        metronomeID = setInterval(function() {
+            clickSound.play()
+        },60000/$("#metronomeBPMSlider")[0].value)
+        $("#metronomeStartStopButton")[0].innerHTML = "Stop"
+    }
+}
 
 // Shortcut to get current session times
 function sessionTimes() {
@@ -230,9 +287,6 @@ function eventStats(ctx) {
             cmean = mean
         }
         
-        console.log(rtime)
-        console.log(stime)
-        
         if ((time<stime||stime==-2||stime==-1)&&time!=-2) {
             stime = time
         }
@@ -248,12 +302,7 @@ function eventStats(ctx) {
         if ((mean<smean||smean==-2)&&(mean!=-2)) {
             smean = mean
         }
-        console.log(stime)
     }
-    
-    console.log("Times")
-    console.log(sao5)
-    console.log(cao5)
     
     if (stime==ctime) {
         ctx.fillStyle = "#00FF00"
@@ -302,10 +351,8 @@ function eventStats(ctx) {
     } else {
         ctx.fillText(formatTime(smo3),200,90) 
     }
-
-    console.log(Math.abs(sao5-cao5)<0.001)
+    
     if (Math.abs(sao5-cao5)<0.001) {
-        console.log("Yep")
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour

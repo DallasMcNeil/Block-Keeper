@@ -128,7 +128,7 @@ body {
     color:@scramble;
 }
 
-button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool {
+button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool {
     color:@text;
     background-color: @base;
     border-color: @border;
@@ -186,7 +186,7 @@ select {
 
 #addToolButton {
     border-color:@border;
-    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='6,12 18,12'></polyline></svg>"); 
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='6,12 20,12'></polyline></svg>"); 
     background-color: @base;
 }
 
@@ -256,7 +256,7 @@ input[type="checkbox"]:active {
     padding-bottom:0px;
 }
 
-button, select, input, #tool, #sessionRecords,#sessionStats,#sessionDetails,#sessionRecordsContainer {
+button, select, input,textarea, #tool, #sessionRecords,#sessionStats,#sessionDetails,#sessionRecordsContainer {
      -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.4);
 }
 
@@ -272,6 +272,18 @@ button, select, input, #tool, #sessionRecords,#sessionStats,#sessionDetails,#ses
 
 #messageShowInfo {
     border-top-color: @border;
+}
+
+#metronomeBPMSlider {
+    background-color: @border;
+}
+
+#metronomeBPMSlider::-webkit-slider-thumb {
+    background-color: @text;
+}
+
+#metronomeBPMLabel {
+    color: @text;
 }
 
 `, function (e, output) {

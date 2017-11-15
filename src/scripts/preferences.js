@@ -37,7 +37,9 @@ var preferences = {
     timerDelay:0.55,
     scrambleAlign:"right",
     showBestTime:true,
-    useMouse:false
+    useMouse:false,
+    extendedVideos:false,
+    scramblesInList:true
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
@@ -98,6 +100,8 @@ function loadPreferences() {
         preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
         preferencesInterface.showBestTime.checked = preferences.showBestTime
         preferencesTimer.useMouse.checked = preferences.useMouse
+        preferencesTimer.extendedVideos.checked = preferences.extendedVideos
+        preferencesInterface.scramblesInList.checked = preferences.scramblesInList
 
         timerText.innerHTML = (0).toFixed(preferences.timerDetail)
         writeTheme(preferences.customTheme) 
@@ -150,6 +154,7 @@ $("#dialogPreferences").dialog({
     if (evt.keyCode === $.ui.keyCode.ESCAPE) {
         closePreferences()
     } else if (evt.keyCode === 13) {
+        savePreferencesForm()
         evt.preventDefault();
     }        
     evt.stopPropagation();
@@ -211,10 +216,13 @@ function closePreferences() {
     preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
     preferencesInterface.showBestTime.checked = preferences.showBestTime
     preferencesTimer.useMouse.checked = preferences.useMouse
-                      
+    preferencesTimer.extendedVideos.checked = preferences.extendedVideos
+    preferencesInterface.scramblesInList.checked = preferences.scramblesInList
+          
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
+        stackmat.stop()
         stackmat.init()
         stackmat.setCallBack(SMCallback)
     } else {
@@ -271,7 +279,9 @@ function savePreferencesForm() {
     preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
     preferences.showBestTime = preferencesInterface.showBestTime.checked
     preferences.useMouse = preferencesTimer.useMouse.checked
-            
+    preferences.extendedVideos = preferencesTimer.extendedVideos.checked
+    preferences.scramblesInList = preferencesInterface.scramblesInList.checked
+   
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
@@ -593,7 +603,10 @@ function clipboardPretty() {
     str += "\n"+document.getElementById("sessionSD").innerHTML
 
     for (var r=0;r<puzzles[currentPuzzle].sessions[currentSession].records.length;r++) {
-        str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+        str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML
+        if (preferences.scramblesInList) {
+            str+=" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+        }
     }
         
     str = str.replace(new RegExp("<b>", 'g'),"").replace(new RegExp("</b>", 'g'),"").replace(new RegExp("<br>", 'g'),"\n")

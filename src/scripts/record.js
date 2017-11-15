@@ -37,6 +37,7 @@ $("#dialogPreview").dialog({
             document.getElementById("previewVideo").pause()
         }
     } else if (evt.keyCode === 13) {
+        closePreview()
         evt.preventDefault();
     }         
     evt.stopPropagation();
@@ -81,6 +82,9 @@ function startRecorder() {
         recorder.clearRecordedData()
         recorder.initRecorder()
         recorder.startRecording()
+        $("#previewButton").addClass("disabled")
+        $("#previewButton").prop("disabled",true)
+        $("#previewButton").addClass("loading")
     }
 }
 
@@ -88,9 +92,6 @@ var videoLoading = false
 // Stop recording camera
 function stopRecorder() {  
     if (hasCamera && preferences.recordSolve) {
-        $("#previewButton").addClass("disabled")
-        $("#previewButton").prop("disabled",true)
-        $("#previewButton").addClass("loading")
         videoLoading = true
 
         finishedRecorder = recorder
@@ -111,6 +112,29 @@ function stopRecorder() {
             if (preferences.autosaveLocation != "") {
                 autosaveVideo(finishedRecorder.blob)
             }
+        })
+    }
+}
+
+function cancelRecorder() {
+    if (hasCamera && preferences.recordSolve) {
+        videoLoading = true
+
+        finishedRecorder = recorder
+        recorder = RecordRTC(mediaStream,{
+            type: 'video',
+            frameInterval: 25,
+            width: 640,
+            height: 480,
+            recorderType: RecordRTC.WhammyRecorder
+        });
+        finishedRecorder.stopRecording(function(vidurl) {
+            if (hasVideo) {
+                $("#previewButton").removeClass("disabled")
+                $("#previewButton").prop("disabled",false)
+                $("#previewButton").removeClass("loading")
+            }
+            videoLoading = false
         })
     }
 }

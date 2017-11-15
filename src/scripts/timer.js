@@ -370,6 +370,9 @@ function startInspection() {
     $("#previewButton").fadeOut()
     s3 = true
     s7 = true
+    if (preferences.extendedVideos) {
+        startRecorder()
+    }
 }
 
 // Prepare timer to start timing
@@ -400,7 +403,9 @@ function readyTimer() {
 
 // Start timer recording
 function startTimer() {
-    startRecorder()
+    if (!preferences.extendedVideos||(!preferences.inspection&&preferences.extendedVideos)) {
+        startRecorder()
+    }
     timerState = "timing"
     timerText.style.color = normalColor
     
@@ -413,7 +418,7 @@ function stopTimer() {
     timerState = "normal"
     timerText.style.color = normalColor
     currentTime = new Date();
-    timerTime = ((timeLastUpdate - startTime)/1000)
+    timerTime = ((currentTime - startTime)/1000)
     timerText.innerHTML = formatTime(timerTime)
     submitTime()
     inspectionTime = currentTime.getTime()
@@ -428,7 +433,13 @@ function stopTimer() {
     $("#previewButton").fadeIn()
     cooldown = true
     timerResult = "OK";
-    stopRecorder()
+    if (!preferences.extendedVideos) {
+        stopRecorder()
+    } else {
+        setTimeout(function(){
+            stopRecorder()
+        },3000)
+    }
 }
 
 // Cancel the timer at anytime
@@ -447,6 +458,9 @@ function cancelTimer() {
     $("#addToolButton").fadeIn()
     $("#toolSelect").fadeIn()
     $("#previewButton").fadeIn()
+    if (preferences.extendedVideos) {
+        cancelRecorder()
+    }
 }
 
 // Submit a time to be created
@@ -586,7 +600,9 @@ function SMCallback(state) {
                     $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
-                    startRecorder()
+                    if (!preferences.extendedVideos) {
+                        startRecorder()
+                    }
                     timerText.style.color = normalColor
                 }
                 timeLastUpdate = new Date().getTime()
@@ -632,9 +648,14 @@ function SMCallback(state) {
                     $("#addToolButton").fadeIn()
                     
                     $("#previewButton").fadeIn()
-                    stopRecorder()
+                    if (!preferences.extendedVideos) {
+                        stopRecorder()
+                    } else {
+                        setTimeout(function(){
+                            stopRecorder()
+                        },3000)
+                    }
                 }   
-                
                 break
             }
         } else {
@@ -651,7 +672,13 @@ function SMCallback(state) {
                 $("#addToolButton").fadeIn()
                 
                 $("#previewButton").fadeIn()
-                stopRecorder()
+                if (!preferences.extendedVideos) {
+                    stopRecorder()
+                } else {
+                    setTimeout(function(){
+                        stopRecorder()
+                    },3000)
+                }
             }
             timerText.style.color = normalColor
             var s = "--"

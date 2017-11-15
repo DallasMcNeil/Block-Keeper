@@ -130,11 +130,12 @@ Created by Dallas McNeil
     <button title="Video Preview" id="previewButton" onclick="showPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
     <select title="Tool Select" id="toolSelect" onchange="updateTool()">
-        <option value="scramble">Drawn Scramble</option>
-        <option value="sessionTrend">Session Trend</option>
         <option value="distribution">Distribution</option>
-        <option value="eventTrend">Event Trend</option>
+        <option value="scramble">Drawn Scramble</option>
         <option value="eventStats">Event Statistics</option>
+        <option value="eventTrend">Event Trend</option>
+        <option value="sessionTrend">Session Trend</option>
+        <option value="metronome">Metronome</option>
     </select>
 
     <div id="tools">
@@ -143,8 +144,8 @@ Created by Dallas McNeil
     
         
     <div id="dialogAddTime">
-        <p>Add Time (in seconds)
-            <input type="text" id="addTimeInput"></p>
+        <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
+        <p>Scramble (optional) <textarea rows="3" id="addScrambleInput"></textarea></p>
         <p><button onclick="addTime()">Add</button> <button onclick="closeTimeDialog()">Cancel</button></p>
     </div>
     
@@ -164,7 +165,7 @@ Created by Dallas McNeil
         
     <div id="dialogShowInfo">
         <button id="closeShowInfo" class="cross" onclick="closeShowInfo()"></button><br>
-        <p id="messageShowInfo">Hello World!</p>
+        <p id="messageShowInfo"></p>
     </div>
         
     <div id="dialogCSTimer">
@@ -209,12 +210,15 @@ Created by Dallas McNeil
                     <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH Split Keys</p>
                     <p title="Use external Stackmat timer to control timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
                     <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
+                    <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
+                    
                     <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
                 </form>
             </div>
             <div id="tabs-2">
                 <form name="preferencesInterface">
                     <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce Best Time</p>
+                    <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
                     <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
                         <option value="2.5">2.5</option>
