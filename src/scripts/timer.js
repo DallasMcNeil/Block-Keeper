@@ -364,11 +364,15 @@ function startInspection() {
     $("#stats").fadeOut()
     $("#scramble").fadeOut()
     $("#preferencesButton").fadeOut()
-    $("#tool").fadeOut()
+    $("#tools").fadeOut()
+    $("#addToolButton").fadeOut()
     $("#toolSelect").fadeOut()
     $("#previewButton").fadeOut()
     s3 = true
     s7 = true
+    if (preferences.extendedVideos) {
+        startRecorder()
+    }
 }
 
 // Prepare timer to start timing
@@ -391,14 +395,17 @@ function readyTimer() {
     $("#stats").fadeOut()
     $("#scramble").fadeOut()
     $("#preferencesButton").fadeOut()
-    $("#tool").fadeOut()
+    $("#tools").fadeOut()
+    $("#addToolButton").fadeOut()
     $("#toolSelect").fadeOut()
     $("#previewButton").fadeOut()
 }
 
 // Start timer recording
 function startTimer() {
-    startRecorder()
+    if (!preferences.extendedVideos||(!preferences.inspection&&preferences.extendedVideos)) {
+        startRecorder()
+    }
     timerState = "timing"
     timerText.style.color = normalColor
     
@@ -411,7 +418,7 @@ function stopTimer() {
     timerState = "normal"
     timerText.style.color = normalColor
     currentTime = new Date();
-    timerTime = ((timeLastUpdate - startTime)/1000)
+    timerTime = ((currentTime - startTime)/1000)
     timerText.innerHTML = formatTime(timerTime)
     submitTime()
     inspectionTime = currentTime.getTime()
@@ -420,13 +427,19 @@ function stopTimer() {
     $("#scramble").fadeIn()
     $("#preferencesButton").fadeIn()
     $("#toolSelect").fadeIn()
-    if (toolSelect.value != "none") {
-        $("#tool").fadeIn()
-    }
+    $("#tools").fadeIn()
+    $("#addToolButton").fadeIn()
+    
     $("#previewButton").fadeIn()
     cooldown = true
     timerResult = "OK";
-    stopRecorder()
+    if (!preferences.extendedVideos) {
+        stopRecorder()
+    } else {
+        setTimeout(function(){
+            stopRecorder()
+        },3000)
+    }
 }
 
 // Cancel the timer at anytime
@@ -441,9 +454,13 @@ function cancelTimer() {
     $("#stats").fadeIn()
     $("#scramble").fadeIn()
     $("#preferencesButton").fadeIn()
-    $("#tool").fadeIn()
+    $("#tools").fadeIn()
+    $("#addToolButton").fadeIn()
     $("#toolSelect").fadeIn()
     $("#previewButton").fadeIn()
+    if (preferences.extendedVideos) {
+        cancelRecorder()
+    }
 }
 
 // Submit a time to be created
@@ -506,7 +523,8 @@ function SMCallback(state) {
                     $("#stats").fadeOut()
                     $("#scramble").fadeOut()
                     $("#preferencesButton").fadeOut()
-                    $("#tool").fadeOut()
+                    $("#tools").fadeOut()
+                    $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
                     startRecorder()
@@ -578,10 +596,13 @@ function SMCallback(state) {
                     $("#stats").fadeOut()
                     $("#scramble").fadeOut()
                     $("#preferencesButton").fadeOut()
-                    $("#tool").fadeOut()
+                    $("#tools").fadeOut()
+                    $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
-                    startRecorder()
+                    if (!preferences.extendedVideos) {
+                        startRecorder()
+                    }
                     timerText.style.color = normalColor
                 }
                 timeLastUpdate = new Date().getTime()
@@ -623,13 +644,18 @@ function SMCallback(state) {
                     $("#scramble").fadeIn()
                     $("#preferencesButton").fadeIn()
                     $("#toolSelect").fadeIn()
-                    if (toolSelect.value != "none") {
-                        $("#tool").fadeIn()
-                    }
+                    $("#tools").fadeIn()
+                    $("#addToolButton").fadeIn()
+                    
                     $("#previewButton").fadeIn()
-                    stopRecorder()
+                    if (!preferences.extendedVideos) {
+                        stopRecorder()
+                    } else {
+                        setTimeout(function(){
+                            stopRecorder()
+                        },3000)
+                    }
                 }   
-                
                 break
             }
         } else {
@@ -642,11 +668,17 @@ function SMCallback(state) {
                 $("#scramble").fadeIn()
                 $("#preferencesButton").fadeIn()
                 $("#toolSelect").fadeIn()
-                if (toolSelect.value != "none") {
-                    $("#tool").fadeIn()
-                }
+                $("#tools").fadeIn()
+                $("#addToolButton").fadeIn()
+                
                 $("#previewButton").fadeIn()
-                stopRecorder()
+                if (!preferences.extendedVideos) {
+                    stopRecorder()
+                } else {
+                    setTimeout(function(){
+                        stopRecorder()
+                    },3000)
+                }
             }
             timerText.style.color = normalColor
             var s = "--"

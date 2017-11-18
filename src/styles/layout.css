@@ -334,7 +334,7 @@ select:hover {
     left: 0px;
 }
 
-input[type="text"] {
+input[type="text"],textarea {
     width: 227px;
     height: 24px;
     border-color:#606060;
@@ -355,7 +355,15 @@ input[type="text"] {
 }
 
 #addTimeInput {
-    width:100px;
+    width:70px;
+    margin-bottom:0px;
+    margin-top:0px;
+    margin-left: 0px;
+}
+
+#addScrambleInput {
+    width:273px;
+    height:90px;
     margin-bottom:0px;
     margin-top:12px;
     margin-left: 0px;
@@ -687,7 +695,7 @@ input[type="checkbox"]:active {
     left:0px;
     width:100vw;
     background-color: #4444FF;
-    transition: 0.2s;
+    transition: 0.1s;
 }
 
 #versionBanner:hover {
@@ -745,7 +753,7 @@ input[type="checkbox"]:active {
     margin-bottom: -2px;
 }
 
-#tabs-1,#tabs-2,#tabs-3 {
+#tabs-1,#tabs-2,#tabs-3,#tabs-4 {
     border-bottom: solid 2px #505050;
     border-top: solid 2px #505050;
     padding-top: 15px;
@@ -766,18 +774,28 @@ ul {
 
 
 #toolSelect {
-    width:304px;
+    width:264px;
     position:fixed;
-    bottom: 10px;
-    right:10px;
+    bottom:10px;
+    right:50px;
 }
 
-#tool {
-    width:300px;
-    height: 200px;
+#tools {
+    width:304zpx;
     position:fixed;
     bottom: 50px;
     right:10px;
+    display: block;
+}
+
+.tool {
+    width:300px;
+    height: 200px;
+    position:relative;
+    margin-bottom:0px;
+    margin-right: 0px;
+    margin-top:10px;
+    margin-left:0px;
     border-color:#505050;
     border-width:2px;
     border-radius: 0px;
@@ -786,10 +804,32 @@ ul {
     background-color: #282828;
 }
 
-#toolCanvas {
-    margin: 0px;
-    width:300px;
-    height:200px;
+.closeTool {
+    display: block;
+    position: absolute;
+    top:10px;
+    right:10px;
+    height:30px;
+    width:30px;
+    opacity:0.4;
+    z-index:1;
+    transition:0.1s;
+}
+
+.closeTool:hover {
+    opacity:1;
+    transition:0.1s;
+}
+
+#addToolButton {
+    width:30px;
+    height:30px;
+    position: fixed;
+    right:10px;
+    bottom:10px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='6,12 18,12'></polyline></svg>"); 
+    background-color: #303030;
+    padding: 0px;
 }
 
 #previewButton.loading {
@@ -805,4 +845,45 @@ ul {
     top:0px;
     left:0px;
     z-index: -2;
+}
+
+#metronomeStartStopButton {
+    margin-top:50px;
+    margin-left:30px;
+    width:100px;
+    height:50px;
+}
+
+#metronomeBPMLabel {
+    position: absolute;
+    top:50px;
+    right:50px;
+    font-size:40px;
+    line-height:40px;
+    margin-top:5px;
+    color:#F0F0F0;
+    font-family: workSansLight;
+}
+
+#metronomeBPMSlider {
+    width:260px;
+    margin-top:40px;
+    margin-left:20px;
+    -webkit-appearance: none; 
+    appearance: none;
+    height: 8px; 
+    background: #606060;
+    outline: none;
+    cursor: pointer;
+}
+
+#metronomeBPMSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px; 
+    height: 23px; 
+    border-radius: 50%; 
+    background: #F0F0F0;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.4);
 }

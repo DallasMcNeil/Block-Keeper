@@ -37,13 +37,17 @@ var preferences = {
     timerDelay:0.55,
     scrambleAlign:"right",
     showBestTime:true,
-    useMouse:false
+    useMouse:false,
+    extendedVideos:false,
+    scramblesInList:true,
+    metronomeBPM:90
 }
 
 var s7voice = new Audio("sounds/male8s.mp3")
 var s3voice = new Audio("sounds/male12s.mp3")
-var preferencesInterface = document.forms[1]
-var preferencesTimer = document.forms[0]
+var preferencesInterface = document.forms[2]
+var preferencesTimer = document.forms[1]
+var preferencesGeneral = document.forms[0]
 var timerText = document.getElementById("timer")
 timerText.innerHTML = (0).toFixed(preferences.timerDetail)
 
@@ -82,22 +86,24 @@ function loadPreferences() {
         preferencesTimer.inspection.checked = preferences.inspection
         preferencesTimer.splitMode.checked = preferences.split
         preferencesTimer.endSplit.checked = preferences.endSplit
-        preferencesTimer.timerDetail.value = preferences.timerDetail
+        preferencesGeneral.timerDetail.value = preferences.timerDetail
         preferencesTimer.hideTiming.checked = preferences.hideTiming
-        preferencesTimer.recordSolve.checked = preferences.recordSolve
+        preferencesGeneral.recordSolve.checked = preferences.recordSolve
         preferencesTimer.voice.value = preferences.voice
-        preferencesTimer.formatTime.checked = preferences.formatTime
+        preferencesGeneral.formatTime.checked = preferences.formatTime
         preferencesTimer.stackmat.checked = preferences.stackmat
         preferencesTimer.leftKey.value = preferences.leftKey  
         preferencesTimer.rightKey.value = preferences.rightKey 
         preferencesInterface.scrambleSize.value = preferences.scrambleSize+""
         preferencesInterface.backgroundImage.value = preferences.backgroundImage
         preferencesTimer.timerDelay.value = preferences.timerDelay
-        preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+        preferencesGeneral.autosaveLocation.value = preferences.autosaveLocation
         preferencesTimer.OHSplit.checked = preferences.OHSplit
         preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
         preferencesInterface.showBestTime.checked = preferences.showBestTime
         preferencesTimer.useMouse.checked = preferences.useMouse
+        preferencesGeneral.extendedVideos.checked = preferences.extendedVideos
+        preferencesGeneral.scramblesInList.checked = preferences.scramblesInList
 
         timerText.innerHTML = (0).toFixed(preferences.timerDetail)
         writeTheme(preferences.customTheme) 
@@ -150,6 +156,7 @@ $("#dialogPreferences").dialog({
     if (evt.keyCode === $.ui.keyCode.ESCAPE) {
         closePreferences()
     } else if (evt.keyCode === 13) {
+        savePreferencesForm()
         evt.preventDefault();
     }        
     evt.stopPropagation();
@@ -175,10 +182,12 @@ function openPreferences() {
         $("#sessionSelect").prop('disabled', true)
         $("#sessionButton").prop('disabled', true)
         $("#toolSelect").prop('disabled', true)
-        $("#tool").prop('disabled', true)
+        $("#tools").prop('disabled', true)
         $("#toolSelect").addClass("disabled")
-        $("#tool").addClass("disabled")
+        $("#tools").addClass("disabled")
         
+        $("#addToolButton").prop('disabled', true)
+        $("#addToolButton").addClass("disabled")
         if (timerState == "inspectReady") {
             cancelTimer()
         }
@@ -193,26 +202,29 @@ function closePreferences() {
     preferencesTimer.inspection.checked = preferences.inspection
     preferencesTimer.splitMode.checked = preferences.split
     preferencesTimer.endSplit.checked = preferences.endSplit
-    preferencesTimer.timerDetail.value = preferences.timerDetail
+    preferencesGeneral.timerDetail.value = preferences.timerDetail
     preferencesTimer.hideTiming.checked = preferences.hideTiming
     preferencesTimer.voice.value = preferences.voice
-    preferencesTimer.formatTime.checked = preferences.formatTime
-    preferencesTimer.recordSolve.checked = preferences.recordSolve
+    preferencesGeneral.formatTime.checked = preferences.formatTime
+    preferencesGeneral.recordSolve.checked = preferences.recordSolve
     preferencesTimer.timerDelay.value = preferences.timerDelay
     preferencesTimer.stackmat.checked = preferences.stackmat  
     preferencesTimer.leftKey.value = preferences.leftKey  
     preferencesTimer.rightKey.value = preferences.rightKey 
     preferencesInterface.scrambleSize.value = preferences.scrambleSize
     preferencesInterface.backgroundImage.value = preferences.backgroundImage
-    preferencesTimer.autosaveLocation.value = preferences.autosaveLocation
+    preferencesGeneral.autosaveLocation.value = preferences.autosaveLocation
     preferencesTimer.OHSplit.checked = preferences.OHSplit
     preferencesInterface.scrambleAlign.value = preferences.scrambleAlign
     preferencesInterface.showBestTime.checked = preferences.showBestTime
     preferencesTimer.useMouse.checked = preferences.useMouse
-                      
+    preferencesGeneral.extendedVideos.checked = preferences.extendedVideos
+    preferencesGeneral.scramblesInList.checked = preferences.scramblesInList
+          
     writeTheme(preferences.customTheme)
     
     if (preferences.stackmat) {
+        stackmat.stop()
         stackmat.init()
         stackmat.setCallBack(SMCallback)
     } else {
@@ -232,10 +244,12 @@ function closePreferences() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
-    
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
@@ -253,21 +267,23 @@ function savePreferencesForm() {
     preferences.inspection = preferencesTimer.inspection.checked
     preferences.split = preferencesTimer.splitMode.checked
     preferences.endSplit = preferencesTimer.endSplit.checked        
-    preferences.timerDetail = preferencesTimer.timerDetail.value
+    preferences.timerDetail = preferencesGeneral.timerDetail.value
     preferences.hideTiming = preferencesTimer.hideTiming.checked
     preferences.voice = preferencesTimer.voice.value
-    preferences.formatTime = preferencesTimer.formatTime.checked
-    preferences.recordSolve = preferencesTimer.recordSolve.checked
+    preferences.formatTime = preferencesGeneral.formatTime.checked
+    preferences.recordSolve = preferencesGeneral.recordSolve.checked
     preferences.stackmat = preferencesTimer.stackmat.checked 
     preferences.scrambleSize = preferencesInterface.scrambleSize.value 
     preferences.backgroundImage = preferencesInterface.backgroundImage.value
     preferences.timerDelay = preferencesTimer.timerDelay.value
-    preferences.autosaveLocation = preferencesTimer.autosaveLocation.value 
+    preferences.autosaveLocation = preferencesGeneral.autosaveLocation.value 
     preferences.OHSplit = preferencesTimer.OHSplit.checked 
     preferences.scrambleAlign = preferencesInterface.scrambleAlign.value
     preferences.showBestTime = preferencesInterface.showBestTime.checked
     preferences.useMouse = preferencesTimer.useMouse.checked
-            
+    preferences.extendedVideos = preferencesGeneral.extendedVideos.checked
+    preferences.scramblesInList = preferencesGeneral.scramblesInList.checked
+   
     if (preferencesTimer.leftKey.value != "") {
         preferences.leftKey = preferencesTimer.leftKey.value
         leftKey = preferences.leftKey
@@ -411,12 +427,13 @@ function importCS() {
             $("#sessionButton").prop('disabled', true)
             $("#sessionButton").addClass("disabled")
             $("#toolSelect").prop('disabled', true)
-            $("#tool").prop('disabled', true)
+            $("#tools").prop('disabled', true)
             $("#toolSelect").addClass("disabled")
-            $("#tool").addClass("disabled")
+            $("#tools").addClass("disabled")
             $("#addTimeButton").prop('disabled', true)
             $("#addTimeButton").addClass("disabled")
-                
+            $("#addToolButton").prop('disabled', true)
+            $("#addToolButton").addClass("disabled")
             $("#dialogCSTimer").dialog("open")
 
             importCSTime(false) 
@@ -502,11 +519,14 @@ function importCSTime(doImport) {
         $("#sessionButton").prop('disabled', false)
         $("#sessionButton").removeClass("disabled")
         $("#toolSelect").prop('disabled', false)
-        $("#tool").prop('disabled', false)
+        $("#tools").prop('disabled', false)
         $("#toolSelect").removeClass("disabled")
-        $("#tool").removeClass("disabled")
+        $("#tools").removeClass("disabled")
+        $("#addToolButton").prop('disabled', false)
+        $("#addToolButton").removeClass("disabled")
         $("#addTimeButton").prop('disabled', false)
         $("#addTimeButton").removeClass("disabled")
+        
                 
         if (hasVideo && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")
@@ -585,7 +605,10 @@ function clipboardPretty() {
     str += "\n"+document.getElementById("sessionSD").innerHTML
 
     for (var r=0;r<puzzles[currentPuzzle].sessions[currentSession].records.length;r++) {
-        str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML+" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+        str+="\n"+(r+1)+". "+sessionRecords.rows[r+1].children[1].children[0].innerHTML
+        if (preferences.scramblesInList) {
+            str+=" ("+puzzles[currentPuzzle].sessions[currentSession].records[r].scramble+")"
+        }
     }
         
     str = str.replace(new RegExp("<b>", 'g'),"").replace(new RegExp("</b>", 'g'),"").replace(new RegExp("<br>", 'g'),"\n")
@@ -615,7 +638,7 @@ function selectLocation() {
         if (fileNames === undefined) {
             return
         } else {
-            preferencesTimer.autosaveLocation.value = fileNames[0].replace(new RegExp("\\\\", "g"),"/")
+            preferencesGeneral.autosaveLocation.value = fileNames[0].replace(new RegExp("\\\\", "g"),"/")
         } 
     });
 }

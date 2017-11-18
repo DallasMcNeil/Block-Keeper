@@ -108,13 +108,18 @@ var currentRecord = 0
 
 // Save events to a file
 function saveSessions() {
-    storage.set("puzzles",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {if (error) {console.log(error)}})
+    storage.set("puzzles",{puzzles:puzzles, puzzle:currentPuzzle,session:currentSession, tools:toolTypes},
+    function(error) {
+        if (error) {
+            console.log(error)
+        }
+    })
 
 }
 
 // Save events to a seperate backup file
 function closeApp() {
-    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tool:toolSelect.value},function(error) {
+    storage.set("puzzlesBackup",{puzzles:puzzles,puzzle:currentPuzzle,session:currentSession,tools:toolTypes},function(error) {
         if (error) {
             console.log(error)
         }
@@ -208,8 +213,8 @@ function loadSessions() {
                 currentSession = 0
             }
         }
-        if (object.tool != null) {
-            toolSelect.value = object.tool
+        if (object.tools != null) {
+            setupTools(object.tools)
         }
     
         setPuzzleOptions()
@@ -321,7 +326,7 @@ function createRecord(time,result) {
             }
         }
         
-        if (time<btime&&btime!=-1&&result!="DNF") {
+        if (time<=btime&&btime!=-1&&result!="DNF") {
             // New PB, launch the confetti
             $("#announcement").animate({opacity:1},500)
             $("#confetti").animate({opacity:1},500)
@@ -381,9 +386,12 @@ function showTimeDialog() {
     $("#sessionSelect").prop('disabled', true)
     $("#sessionButton").prop('disabled', true)
     $("#toolSelect").prop('disabled', true)
-    $("#tool").prop('disabled', true)
+    $("#tools").prop('disabled', true)
     $("#toolSelect").addClass("disabled")
-    $("#tool").addClass("disabled")
+    $("#tools").addClass("disabled")
+    
+    $("#addToolButton").prop('disabled', true)
+    $("#addToolButton").addClass("disabled")
     preferencesOpen = true
 }
 
@@ -402,9 +410,12 @@ function closeTimeDialog() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
@@ -423,6 +434,7 @@ function addTime() {
         return
     }
     createRecord(t,"OK")
+    puzzles[currentPuzzle].sessions[currentSession].records[puzzles[currentPuzzle].sessions[currentSession].records.length-1].scramble = document.getElementById("addScrambleInput").value
     timerText.innerHTML = formatTime(t)
     scramble()
     closeTimeDialog()
@@ -1017,8 +1029,8 @@ $("#dialogRecord").dialog({
 $("#dialogAddTime").dialog({
     autoOpen : false,
     modal : true,
-    width: "225",
-    height: "144",
+    width: "307",
+    height: "265",
     show:"fade",
     hide:"fade"
 }).on('keydown', function(evt) {
@@ -1044,6 +1056,14 @@ $("#dialogShowInfo").dialog({
     height: "480",
     show:"fade",
     hide:"fade"
+}).on('keydown',function(evt) {
+    if (evt.keyCode === $.ui.keyCode.ESCAPE) {
+        closeShowInfo()
+    } else if (evt.keyCode === 13) {
+        closeShowInfo()
+        evt.preventDefault();
+    }        
+    evt.stopPropagation();
 })
 
 function openShowInfo(type,a) {
@@ -1097,7 +1117,9 @@ function openShowInfo(type,a) {
                 str+=")"
                 min = -2
             }
-            str+=(" ("+r[i].scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r[i].scramble.trim()+")")
+            }
         }   
         
     } else if (type == "Ao12") {
@@ -1146,7 +1168,9 @@ function openShowInfo(type,a) {
                 str+=")"
                 min = -2
             }
-            str+=(" ("+r[i].scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r[i].scramble.trim()+")")
+            }
         }   
     } else if (type == "Current") {
         if (a == 1) {
@@ -1160,7 +1184,9 @@ function openShowInfo(type,a) {
             } else {
                 str+="DNF"
             }
-            str+=(" ("+r.scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r.scramble.trim()+")")
+            }
         } else if (a == 3) {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-3)
             var mo3 = (meanTimes(extractTimes(r)))
@@ -1181,7 +1207,9 @@ function openShowInfo(type,a) {
                 } else {
                     str+="DNF"
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         } else {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-a)
@@ -1226,7 +1254,9 @@ function openShowInfo(type,a) {
                     str+=")"
                     min = -2
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }   
             }   
         }
         
@@ -1252,7 +1282,9 @@ function openShowInfo(type,a) {
             } else {
                 str+="DNF"
             }
-            str+=(" ("+r.scramble.trim()+")")
+            if (preferences.scramblesInList) {
+                str+=(" ("+r.scramble.trim()+")")
+            }
         } else if (a == 3) {
             var best = -1
             var index = 0
@@ -1283,7 +1315,9 @@ function openShowInfo(type,a) {
                 } else {
                     str+="DNF"
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         
         } else {
@@ -1340,7 +1374,9 @@ function openShowInfo(type,a) {
                     str+=")"
                     min = -2
                 }
-                str+=(" ("+r[i].scramble.trim()+")")
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r[i].scramble.trim()+")")
+                }
             }   
         
         }
@@ -1362,10 +1398,11 @@ function openShowInfo(type,a) {
     $("#sessionSelect").prop('disabled', true)
     $("#sessionButton").prop('disabled', true)
     $("#toolSelect").prop('disabled', true)
-    $("#tool").prop('disabled', true)
+    $("#tools").prop('disabled', true)
     $("#toolSelect").addClass("disabled")
-    $("#tool").addClass("disabled")
-
+    $("#tools").addClass("disabled")
+    $("#addToolButton").prop('disabled', true)
+    $("#addToolButton").addClass("disabled")
     if (timerState == "inspectReady") {
         cancelTimer()
     }
@@ -1386,10 +1423,12 @@ function closeShowInfo() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
-    
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     if (hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)

@@ -5,15 +5,100 @@
 
 
 var toolSelect = document.getElementById("toolSelect")
-var tool = document.getElementById("tool")
-var canvas = document.getElementById("toolCanvas")
-var ctx = canvas.getContext("2d")
+var tools = document.getElementById("tools")
+var canvases = []
+var toolTypes = []
+var toolOptions = []
 
 var mainColour = themeColours[0][5]
 var secondColour = themeColours[0][4]
 
 var colours = ["#F20","#5F0","#0060FF"]
 
+function deleteTool(index) {
+    tools.removeChild(canvases[index].parentNode)
+    toolSelect.options.add(toolOptions[index])
+    canvases.splice(index,1)
+    toolTypes.splice(index,1)
+    toolOptions.splice(index,1)
+    $("#toolSelect").html($("#toolSelect option").sort(function (a, b) {
+        if (a.text == b.text) {
+            return 0
+        } else if (a.text < b.text) {
+            return -1
+        } else {
+            return 1
+        }
+    }))
+}
+
+function addTool() {
+    var tool = document.createElement("div"); 
+    toolTypes.push(toolSelect.value)
+    tool.className = "tool"
+    var toolClose = document.createElement("button"); 
+    toolClose.className = "cross closeTool"
+    toolClose.title = "Remove Tool"
+    toolClose.onclick = function() {
+        for (var i=0;i<tools.children.length;i++) {
+            if (tools.children[i] === tool) {
+                deleteTool(i)
+                break
+            }
+        }
+    }
+    tool.appendChild(toolClose)
+    
+    var toolCanvas
+    if (toolSelect.value == "scramble") {
+        var toolCanvas = document.createElement("div")
+    } else if (toolSelect.value == "metronome") {
+        var toolCanvas = document.createElement("div");
+        var startStopButton = document.createElement("button")
+        startStopButton.onclick = startStopMetronome
+        startStopButton.id = "metronomeStartStopButton"
+        startStopButton.innerHTML = "Start"
+        var BPMSlider = document.createElement("input")
+        BPMSlider.type = "range"
+        BPMSlider.min = "20"
+        BPMSlider.max = "240"
+        BPMSlider.value = preferences.metronomeBPM+""
+        BPMSlider.id = "metronomeBPMSlider"
+        var BPMLabel = document.createElement("p")
+        BPMLabel.id = "metronomeBPMLabel"
+        BPMLabel.innerHTML = preferences.metronomeBPM+"<span style='font-size:15px'>BPM</span>"
+        BPMSlider.oninput = function () {
+            BPMLabel.innerHTML = BPMSlider.value+"<span style='font-size:15px'>BPM</span>"
+        }
+        BPMSlider.onchange = function () {
+            preferences.metronomeBPM = BPMSlider.value
+            savePreferences()
+        }
+        toolCanvas.appendChild(startStopButton)
+        toolCanvas.appendChild(BPMLabel)
+        toolCanvas.appendChild(BPMSlider)
+    } else {
+        var toolCanvas = document.createElement("canvas")
+        toolCanvas.width = 300*2
+        toolCanvas.height = 200*2
+        toolCanvas.style.width = "300px"
+        toolCanvas.style.height = "200px"
+        toolCanvas.getContext("2d").scale(2,2)
+    }
+    
+    tool.appendChild(toolCanvas)
+    canvases.push(toolCanvas)
+    tools.appendChild(tool)
+    var option = 0;
+    for (var i=0;i<toolSelect.options.length;i++) {
+        if (toolSelect.options[i].value == toolSelect.value) {
+            option = i
+        }
+    }
+    toolOptions.push(toolSelect.options[option])
+    toolSelect.remove(option)
+    updateTool()
+}
 
 // Update Tools based on new session data or scramble
 function updateTool() {
@@ -25,26 +110,48 @@ function updateTool() {
         secondColour = themeColours[preferencesInterface.theme.value][4]
     }
     
-    if (toolSelect.value == "none") {
-        $("#tool").hide()
-        return
+    for (var i=0;i<canvases.length;i++) {
+        if (toolTypes[i] == "sessionTrend") {
+            var ctx = canvases[i].getContext("2d")
+            sessionTrend(ctx)
+        } else if (toolTypes[i] == "eventTrend") {
+            var ctx = canvases[i].getContext("2d")
+            eventTrend(ctx)
+        } else if (toolTypes[i] == "distribution") {
+            var ctx = canvases[i].getContext("2d")
+            distribution(ctx)
+        } else if (toolTypes[i] == "scramble") {
+            drawScramble(canvases[i])
+        } else if (toolTypes[i] == "eventStats") {
+            var ctx = canvases[i].getContext("2d")
+            eventStats(ctx)
+        }
+    }
+}
+
+function setupTools(list) {
+    for (var i=0;i<list.length;i++) {
+        toolSelect.value = list[i]
+        addTool()
+    }
+} 
+
+var metronomeID
+var metronomePlaying = false
+var clickSound = new Audio("sounds/click.wav")
+
+function startStopMetronome() {
+    if (metronomePlaying) {
+        metronomePlaying = false
+        clearInterval(metronomeID)
+        $("#metronomeStartStopButton")[0].innerHTML = "Start"
     } else {
-        $("#tool").show()
+        metronomePlaying = true
+        metronomeID = setInterval(function() {
+            clickSound.play()
+        },60000/$("#metronomeBPMSlider")[0].value)
+        $("#metronomeStartStopButton")[0].innerHTML = "Stop"
     }
-    
-    if (toolSelect.value == "sessionTrend") {
-        sessionTrend()
-    } else if (toolSelect.value == "eventTrend") {
-        eventTrend()
-    } else if (toolSelect.value == "distribution") {
-        distribution()
-    } else if (toolSelect.value == "scramble") {
-        drawScramble()
-        return
-    } else if (toolSelect.value == "eventStats") {
-        eventStats()
-    }
-    hideScramble()
 }
 
 // Shortcut to get current session times
@@ -105,7 +212,7 @@ function extractTimes(records) {
     return times
 }
 
-function eventStats() {
+function eventStats(ctx) {
     ctx.clearRect(0,0,300,200)
     ctx.strokeStyle = secondColour
     ctx.fillStyle = mainColour
@@ -222,10 +329,10 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,60) 
     } else {
-        ctx.fillText(formatTime(time),200,60) 
+        ctx.fillText(formatTime(stime),200,60) 
     }
     
-    if (smo3==cmo3) {
+    if (Math.abs(smo3-cmo3)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -237,7 +344,6 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,90) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cmo3),100,90) 
     }
     if (smo3==-2) {
@@ -247,11 +353,10 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,90) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(smo3),200,90) 
     }
-
-    if (sao5==cao5) {
+    
+    if (Math.abs(sao5-cao5)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -263,7 +368,6 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,120) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cao5),100,120) 
     }
     if (sao5==-2) {
@@ -273,11 +377,10 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,120) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(sao5),200,120) 
     }
     
-    if (sao12==cao12) {
+    if (Math.abs(sao12-cao12)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -289,7 +392,6 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",100,150) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cao12),100,150) 
     }
     if (sao12==-2) {
@@ -299,11 +401,10 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,150) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(sao12),200,150) 
     }
     
-    if (smean==cmean) {
+    if (Math.abs(smean-cmean)<0.001) {
         ctx.fillStyle = "#00FF00"
     } else {
         ctx.fillStyle = mainColour
@@ -312,7 +413,6 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("-",100,180) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(cmean),100,180) 
     }
     if (smean==-2) {
@@ -322,14 +422,13 @@ function eventStats() {
         ctx.fillStyle = mainColour
         ctx.fillText("DNF",200,180) 
     } else {
-        ctx.fillStyle = mainColour
         ctx.fillText(formatTime(smean),200,180) 
     }
   
 }
 
 // Draw a trendline of current session
-function sessionTrend() {
+function sessionTrend(ctx) {
     ctx.clearRect(0,0,300,200)
     
     var times = sessionTimes()
@@ -440,7 +539,7 @@ function sessionTrend() {
 }
 
 // Draw trendline for current event
-function eventTrend() {
+function eventTrend(ctx) {
     
     ctx.clearRect(0,0,300,200)
     
@@ -471,6 +570,7 @@ function eventTrend() {
             bestAo5.push(ao5s.sort(function(a,b){return a-b})[0])
         }
     }
+    
     var dis = rangeForTimes(means.concat(bests).filter(function(n){return !isNaN(n)&&n}))
     
     ctx.strokeStyle = secondColour
@@ -554,7 +654,7 @@ function eventTrend() {
 }
 
 // Draw distribution of current session
-function distribution() {
+function distribution(ctx) {
     ctx.clearRect(0,0,300,200)
 
     var times = sessionTimes()

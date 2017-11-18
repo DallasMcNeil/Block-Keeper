@@ -37,6 +37,7 @@ $("#dialogPreview").dialog({
             document.getElementById("previewVideo").pause()
         }
     } else if (evt.keyCode === 13) {
+        closePreview()
         evt.preventDefault();
     }         
     evt.stopPropagation();
@@ -81,6 +82,9 @@ function startRecorder() {
         recorder.clearRecordedData()
         recorder.initRecorder()
         recorder.startRecording()
+        $("#previewButton").addClass("disabled")
+        $("#previewButton").prop("disabled",true)
+        $("#previewButton").addClass("loading")
     }
 }
 
@@ -88,9 +92,6 @@ var videoLoading = false
 // Stop recording camera
 function stopRecorder() {  
     if (hasCamera && preferences.recordSolve) {
-        $("#previewButton").addClass("disabled")
-        $("#previewButton").prop("disabled",true)
-        $("#previewButton").addClass("loading")
         videoLoading = true
 
         finishedRecorder = recorder
@@ -115,6 +116,29 @@ function stopRecorder() {
     }
 }
 
+function cancelRecorder() {
+    if (hasCamera && preferences.recordSolve) {
+        videoLoading = true
+
+        finishedRecorder = recorder
+        recorder = RecordRTC(mediaStream,{
+            type: 'video',
+            frameInterval: 25,
+            width: 640,
+            height: 480,
+            recorderType: RecordRTC.WhammyRecorder
+        });
+        finishedRecorder.stopRecording(function(vidurl) {
+            if (hasVideo) {
+                $("#previewButton").removeClass("disabled")
+                $("#previewButton").prop("disabled",false)
+                $("#previewButton").removeClass("loading")
+            }
+            videoLoading = false
+        })
+    }
+}
+
 // Show the dialog which presents the recording
 function showPreview() {
     if ($('#dialogPreview').dialog('isOpen')) {
@@ -133,9 +157,11 @@ function showPreview() {
         $("#sessionSelect").prop('disabled', true)
         $("#sessionButton").prop('disabled', true)
         $("#toolSelect").prop('disabled', true)
-        $("#tool").prop('disabled', true)
+        $("#tools").prop('disabled', true)
         $("#toolSelect").addClass("disabled")
-        $("#tool").addClass("disabled")
+        $("#tools").addClass("disabled")
+        $("#addToolButton").prop('disabled', true)
+        $("#addToolButton").addClass("disabled")
         
         preferencesOpen = true
         if (timerState == "inspectReady") {
@@ -159,9 +185,12 @@ function closePreview() {
     $("#sessionSelect").prop('disabled', false)
     $("#sessionButton").prop('disabled', false)
     $("#toolSelect").prop('disabled', false)
-    $("#tool").prop('disabled', false)
+    $("#tools").prop('disabled', false)
     $("#toolSelect").removeClass("disabled")
-    $("#tool").removeClass("disabled")
+    $("#tools").removeClass("disabled")
+    $("#addToolButton").prop('disabled', false)
+    $("#addToolButton").removeClass("disabled")
+        
     preferencesOpen = false
 }
 
