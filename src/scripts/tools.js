@@ -62,13 +62,17 @@ function addTool() {
         BPMSlider.type = "range"
         BPMSlider.min = "20"
         BPMSlider.max = "240"
-        BPMSlider.value = "90"
+        BPMSlider.value = preferences.metronomeBPM+""
         BPMSlider.id = "metronomeBPMSlider"
         var BPMLabel = document.createElement("p")
         BPMLabel.id = "metronomeBPMLabel"
-        BPMLabel.innerHTML = "90<span style='font-size:15px'>BPM</span>"
+        BPMLabel.innerHTML = preferences.metronomeBPM+"<span style='font-size:15px'>BPM</span>"
         BPMSlider.oninput = function () {
             BPMLabel.innerHTML = BPMSlider.value+"<span style='font-size:15px'>BPM</span>"
+        }
+        BPMSlider.onchange = function () {
+            preferences.metronomeBPM = BPMSlider.value
+            savePreferences()
         }
         toolCanvas.appendChild(startStopButton)
         toolCanvas.appendChild(BPMLabel)
@@ -134,7 +138,7 @@ function setupTools(list) {
 
 var metronomeID
 var metronomePlaying = false
-var clickSound = new Audio("sounds/click1.wav")
+var clickSound = new Audio("sounds/click.wav")
 
 function startStopMetronome() {
     if (metronomePlaying) {

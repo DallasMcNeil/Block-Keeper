@@ -1,4 +1,4 @@
-# Block Keeper 1.1.0
+# Block Keeper 1.2.0
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -43,7 +43,7 @@ However, I don't recommend this method past making very small changes as it does
 
 ### From Source
 
-Once you download the source from Github. Navigate to the download folder using the command line and run the setup script. You will need [npm](https://www.npmjs.com/get-npm) installed. All scripts use bash.
+Once you download the source from Github. Navigate to the downloaded folder using the command line and run the setup script. You will need [npm](https://www.npmjs.com/get-npm) installed. All scripts use bash.
 
 `./setup`
 

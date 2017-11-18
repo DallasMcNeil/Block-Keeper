@@ -177,22 +177,32 @@ Created by Dallas McNeil
         <button id="closePreferences" class="cross" onclick="closePreferences()"></button>
         <div id="tabs">
             <ul>
-            <li class="tab"><a href="#tabs-1"><button>Timer</button></a></li>
-            <li class="tab"><a href="#tabs-2"><button>Interface</button></a></li>
-            <li class="tab"><a href="#tabs-3"><button>Import/Export</button></a></li>
+            <li class="tab"><a href="#tabs-1"><button>General</button></a></li>
+            <li class="tab"><a href="#tabs-2"><button>Timer</button></a></li>
+            <li class="tab"><a href="#tabs-3"><button>Interface</button></a></li>
+            <li class="tab"><a href="#tabs-4"><button>Import/Export</button></a></li>
             </ul>
             <div id="tabs-1">
-                <form name="preferencesTimer">
-                    <p title="'8 Seconds' and '12 Seconds' announcements during inspection">Inspection Announcements: <select name="voice">
-                        <option value="none" selected>None</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select></p>
+                <form name="preferencesGeneral">
                     <p title="Decimal places after times">Time Detail:  <select name="timerDetail" style="width:52px">
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2" selected>2</option>
                         <option value="3">3</option>
+                    </select></p>
+                    <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
+                    <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
+                    <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
+                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
+                    <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
+                </form> 
+            </div>
+            <div id="tabs-2">
+                <form name="preferencesTimer">
+                    <p title="'8 Seconds' and '12 Seconds' announcements during inspection">Inspection Announcements: <select name="voice">
+                        <option value="none" selected>None</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
                     </select></p>
                     <p title="Time between timer keys being pressed and timer starting">Timer Start Delay:  <select name="timerDelay" style="width:100px">
                         <option value="0">None</option>
@@ -201,24 +211,17 @@ Created by Dallas McNeil
                         <option value="1">1</option>
                     </select></p>
                     <p title="Time replaced with 'Solve' while solving"><input type="checkbox" name="hideTiming" class="checkbox">Hide Timer While Solving</p>
-                    <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
                     <p title="15s of inspection before solving"><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
                     <p title="Use primary mouse button to use timer, like spacebar, with cursor over background"><input type="checkbox" name="useMouse" class="checkbox">Use Mouse For Timer</p>
-                    
                     <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
                     <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
                     <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH Split Keys</p>
                     <p title="Use external Stackmat timer to control timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
-                    <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
-                    <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
-                    
-                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
                 </form>
             </div>
-            <div id="tabs-2">
+            <div id="tabs-3">
                 <form name="preferencesInterface">
                     <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce Best Time</p>
-                    <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
                     <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
                         <option value="2.5">2.5</option>
@@ -236,6 +239,7 @@ Created by Dallas McNeil
                         <option value="center">Center</option>
                         <option value="right" selected>Right</option>
                     </select></p>
+                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
                     <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="previewStylesheet()" style="width:200px;">
                         <option value=0>Dark</option>
                         <option value=1>Light</option>
@@ -252,14 +256,13 @@ Created by Dallas McNeil
                         <option value=12>Neon Blue</option>
                         <option value="custom">Custom...</option>
                     </select></p>
-                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
                     <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="previewStylesheet();return false;">Refresh Theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
                     <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
                 </form>
             </div>
-            <div id="tabs-3">
+            <div id="tabs-4">
                 <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="importBK()">Import</button>  <button onclick="exportBK()">Export</button></p>
                 <p title="Import csTimer Sessions">csTimer:  <button onclick="importCS()">Import</button></p>
                 <p title="Export all times as flat CSV file">CSV:  <button onclick="exportCSV()">Export</button></p>

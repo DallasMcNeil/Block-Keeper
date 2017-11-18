@@ -241,7 +241,7 @@ input[type="checkbox"]:active {
     border-bottom-color: solid 2px @base;
 }
 
-#tabs-1,#tabs-2,#tabs-3 {
+#tabs-1,#tabs-2,#tabs-3,#tabs-4 {
     border-bottom: solid 2px @border;
     border-top: solid 2px @border;
 }

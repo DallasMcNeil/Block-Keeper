@@ -48,8 +48,8 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 1. Timer: Displays the current time of a solve and the time of the last solve in addition to inspection countdown
 2. Scramble: Displays a scramble for the current event and solve  
 3. Stats and Times: See below for additional information
-4. Tool: Presents additional information about the current session or event. See the Tools section
-5. Tool Select: Used to select a tool to be displayed above
+4. Tools: Provides additional information and tools. See the Tools section
+5. Tool Select and Add: Used to select a tool and add it above
 6. Preferences: Open preferences menu to view options. See the Preferences section
 7. Video Preview: Open video menu to view and save recorder video. See the Video Record section
 
@@ -62,11 +62,11 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
     * Solves: Number of valid solves (not including DNF solves) over number of solves.
     * Mean: Total time of all valid solves over the number of valid solves, a mean of all valid solves.
     * Median: Middle time of all valid solves in order.
-    * Standard Deviation: Rough measure of average distance from mean time any time is.
-5. Best and Current: Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result.
-6. Records Table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking any average results will present the list of times and scrambles used to generate the average.
-7. Add Time: Shows dialog with option to add custom time to session
-8. Solve Details: Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely
+    * Standard Deviation: Rough measure of average distance from mean time any  
+    * Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result.
+5. Records Table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking any average results will present the list of times and scrambles used to generate the average.
+6. Add Time: Shows dialog with option to add custom time and scramble to session
+7. Solve Details: Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely
 
 ## Keyboard and Menu Shortcuts
 
@@ -135,37 +135,43 @@ Everyone chooses to use sessions differently, however, with this system it allow
 
 ## Video Record
 
-After enabling Video Record Solves in preferences, your webcam or attached camera will be used to record your solves. Upon starting the timer, the camera will begin recording, until the timer is stopped. After a recording has been made, the video can be viewed through the video record button in the bottom right corner. The video can also be saved from here as a .webm file. 
+After enabling Video Record Solves in preferences, your webcam or attached camera will be used to record your solves. Upon starting the timer, the camera will begin recording, until the timer is stopped. There is also the option to record inspection and just after the solve. After a recording has been made, the video can be viewed through the video record button in the bottom right corner. The video can also be saved from here as a `.webm` file. 
 
 **IMPORTANT:** Only the most recent solve is available to view and save. When you begin another solve, the previous recorded video will be deleted. **If you want to view/save your solve, do so before you start your next solve.**
  
 ## Tools
 
-Tools are selectable from the bottom right of the window and offer additional visual information.
+Tools offer additional visual information and functionality. After selecting a tool to add form the selection menu, click the plus button to add the tool. Multiple tools can be added. To remove any tool, press the cross button on it.
 
-* Drawn Scramble: Shows the current scramble for the current event applied to a solved puzzle. Some events such as Skewb and MBLD are not supported.
-* Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.
-* Event Trend: Shows a trend-line of session stats within the currently selected event for best time, best Ao5 and mean. This shows your progress in an event.
-* Event Statistics: Shows a table of current and best time, Mo3, Ao5, Ao12 and session means for the current event.
 * Distribution: Shows a histogram of times within the currently selected session, showing the number of times within certain ranges.
+* Drawn Scramble: Shows the current scramble for the current event applied to a solved puzzle. Some events such as Skewb and MBLD are not supported.
+* Event Statistics: Shows a table of current and best time, Mo3, Ao5, Ao12 and session means for the current event.
+* Event Trend: Shows a trend-line of session stats within the currently selected event for best time, best Ao5 and mean. This shows your progress in an event.
+* Metronome: Presents a metronome which can be started, stopped and adjusted to a set tempo. This can be used while timing or not.
+* Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.
 
 ## Preferences
+
+### General
+
+* Time Detail: Number of decimal points to show for times throughout the application
+* Format Time: Times shown throughout the application will have a format of `mm:ss` rather than just seconds (e.g `1:34.23` instead of `94.23`)
+* Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
+* Record Inspection: Include inspections and just after a solve while video recording.
+* Video Autosave Location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.
+* Display Scrambles in Lists: Include the scramble for a solve in any exported times.
 
 ### Timer
 
 * Inspection Announcements: Voice announcements at 8s and 12s through WCA inspection (WCA inspection must be enabled)
-* Time Detail: Number of decimal points to show for times throughout the application
 * Timer Start Delay: Delay in seconds between keys being pressed and timer turning green and becoming ready.
 * Hide Timer While Solving: Current time during solve is replaced with `solve`, hiding the time
-* Format Time: Times shown throughout the application will have a format of `mm:ss` rather than just seconds (e.g `1:34.23` instead of `94.23`)
 * WCA Inspection: Enable WCA inspection before solve. See the Timer Operation section
 * Use Mouse for Timer: Use primary mouse button like `spacebar` to control the timer by clicking on timer
 * Split Timer Controls: Use 2 specific keys rather than the `spacebar` to operate the timer. See the Timer Operation section
 * Stop Timer with Split Keys: Require both split keys to be pressed to stop the timer rather than any key
 * OH Split Keys: Enable split keys for the 3x3x3 OH event and require one key to be held down during a solve or receive a `DNF` penalty
 * Use Stackmat Timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognise your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see [here](https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/)
-* Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
-* Video Autosave Location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.
 
 ### Interface
 
@@ -186,4 +192,3 @@ Tools are selectable from the bottom right of the window and offer additional vi
 
 
 Thanks for using Block Keeper!
-

@@ -753,7 +753,7 @@ input[type="checkbox"]:active {
     margin-bottom: -2px;
 }
 
-#tabs-1,#tabs-2,#tabs-3 {
+#tabs-1,#tabs-2,#tabs-3,#tabs-4 {
     border-bottom: solid 2px #505050;
     border-top: solid 2px #505050;
     padding-top: 15px;
