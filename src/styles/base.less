@@ -41,9 +41,14 @@ body {
 
 #scramble {
     color:@scramble;
+    background-color:fade(@scramble,10%);
 }
 
-button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool {
+#scramble:hover {
+    background-color:fade(@scramble,20%);
+}
+
+button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,#dialogScramble,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool {
     color:@text;
     background-color: @base;
     border-color: @border;
@@ -135,7 +140,7 @@ select:hover {
 }
 
 #recordScramble {
-    color:@scramble;
+    color:@text;
 }
 
 input[type="checkbox"]:checked {

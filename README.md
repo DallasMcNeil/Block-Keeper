@@ -84,6 +84,7 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [cubing/jsss](https://github.com/cubing/jsss)
 - [nickcolley/scrambo](https://github.com/nickcolley/scrambo)
 - [wesleycho/confetti.js](https://github.com/wesleycho/confetti.js/)
+- [torjusti/cube-solver](https://github.com/torjusti/cube-solver)
 
 ### Fonts
 

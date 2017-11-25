@@ -35,6 +35,7 @@ Created by Dallas McNeil
     <script src="scripts/libs/scramble_skewb.js"></script>
     <script src="scripts/libs/stackmat.js"></script>
     <script src="scripts/libs/confetti.js"></script>
+    <script src="scripts/libs/solver.js"></script>
     <script>if (window.module) module = window.module;</script>
 </head>
     
@@ -161,6 +162,11 @@ Created by Dallas McNeil
         <button id="closePreview" class="cross" onclick="closePreview()"></button><br>
         <video id="previewVideo" controls></video>
         <button title="Save video as file" id="savePreview" onclick="savePreview()">Save Video</button>
+    </div>
+        
+    <div id="dialogScramble">
+        <select id="scramblerSelect"></select>
+        <p><button onclick="closeScramble()">Done</button></p>
     </div>
         
     <div id="dialogShowInfo">

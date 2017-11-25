@@ -34,13 +34,20 @@ function formatTime(s) {
 // Average all the times
 function averageTimes(times) {
     if (times.length > 2) {
-        times.sort(function(a, b){return a-b})
-        if (times[times.length-1] != -1) {
-            while (times[0] == -1) {
-                times.push(times.shift())
+        times.sort(function(a, b){
+            if (a==-1) {
+                return 1
+            } else if (b==-1) {
+                return -1
+            } else {
+                return a-b
             }
+        })
+        if (times.length<40) {
+            times = times.slice(1,-1)
+        } else {
+            times = times.slice(Math.floor(times.length*0.05),-Math.floor(times.length*0.05))
         }
-        times = times.slice(1,-1)
         if (times[0] == -1) {
             return -1
         }
@@ -524,6 +531,8 @@ function updateRecords() {
     var ao12s = records.length>11 ? new Array(records.length-11) : []
     var ao50s = records.length>49 ? new Array(records.length-49) : []
     var ao100s = records.length>99 ? new Array(records.length-99) : []
+    var ao500s = records.length>499 ? new Array(records.length-499) : []
+    var ao1000s = records.length>999 ? new Array(records.length-999) : []
     var DNFsolves = 0
 
     for (var i = 0;i<records.length;i++) {
@@ -556,6 +565,12 @@ function updateRecords() {
         if (i >= 99) {
             ao100s[i-99] = (averageTimes(times.slice(i-99,i+1)))
         } 
+        if (i >= 499) {
+            ao500s[i-499] = (averageTimes(times.slice(i-499,i+1)))
+        }
+        if (i >= 999) {
+            ao1000s[i-999] = (averageTimes(times.slice(i-999,i+1)))
+        }
         sessionRecordsTable.rows[i+1].cells[0].children[0].innerHTML = i+1
 
         if (times[i] == -1) {
@@ -826,6 +841,78 @@ function updateRecords() {
         best.appendChild(bestP)
         extraHeight=extraHeight+30
     }
+    if (records.length > 499) {
+        var row = sessionStatsTable.insertRow(-1)
+        
+        var name = row.insertCell(-1)
+        var nameP = document.createElement("p")
+        nameP.innerHTML = "Ao500"
+        name.appendChild(nameP)
+        
+        var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",500);
+        }
+        var currentP = document.createElement("p")
+        if (ao500s[ao500s.length-1] == -1) {
+            currentP.innerHTML = "DNF"
+        } else {
+            currentP.innerHTML = formatTime(ao500s[ao500s.length-1])
+        }
+        current.appendChild(currentP)
+        
+        var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",500);
+        } 
+        var bestP = document.createElement("p")
+        var t = Math.min.apply(null,ao500s.filter(function(t) {return t!=-1}))
+        if (t == Infinity) {
+            bestP.innerHTML = "DNF"
+        } else {
+            bestP.innerHTML = formatTime(t)
+        }
+        best.appendChild(bestP)
+        extraHeight=extraHeight+30
+    }
+    if (records.length > 999) {
+        var row = sessionStatsTable.insertRow(-1)
+        
+        var name = row.insertCell(-1)
+        var nameP = document.createElement("p")
+        nameP.innerHTML = "Ao1000"
+        name.appendChild(nameP)
+        
+        var current = row.insertCell(-1)
+        current.className+=" selectable"
+        current.onclick = function(){
+            openShowInfo("Current",1000);
+        }
+        var currentP = document.createElement("p")
+        if (ao1000s[ao1000s.length-1] == -1) {
+            currentP.innerHTML = "DNF"
+        } else {
+            currentP.innerHTML = formatTime(ao1000s[ao1000s.length-1])
+        }
+        current.appendChild(currentP)
+        
+        var best = row.insertCell(-1)
+        best.className+=" selectable"
+        best.onclick = function(){
+            openShowInfo("Best",1000);
+        } 
+        var bestP = document.createElement("p")
+        var t = Math.min.apply(null,ao1000s.filter(function(t) {return t!=-1}))
+        if (t == Infinity) {
+            bestP.innerHTML = "DNF"
+        } else {
+            bestP.innerHTML = formatTime(t)
+        }
+        best.appendChild(bestP)
+        extraHeight=extraHeight+30
+    }
     $("#sessionRecords td").hover(function(e) {
         if (!preferencesOpen) {
             var column = parseInt( $(this).index());
@@ -1086,9 +1173,9 @@ function openShowInfo(type,a) {
         var sts = ts.slice();
         sts.sort((a,b)=>{
             if (a==-1) {
-                return -1
-            } else if (b==-1) {
                 return 1
+            } else if (b==-1) {
+                return -1
             } else {
                 return a-b
             }
@@ -1137,9 +1224,9 @@ function openShowInfo(type,a) {
         var sts = ts.slice();
         sts.sort((a,b)=>{
             if (a==-1) {
-                return -1
-            } else if (b==-1) {
                 return 1
+            } else if (b==-1) {
+                return -1
             } else {
                 return a-b
             }
@@ -1148,7 +1235,6 @@ function openShowInfo(type,a) {
         var max = sts[11]
         for (var i=0;i<12;i++) {
             str+=("<br>"+(i+1)+". ")
-            
             if (ts[i] == max) {
                 str+="("
             } else if (ts[i] == min) {
@@ -1223,36 +1309,48 @@ function openShowInfo(type,a) {
             var sts = ts.slice();
             sts.sort((a,b)=>{
                 if (a==-1) {
-                    return -1
-                } else if (b==-1) {
                     return 1
+                } else if (b==-1) {
+                    return -1
                 } else {
                     return a-b
                 }
             });
-            var min = sts[0]
-            var max = sts[a-1]
+            var toRemove = []
+            if (a>=40) {
+                for (var i=0;i<Math.floor(sts.length*0.05);i++) {
+                    toRemove.push(sts[i])
+                    toRemove.push(sts[a-(i+1)])
+                }
+            } else {
+                toRemove.push(sts[0])
+                toRemove.push(sts[a-1])
+            }
             for (var i=0;i<a;i++) {
                 str+=("<br>"+(i+1)+". ")
-
-                if (ts[i] == max) {
-                    str+="("
-                } else if (ts[i] == min) {
-                    str+="("
+                var didRemove = false
+                for (var x=0;x<toRemove.length;x++) {
+                    if (ts[i] == toRemove[x]) {
+                        if (r[i].result == "OK") {
+                            str+="("+(formatTime(r[i].time))+") "
+                        } else if (r[i].result == "+2") {
+                            str+="("+(formatTime(r[i].time+2)+"+")+") "
+                        } else {
+                            str+="(DNF) "
+                        }
+                        toRemove.splice(x,1)
+                        didRemove = true
+                        break
+                    }
                 }
-                if (r[i].result == "OK") {
-                    str+=(formatTime(r[i].time))
-                } else if (r[i].result == "+2") {
-                    str+=(formatTime(r[i].time+2)+"+")
-                } else {
-                    str+="DNF"
-                }
-                if (ts[i] == max) {
-                    str+=")"
-                    max = -2
-                } else if (ts[i] == min) {
-                    str+=")"
-                    min = -2
+                if (!didRemove) {
+                    if (r[i].result == "OK") {
+                        str+=(formatTime(r[i].time))
+                    } else if (r[i].result == "+2") {
+                        str+=(formatTime(r[i].time+2)+"+")
+                    } else {
+                        str+="DNF"
+                    }
                 }
                 if (preferences.scramblesInList) {
                     str+=(" ("+r[i].scramble.trim()+")")
@@ -1343,36 +1441,47 @@ function openShowInfo(type,a) {
             var sts = ts.slice();
             sts.sort((a,b)=>{
                 if (a==-1) {
-                    return -1
-                } else if (b==-1) {
                     return 1
+                } else if (b==-1) {
+                    return -1
                 } else {
                     return a-b
                 }
             });
-            var min = sts[0]
-            var max = sts[a-1]
+            var toRemove = []
+            if (a>=40) {
+                for (var i=0;i<Math.floor(sts.length*0.05);i++) {
+                    toRemove.push(sts[i])
+                    toRemove.push(sts[a-(i+1)])
+                }
+            } else {
+                toRemove.push(sts[0])
+                toRemove.push(sts[a-1])
+            }
             for (var i=0;i<a;i++) {
                 str+=("<br>"+(i+1)+". ")
-
-                if (ts[i] == max) {
-                    str+="("
-                } else if (ts[i] == min) {
-                    str+="("
+                var didRemove = false
+                for (var x=0;x<toRemove.length;x++) {
+                    if (ts[i] == toRemove[x]) {
+                        if (r[i].result == "OK") {
+                            str+="("+(formatTime(r[i].time))+") "
+                        } else if (r[i].result == "+2") {
+                            str+="("+(formatTime(r[i].time+2)+"+")+") "
+                        } else {
+                            str+="(DNF) "
+                        }
+                        toRemove.splice(x,1)
+                        break
+                    }
                 }
-                if (r[i].result == "OK") {
-                    str+=(formatTime(r[i].time))
-                } else if (r[i].result == "+2") {
-                    str+=(formatTime(r[i].time+2)+"+")
-                } else {
-                    str+="DNF"
-                }
-                if (ts[i] == max) {
-                    str+=")"
-                    max = -2
-                } else if (ts[i] == min) {
-                    str+=")"
-                    min = -2
+                if (!didRemove) {
+                    if (r[i].result == "OK") {
+                        str+=(formatTime(r[i].time))
+                    } else if (r[i].result == "+2") {
+                        str+=(formatTime(r[i].time+2)+"+")
+                    } else {
+                        str+="DNF"
+                    }
                 }
                 if (preferences.scramblesInList) {
                     str+=(" ("+r[i].scramble.trim()+")")
