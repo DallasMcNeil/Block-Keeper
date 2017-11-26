@@ -235,13 +235,58 @@ function solveEOLine(scramble) {
     return cubeSolver.EOLineSolver(s)
 }
     
-function solveCross(scramble) {
-    var s = scramble.replaceAll("R","X")
-    s = s.replaceAll("L","R")
-    s = s.replaceAll("X","L")
-    s = s.replaceAll("D","X")
-    s = s.replaceAll("U","D")
-    s = s.replaceAll("X","U")
+function solveCross(scramble,type) {
+    var s = scramble
+    // type = 1 = Yellow
+    if (type==0) { 
+        // Whitte
+        s = s.replaceAll("R","X")
+        s = s.replaceAll("L","R")
+        s = s.replaceAll("X","L")
+        s = s.replaceAll("D","X")
+        s = s.replaceAll("U","D")
+        s = s.replaceAll("X","U")
+    } else if (type==2) { 
+        // Red
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("L","U")
+        s = s.replaceAll("D","L")
+        s = s.replaceAll("R","D")
+        s = s.replaceAll("X","R")
+    } else if (type==3) { 
+        // Orange
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("R","U")
+        s = s.replaceAll("D","R")
+        s = s.replaceAll("L","D")
+        s = s.replaceAll("X","L")
+    } else if (type==4) { 
+        // Blue
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("L","U")
+        s = s.replaceAll("D","L")
+        s = s.replaceAll("R","D")
+        s = s.replaceAll("X","R")
+        
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("F","U")
+        s = s.replaceAll("D","F")
+        s = s.replaceAll("B","D")
+        s = s.replaceAll("X","B")
+    } else if (type==5) { 
+        // Green
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("R","U")
+        s = s.replaceAll("D","R")
+        s = s.replaceAll("L","D")
+        s = s.replaceAll("X","L")
+        
+        s = s.replaceAll("U","X")
+        s = s.replaceAll("B","U")
+        s = s.replaceAll("D","B")
+        s = s.replaceAll("F","D")
+        s = s.replaceAll("X","F")
+    }
     return cubeSolver.crossSolver(s)
 }
     

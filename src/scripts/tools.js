@@ -125,6 +125,9 @@ function updateTool() {
         } else if (toolTypes[i] == "eventStats") {
             var ctx = canvases[i].getContext("2d")
             eventStats(ctx)
+        } else if (toolTypes[i] == "crossSolver") {
+            var ctx = canvases[i].getContext("2d")
+            crossSolver(ctx)
         }
     }
 }
@@ -734,4 +737,42 @@ function distribution(ctx) {
     ctx.lineTo(285,140)
     ctx.stroke()
     
+}
+
+var crossSolverID = 0;
+function crossSolver(ctx) {
+    clearTimeout(crossSolverID)
+    if (scrambleStr == "333") {
+        ctx.clearRect(0,0,300,200)
+        ctx.strokeStyle = secondColour
+        ctx.fillStyle = mainColour
+        ctx.lineWidth = 1
+        ctx.font = "20px workSans"
+        ctx.textAlign = "center"
+        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
+        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
+        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        crossSolverID = setTimeout(function() {    
+            for (var i=0;i<6;i++) {
+                var str = "(UF):"
+                var x = 60
+                ctx.textAlign = "right"
+                for (var s=str.length-1;s>=0;s--){
+                    var ch = str.charAt(s)
+                    if (s==1) {
+                        ctx.fillStyle = UColors[i]
+                    } else if (s==2) {
+                        ctx.fillStyle = FColors[i]
+                    } else {
+                        ctx.fillStyle = mainColour
+                    }
+                    ctx.fillText(ch, x, 30*(1+i))
+                    x -= ctx.measureText(ch).width
+                }
+                ctx.textAlign = "left"
+                ctx.fillStyle = DColors[i]
+                ctx.fillText(solveCross(currentScramble,i),80,30*(1+i))
+            }
+        },0)
+    }
 }
