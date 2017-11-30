@@ -29,6 +29,10 @@
     src: url("../fonts/WorkSans-Bold.ttf");
 }
 
+body {
+    background-color:#000000;
+}
+
 :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
     -webkit-user-select: none;
     user-select: none;

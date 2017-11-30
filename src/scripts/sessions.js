@@ -31,6 +31,16 @@ function formatTime(s) {
     }
 }
 
+function standardDeviation(extractedTimes) {
+    var sum = 0
+    var t = extractedTimes.filter(function(t) {return t!=-1})
+    var mean = meanTimes(t)
+    for (var i=0;i<t.length;i++) {
+        sum+=((t[i]-mean)*(t[i]-mean))
+    }
+    return Math.sqrt(sum/t.length)
+}
+
 // Average all the times
 function averageTimes(times) {
     if (times.length > 2) {
@@ -488,8 +498,7 @@ function setSession() {
 
 // Update all records displayed on screen
 function updateRecords() {
-    var debugTime = new Date().getTime()
- 
+    setTimeout(function(){
     var records = puzzles[currentPuzzle].sessions[currentSession].records
     var length = sessionRecordsTable.rows.length-1
     if (records.length < length) {
@@ -605,14 +614,9 @@ function updateRecords() {
         $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime(0))
     } else {
         $("#sessionMean").prop("innerHTML","<b>Mean:</b> "+formatTime(mean))
-        var sum = 0
-        var t = times.filter(function(t) {return t!=-1})
-        for (var i=0;i<t.length;i++) {
-            sum+=((t[i]-mean)*(t[i]-mean))
-        }
-        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(Math.sqrt(sum/t.length)))
+        $("#sessionSD").prop("innerHTML","<b>σ(s.d):</b> "+formatTime(standardDeviation(times)))
         
-        var sortedTimes = t.sort()
+        var sortedTimes = times.filter(function(t) {return t!=-1}).sort()
         $("#sessionMedian").prop("innerHTML","<b>Median:</b> "+formatTime((sortedTimes[Math.ceil((sortedTimes.length-1)/2)]+sortedTimes[Math.floor((sortedTimes.length-1)/2)])/2))
     }
     $("#sessionSolves").prop("innerHTML","<b>Solves:</b> "+DNFsolves+"/"+records.length)
@@ -624,6 +628,10 @@ function updateRecords() {
     var extraHeight = 0
     var row = sessionStatsTable.insertRow(-1)
     var name = row.insertCell(-1)
+    name.className+=" selectable"
+    name.onclick = function(){
+        openShowInfo("All",1);
+    }
     var nameP = document.createElement("p")
     nameP.innerHTML = "Time"
     name.appendChild(nameP)
@@ -665,6 +673,10 @@ function updateRecords() {
     if (records.length > 2) {
         var row = sessionStatsTable.insertRow(-1)
         var name = row.insertCell(-1)
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",3);
+        }
         var nameP = document.createElement("p")
         nameP.innerHTML = "Mo3"
         name.appendChild(nameP)
@@ -704,7 +716,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao5"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",5);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -739,7 +754,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao12"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",12);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -776,7 +794,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao50"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",50);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -812,7 +833,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao100"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",100);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -848,7 +872,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao500"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",500);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -884,7 +911,10 @@ function updateRecords() {
         var nameP = document.createElement("p")
         nameP.innerHTML = "Ao1000"
         name.appendChild(nameP)
-        
+        name.className+=" selectable"
+        name.onclick = function(){
+            openShowInfo("All",1000);
+        }
         var current = row.insertCell(-1)
         current.className+=" selectable"
         current.onclick = function(){
@@ -940,7 +970,6 @@ function updateRecords() {
             }
         }
     })    
-
     setTimeout(function() {
         extraHeight+=$("#sessionDetails").height()
         $("#sessionRecordsContainer").css("max-height","calc(100vh - ("+extraHeight+"px + 170px))")
@@ -948,6 +977,7 @@ function updateRecords() {
     
     updateTool()
     saveSessions()
+    },0)
 }
 
 var sessionButtonsShowing = false
@@ -1164,10 +1194,11 @@ function openShowInfo(type,a) {
         }
         var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(a-5,a)
         var ao5 = (averageTimes(extractTimes(r)))
+        str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
         if (ao5 == -1) {
-            str = "Ao5: DNF<br>"
+            str+= "Ao5: DNF<br>"
         } else {
-            str = "Ao5: "+formatTime(ao5)+"<br>"
+            str+= "Ao5: "+formatTime(ao5)+"<br>"
         }
         var ts = extractTimes(r)
         var sts = ts.slice();
@@ -1215,10 +1246,11 @@ function openShowInfo(type,a) {
         }
         var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(a-12,a)
         var ao12 = (averageTimes(extractTimes(r)))
+        str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
         if (ao12 == -1) {
-            str = "Ao12: DNF<br>"
+            str+= "Ao12: DNF<br>"
         } else {
-            str = "Ao12: "+formatTime(ao12)+"<br>"
+            str+= "Ao12: "+formatTime(ao12)+"<br>"
         }
         var ts = extractTimes(r)
         var sts = ts.slice();
@@ -1260,6 +1292,7 @@ function openShowInfo(type,a) {
         }   
     } else if (type == "Current") {
         if (a == 1) {
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>Current time<br><br>"
             var r = puzzles[currentPuzzle].sessions[currentSession].records[puzzles[currentPuzzle].sessions[currentSession].records.length-1]
             str+=("1. ")
 
@@ -1276,10 +1309,11 @@ function openShowInfo(type,a) {
         } else if (a == 3) {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-3)
             var mo3 = (meanTimes(extractTimes(r)))
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
             if (mo3 == -1) {
-                str = "Mo3: DNF<br>"
+                str+= "Current Mo3: DNF<br>"
             } else {
-                str = "Mo3: "+formatTime(mo3)+"<br>"
+                str+= "Current Mo3: "+formatTime(mo3)+"<br>"
             }
             var ts = extractTimes(r)
             
@@ -1300,10 +1334,11 @@ function openShowInfo(type,a) {
         } else {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(-a)
             var aoa = (averageTimes(extractTimes(r)))
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
             if (aoa == -1) {
-                str = "Ao"+a+": DNF<br>"
+                str+= "Current Ao"+a+": DNF<br>"
             } else {
-                str = "Ao"+a+": "+formatTime(aoa)+"<br>"
+                str+= "Current Ao"+a+": "+formatTime(aoa)+"<br>"
             }
             var ts = extractTimes(r)
             var sts = ts.slice();
@@ -1361,6 +1396,8 @@ function openShowInfo(type,a) {
     } else if (type == "Best") {
         
         if (a == 1) {
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>Best time<br><br>"
+            
             var best = -1
             var index = 0
             for (var i=0;i<puzzles[currentPuzzle].sessions[currentSession].records.length;i++) {
@@ -1396,10 +1433,11 @@ function openShowInfo(type,a) {
             
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(index,index+3)
             var mo3 = (meanTimes(extractTimes(r)))
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
             if (mo3 == -1) {
-                str = "Mo3: DNF<br>"
+                str+= "Best Mo3: DNF<br>"
             } else {
-                str = "Mo3: "+formatTime(mo3)+"<br>"
+                str+= "Best Mo3: "+formatTime(mo3)+"<br>"
             }
             var ts = extractTimes(r)
             
@@ -1432,10 +1470,12 @@ function openShowInfo(type,a) {
             var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(index,index+a)
             
             var aoa = (averageTimes(extractTimes(r)))
+            
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>"
             if (aoa == -1) {
-                str = "Ao"+a+": DNF<br>"
+                str+= "Best Ao"+a+": DNF<br>"
             } else {
-                str = "Ao"+a+": "+formatTime(aoa)+"<br>"
+                str+= "Best Ao"+a+": "+formatTime(aoa)+"<br>"
             }
             var ts = extractTimes(r)
             var sts = ts.slice();
@@ -1488,6 +1528,58 @@ function openShowInfo(type,a) {
                 }
             }   
         
+        }
+    } else if (type == "All") {
+        
+        if (a == 1) {
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>Time list<br>"
+            str+= "σ(s.d): "+formatTime(standardDeviation(extractTimes(puzzles[currentPuzzle].sessions[currentSession].records)))+"<br>"
+            for (var i=0;i<puzzles[currentPuzzle].sessions[currentSession].records.length;i++) {
+                var r = puzzles[currentPuzzle].sessions[currentSession].records[i]
+                str+="<br>"+(i+1)+". "
+                if (r.result == "OK") {
+                    str+=(formatTime(r.time))
+                } else if (r.result == "+2") {
+                    str+=(formatTime(r.time+2)+"+")
+                } else {
+                    str+="DNF"
+                }
+                if (preferences.scramblesInList) {
+                    str+=(" ("+r.scramble.trim()+")")
+                }
+            }
+        } else if (a == 3) {
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>Mo3 list<br>"
+            var means = []
+            for (var i=2;i<puzzles[currentPuzzle].sessions[currentSession].records.length;i++) {
+                var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(i-2,i+1)
+                means.push(meanTimes(extractTimes(r)))
+            }
+            str+="σ(s.d): "+formatTime(standardDeviation(means))+"<br>"
+            for (var i=0;i<means.length;i++) {
+                str+="<br>"+(i+1)+". "
+                if (means[i] == -1) {
+                    str+="DNF"
+                } else {
+                    str+=formatTime(means[i])
+                }
+            }
+        } else {
+            str = "Generated by Block Keeper on "+new Date().toDateString()+"<br>Ao"+a+" list<br>"
+            var averages = []
+            for (var i=a-1;i<puzzles[currentPuzzle].sessions[currentSession].records.length;i++) {
+                var r = puzzles[currentPuzzle].sessions[currentSession].records.slice(i-(a-1),i+1)
+                averages.push(averageTimes(extractTimes(r)))
+            }
+            str+="σ(s.d): "+formatTime(standardDeviation(averages))+"<br>"
+            for (var i=0;i<averages.length;i++) {
+                str+="<br>"+(i+1)+". "
+                if (averages[i] == -1) {
+                    str+="DNF"
+                } else {
+                    str+=formatTime(averages[i])
+                }
+            }
         }
     }
     
@@ -1596,6 +1688,8 @@ function confettiUpdateState() {
   this.angle += 0.01;
   this.tiltAngle += 0.1;
 }
+
+
 
 
 loadSessions()

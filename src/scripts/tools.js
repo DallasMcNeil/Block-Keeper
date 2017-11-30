@@ -128,6 +128,15 @@ function updateTool() {
         } else if (toolTypes[i] == "crossSolver") {
             var ctx = canvases[i].getContext("2d")
             crossSolver(ctx)
+        } else if (toolTypes[i] == "crossSolver") {
+            var ctx = canvases[i].getContext("2d")
+            EOLineSolver(ctx)
+        } else if (toolTypes[i] == "EOLineSolver") {
+            var ctx = canvases[i].getContext("2d")
+            EOLineSolver(ctx)
+        } else if (toolTypes[i] == "firstBlockSolver") {
+            var ctx = canvases[i].getContext("2d")
+            firstBlockSolver(ctx)
         }
     }
 }
@@ -771,8 +780,86 @@ function crossSolver(ctx) {
                 }
                 ctx.textAlign = "left"
                 ctx.fillStyle = DColors[i]
-                ctx.fillText(solveCross(currentScramble,i),80,30*(1+i))
+                ctx.fillText(solveCross(currentScramble,i),70,30*(1+i))
             }
         },0)
     }
 }
+
+var EOLineSolverID = 0;
+function EOLineSolver(ctx) {
+    clearTimeout(EOLineSolverID)
+    if (scrambleStr == "333") {
+        ctx.clearRect(0,0,300,200)
+        ctx.strokeStyle = secondColour
+        ctx.fillStyle = mainColour
+        ctx.lineWidth = 1
+        ctx.font = "20px workSans"
+        ctx.textAlign = "center"
+        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
+        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
+        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        EOLineSolverID = setTimeout(function() {    
+            for (var i=0;i<6;i++) {
+                var str = "(UF):"
+                var x = 60
+                ctx.textAlign = "right"
+                for (var s=str.length-1;s>=0;s--){
+                    var ch = str.charAt(s)
+                    if (s==1) {
+                        ctx.fillStyle = UColors[i]
+                    } else if (s==2) {
+                        ctx.fillStyle = FColors[i]
+                    } else {
+                        ctx.fillStyle = mainColour
+                    }
+                    ctx.fillText(ch, x, 30*(1+i))
+                    x -= ctx.measureText(ch).width
+                }
+                ctx.textAlign = "left"
+                ctx.fillStyle = DColors[i]
+                ctx.fillText(solveEOLine(currentScramble,i),70,30*(1+i))
+            }
+        },0)
+    }
+}
+
+
+var firstBlockSolverID = 0;
+function firstBlockSolver(ctx) {
+    clearTimeout(firstBlockSolverID)
+    if (scrambleStr == "333") {
+        ctx.clearRect(0,0,300,200)
+        ctx.strokeStyle = secondColour
+        ctx.fillStyle = mainColour
+        ctx.lineWidth = 1
+        ctx.font = "20px workSans"
+        ctx.textAlign = "center"
+        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
+        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
+        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        firstBlockSolverID = setTimeout(function() {    
+            for (var i=0;i<6;i++) {
+                var str = "(UF):"
+                var x = 60
+                ctx.textAlign = "right"
+                for (var s=str.length-1;s>=0;s--){
+                    var ch = str.charAt(s)
+                    if (s==1) {
+                        ctx.fillStyle = UColors[i]
+                    } else if (s==2) {
+                        ctx.fillStyle = FColors[i]
+                    } else {
+                        ctx.fillStyle = mainColour
+                    }
+                    ctx.fillText(ch, x, 30*(1+i))
+                    x -= ctx.measureText(ch).width
+                }
+                ctx.textAlign = "left"
+                ctx.fillStyle = DColors[i]
+                ctx.fillText(solveFirstBlock(currentScramble,i),70,30*(1+i))
+            }
+        },0)
+    }
+}
+

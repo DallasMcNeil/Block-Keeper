@@ -224,19 +224,23 @@ function scrambleNone() {
     scrambleState = {scramble_string:""}
     currentScramble = ""
 }
-
-function solveEOLine(scramble) {
-    var s = scramble.replaceAll("R","X")
-    s = s.replaceAll("L","R")
-    s = s.replaceAll("X","L")
-    s = s.replaceAll("D","X")
-    s = s.replaceAll("U","D")
-    s = s.replaceAll("X","U")
-    return cubeSolver.EOLineSolver(s)
-}
     
 function solveCross(scramble,type) {
-    var s = scramble
+    var s = formatScrambleForFace(scramble,type)
+    return cubeSolver.crossSolver(s)
+}
+
+function solveEOLine(scramble,type) {
+    var s = formatScrambleForFace(scramble,type)
+    return cubeSolver.EOLineSolver(s)
+}
+
+function solveFirstBlock(scramble,type) {
+    var s = formatScrambleForFace(scramble,type)
+    return cubeSolver.firstBlockSolver(s)
+}
+    
+function formatScrambleForFace(s,type) {
     // type = 1 = Yellow
     if (type==0) { 
         // Whitte
@@ -287,6 +291,5 @@ function solveCross(scramble,type) {
         s = s.replaceAll("F","D")
         s = s.replaceAll("X","F")
     }
-    return cubeSolver.crossSolver(s)
+    return s
 }
-    
