@@ -24,8 +24,8 @@ $("#dialogScramble").dialog({
         at:"center",
         of:"#background"
     },
-    width: 484,
-    height: 510
+    width: 408,
+    height: 266
 }).on('keydown',function(evt) {
     if (evt.keyCode === $.ui.keyCode.ESCAPE) {
         closeScramble()
@@ -83,6 +83,7 @@ function closeScramble() {
 var currentScrambler = "Recommended"
 var scrambleOptions = {
     "Recommended":scrambleRecommended,
+    "Custom...":scrambleCustom,
     "3x3x3":scramble3x3,
     "2x2x2":scramble2x2,
     "4x4x4":scramble4x4,
@@ -93,12 +94,12 @@ var scrambleOptions = {
     "Square-1":scrambleSquare1,
     "Clock":scrambleClock,
     "6x6x6":scramble6x6,
-    "7x7x7":scramble7x7,               
-    "3x3x3 OH":scramble3x3,
+    "7x7x7":scramble7x7,   
     "3x3x3 BLD":scramble3x3BLD,
-    "4x4x4 BLD":scramble4x4,
-    "5x5x5 BLD":scramble5x5,
-    "3x3x3 FT":scramble3x3,
+    "8x8x8":function(){scrambleNxNxN(8,100)},
+    "9x9x9":function(){scrambleNxNxN(9,120)},
+    "10x10x10":function(){scrambleNxNxN(10,140)},
+    "11x11x11":function(){scrambleNxNxN(11,160)},
     "None":scrambleNone
 }
 
@@ -127,8 +128,8 @@ function scramble() {
 }
 
 function scrambleRecommended() {
-    if (scrambleOptions[puzzles[currentPuzzle].name] != undefined) {
-        scrambleOptions[puzzles[currentPuzzle].name]()
+    if (scrambleOptions[puzzles[currentPuzzle].scrambler] != undefined) {
+        scrambleOptions[puzzles[currentPuzzle].scrambler]()
     } else {
         scrambleNone()
     }
@@ -142,6 +143,11 @@ function drawScramble(ctx) {
         ctx.innerHTML = ""
         scramblers[scrambleStr].drawScramble(ctx, scrambleState.state, 300, 200);
     }
+}
+
+function scrambleCustom() {
+    scrambleStr = "none"
+    currentScramble = document.getElementById("customScramble").value
 }
 
 // Calls to get a scramble for each puzzle available
@@ -179,6 +185,86 @@ function scramble7x7() {
     scrambleStr = "777"
     scrambleState = scramblers[scrambleStr].getRandomScramble()
     currentScramble = scrambleState.scramble_string
+}
+
+function scrambleNxNxN(n,length) {
+    var moves = []
+    if (n > 1) {
+        moves.push("R")
+        moves.push("F")
+        moves.push("U")
+    }
+    if (n > 2) {
+        moves.push("L")
+        moves.push("B")
+        moves.push("D")
+    }
+    
+    for (var i=2;i<=(n/2);i++) {
+        moves.push(i+"R")
+        moves.push(i+"L")
+        moves.push(i+"F")
+        moves.push(i+"B")
+        moves.push(i+"U")
+        moves.push(i+"D")
+    }
+    
+    var finalMoves = moves
+    for (m in moves) {
+        finalMoves.push(moves[m]+"'")
+        finalMoves.push(moves[m]+"2")
+    }
+    
+    var s = ""
+    for (var i=0;i<length;i++) {
+        s+=finalMoves[Math.floor(Math.random()*finalMoves.length)]+" "
+    }
+    scrambleStr = ""+n+n+n
+    scrambleState = {scramble_string:""}
+    currentScramble = s
+}
+
+// Length (RL), Depth (FB), Height (UD)
+function scrambleLxMxN(l,m,n) {
+    var RL = []
+    var FB = []
+    var UD = []
+    if (l > 1) {
+        RL.push("R")
+    }
+    if (m > 1) {
+        FB.push("F")
+    }
+    if (n > 1) {
+        UD.push("U")
+    }
+    
+    if (l > 2) {
+        RL.push("L")
+    }
+    if (m > 2) {
+        FB.push("B")
+    }
+    if (n > 2) {
+        UD.push("D")
+    }
+    
+    for (var li=2;li<=(l/2);li++) {
+        RL.push(li+"R")
+        RL.push(li+"L")
+    }
+    for (var mi=2;mi<=(m/2);mi++) {
+        FB.push(mi+"F")
+        FB.push(mi+"B")
+    }
+    for (var ni=2;ni<=(n/2);ni++) {
+        UD.push(ni+"U")
+        UD.push(ni+"D")
+    }
+    
+    console.log(RL)
+    console.log(FB)
+    console.log(UD)
 }
 
 function scramblePyraminx() {

@@ -94,34 +94,32 @@ function rawTimes(times) {
 }
 
 // All events, holding all session and record data
-var puzzles = [{name:"3x3x3",sessions:[],scramble:scramble3x3},
-               {name:"2x2x2",sessions:[],scramble:scramble2x2},
-               {name:"4x4x4",sessions:[],scramble:scramble4x4},
-               {name:"5x5x5",sessions:[],scramble:scramble5x5},
+var puzzles = [{name:"3x3x3",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false},
+               {name:"2x2x2",sessions:[],scrambler:"2x2x2",enabled:true,OH:false,blind:false},
+               {name:"4x4x4",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:false},
+               {name:"5x5x5",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:false},
                
-               {name:"Pyraminx",sessions:[],scramble:scramblePyraminx},
-               {name:"Skewb",sessions:[],scramble:scrambleSkewb},
-               {name:"Megaminx",sessions:[],scramble:scrambleMegaminx},
-               {name:"Square-1",sessions:[],scramble:scrambleSquare1},
-               {name:"Clock",sessions:[],scramble:scrambleClock},
-               {name:"6x6x6",sessions:[],scramble:scramble6x6},
-               {name:"7x7x7",sessions:[],scramble:scramble7x7},
+               {name:"Pyraminx",sessions:[],scrambler:"Pyraminx",enabled:true,OH:false,blind:false},
+               {name:"Skewb",sessions:[],scrambler:"Skewb",enabled:true,OH:false,blind:false},
+               {name:"Megaminx",sessions:[],scrambler:"Megaminx",enabled:true,OH:false,blind:false},
+               {name:"Square-1",sessions:[],scrambler:"Square-1",enabled:true,OH:false,blind:false},
+               {name:"Clock",sessions:[],scrambler:"Clock",enabled:true,OH:false,blind:false},
+               {name:"6x6x6",sessions:[],scrambler:"6x6x6",enabled:true,OH:false,blind:false},
+               {name:"7x7x7",sessions:[],scrambler:"7x7x7",enabled:true,OH:false,blind:false},
                
-               {name:"3x3x3 OH",sessions:[],scramble:scramble3x3},
-               {name:"3x3x3 BLD",sessions:[],scramble:scramble3x3BLD},
-               {name:"4x4x4 BLD",sessions:[],scramble:scramble4x4},
-               {name:"5x5x5 BLD",sessions:[],scramble:scramble5x5},
-               {name:"3x3x3 FT",sessions:[],scramble:scramble3x3},
+               {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false},
+               {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true},
+               {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:false,OH:false,blind:true},
+               {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true},
+               {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false},
                
-               {name:"Other",sessions:[],scramble:scrambleNone},
+               {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false},
              ]
 
 // Set the scamble function for each event
-var scrambleFunctions = [scramble3x3,scramble2x2,scramble4x4,scramble5x5,scramblePyraminx,scrambleSkewb,scrambleMegaminx,scrambleSquare1,scramble3x3,scramble3x3BLD,scrambleClock,scramble6x6,scramble7x7,,scramble4x4,scramble5x5,scramble3x3,scrambleNone] 
 var currentPuzzle = 0
 var currentSession = 0
 var currentRecord = 0
-
 
 // Save events to a file
 function saveSessions() {
@@ -220,7 +218,7 @@ function loadSessions() {
 
         if (object.puzzle != null) {
             currentPuzzle = object.puzzle
-            if (currentPuzzle >= puzzles.length) {
+            if (currentPuzzle >= puzzles.length||isNaN(currentPuzzle)) {
                 currentPuzzle = 0
             }
         }
@@ -230,6 +228,7 @@ function loadSessions() {
                 currentSession = 0
             }
         }
+        console.log(currentSession)
         if (object.tools != null) {
             setupTools(object.tools)
         }
@@ -465,6 +464,10 @@ function setPuzzle() {
         }
     }
     currentPuzzle = parseInt(puzzleSelect.value)
+    if (isNaN(currentPuzzle)) {
+        currentPuzzle = 0
+        puzzleSelect.value = currentPuzzle
+    }
     if (puzzles[currentPuzzle].sessions.length == 0) {
         createSession()
     }
@@ -482,12 +485,20 @@ function setPuzzleOptions() {
         puzzleSelect.options[i] = null;
     }
     for (var i = 0;i<puzzles.length;i++) {
-        var option = document.createElement("option");
-        option.text = puzzles[i].name;
-        option.value = i;
-        puzzleSelect.add(option);
+        if (puzzles[i].enabled) {
+            var option = document.createElement("option");
+            option.text = puzzles[i].name;
+            option.value = i;
+            puzzleSelect.add(option);
+        }
     }
-    puzzleSelect.value = currentPuzzle
+    if (puzzles[currentPuzzle].enabled) {
+        puzzleSelect.value = currentPuzzle
+    } else {
+        currentPuzzle = 0
+        puzzleSelect.value = currentPuzzle
+    }
+    
 }
 
 // Set the session based on the dropdown

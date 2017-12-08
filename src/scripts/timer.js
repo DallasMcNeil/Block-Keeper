@@ -132,9 +132,9 @@ document.getElementById("background").onmouseup = function(e) {
 
 // Update the timer frequently
 function timerUpdate() {
-    inspectionEnabled = (preferences.inspection&&!puzzles[currentPuzzle].name.endsWith("BLD"))
+    inspectionEnabled = (preferences.inspection&&!puzzles[currentPuzzle].blind)
     splitEnabled = preferences.split||(puzzles[currentPuzzle].name.endsWith("OH")&&preferences.OHSplit)
-    OHSplitEnabled = preferences.OHSplit&&puzzles[currentPuzzle].name.endsWith("OH")
+    OHSplitEnabled = preferences.OHSplit&&puzzles[currentPuzzle].OH
     if (!preferences.stackmat) {
     document.getElementById("background").focus()
     currentTime = new Date();
