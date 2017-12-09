@@ -1661,7 +1661,7 @@ var confettiConfig = {
 function confettiDraw(confetti) {
   confettiCanvas.context.beginPath();
   confettiCanvas.context.lineWidth = confetti.r / 2;
-  confettiCanvas.context.strokeStyle = colorScheme[confetti.c];
+  confettiCanvas.context.strokeStyle = globals.cubeColors[confetti.c];
   confettiCanvas.context.moveTo(confetti.x + confetti.tilt + (confetti.r / 4),
     confetti.y);
   confettiCanvas.context.lineTo(confetti.x + confetti.tilt, confetti.y +

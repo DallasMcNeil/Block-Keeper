@@ -558,14 +558,15 @@ scramblers["pyram"] = (function() {
   ];
 
 
+  // Modified by Dallas McNeil for Block Keeper, using custom colors
   function colorGet(col){
-        if (col==="r") return colorScheme[0];
-        if (col==="o") return colorScheme[1];
-        if (col==="b") return colorScheme[2];
-        if (col==="g") return colorScheme[3];
-        if (col==="y") return colorScheme[4];
-        if (col==="w") return colorScheme[5];
-        if (col==="x") return colorScheme[6];
+    if (col==="r") return globals.cubeColors[0];
+    if (col==="o") return globals.cubeColors[1];
+    if (col==="b") return globals.cubeColors[2];
+    if (col==="g") return globals.cubeColors[3];
+    if (col==="y") return globals.cubeColors[4];
+    if (col==="w") return globals.cubeColors[5];
+    if (col==="x") return globals.cubeColors[6];
   }
 
   var scalePoint = function(w, h, ptIn) {

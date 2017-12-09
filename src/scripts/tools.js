@@ -10,8 +10,8 @@ var canvases = []
 var toolTypes = []
 var toolOptions = []
 
-var mainColour = themeColours[0][5]
-var secondColour = themeColours[0][4]
+var mainColour = globals.themeColors[0][5]
+var secondColour = globals.themeColors[0][4]
 
 var colours = ["#F20","#5F0","#0060FF"]
 
@@ -106,8 +106,8 @@ function updateTool() {
         mainColour = readTheme()[5]
         secondColour = readTheme()[4]
     } else {
-        mainColour = themeColours[preferencesInterface.theme.value][5]
-        secondColour = themeColours[preferencesInterface.theme.value][4]
+        mainColour = globals.themeColors[preferencesInterface.theme.value][5]
+        secondColour = globals.themeColors[preferencesInterface.theme.value][4]
     }
     
     for (var i=0;i<canvases.length;i++) {
@@ -758,9 +758,9 @@ function crossSolver(ctx) {
         ctx.lineWidth = 1
         ctx.font = "20px workSans"
         ctx.textAlign = "center"
-        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
-        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
-        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        var UColors = [globals.cubeColors[4],mainColour,globals.cubeColors[1],globals.cubeColors[0],globals.cubeColors[3],globals.cubeColors[2]]
+        var FColors = [globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[0],globals.cubeColors[0]]
+        var DColors = [mainColour,globals.cubeColors[4],globals.cubeColors[0],globals.cubeColors[1],globals.cubeColors[2],globals.cubeColors[3]]
         crossSolverID = setTimeout(function() {    
             for (var i=0;i<6;i++) {
                 var str = "(UF):"
@@ -796,9 +796,9 @@ function EOLineSolver(ctx) {
         ctx.lineWidth = 1
         ctx.font = "20px workSans"
         ctx.textAlign = "center"
-        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
-        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
-        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        var UColors = [globals.cubeColors[4],mainColour,globals.cubeColors[1],globals.cubeColors[0],globals.cubeColors[3],globals.cubeColors[2]]
+        var FColors = [globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[0],globals.cubeColors[0]]
+        var DColors = [mainColour,globals.cubeColors[4],globals.cubeColors[0],globals.cubeColors[1],globals.cubeColors[2],globals.cubeColors[3]]
         EOLineSolverID = setTimeout(function() {    
             for (var i=0;i<6;i++) {
                 var str = "(UF):"
@@ -835,9 +835,9 @@ function firstBlockSolver(ctx) {
         ctx.lineWidth = 1
         ctx.font = "20px workSans"
         ctx.textAlign = "center"
-        var UColors = [colorScheme[4],mainColour,colorScheme[1],colorScheme[0],colorScheme[3],colorScheme[2]]
-        var FColors = [colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[3],colorScheme[0],colorScheme[0]]
-        var DColors = [mainColour,colorScheme[4],colorScheme[0],colorScheme[1],colorScheme[2],colorScheme[3]]
+        var UColors = [globals.cubeColors[4],mainColour,globals.cubeColors[1],globals.cubeColors[0],globals.cubeColors[3],globals.cubeColors[2]]
+        var FColors = [globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[3],globals.cubeColors[0],globals.cubeColors[0]]
+        var DColors = [mainColour,globals.cubeColors[4],globals.cubeColors[0],globals.cubeColors[1],globals.cubeColors[2],globals.cubeColors[3]]
         firstBlockSolverID = setTimeout(function() {    
             for (var i=0;i<6;i++) {
                 var str = "(UF):"

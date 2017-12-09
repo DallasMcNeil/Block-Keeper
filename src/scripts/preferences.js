@@ -304,20 +304,20 @@ function savePreferencesForm() {
 // Set the style of the application based on the theme in preferences
 function setStylesheet() {
     if (preferences.theme == "custom") {
-        setStyle(preferences.customTheme)
+        style.setStyle(preferences.customTheme)
     } else if (isNaN(parseInt(preferences.theme))) {
-        setStyle = themeColours[0]
+        style.setStyle = globals.themeColors[0]
     } else {
-        setStyle(themeColours[parseInt(preferences.theme)])
+        style.setStyle(globals.themeColors[parseInt(preferences.theme)])
     }
 }
 
 // Set the style of the application based on the theme selected in preferences
 function previewStylesheet() {
     if (preferencesInterface.theme.value == "custom") {
-        setStyle(readTheme())
+        style.setStyle(readTheme())
     } else {
-        setStyle(themeColours[preferencesInterface.theme.value])
+        style.setStyle(globals.themeColors[preferencesInterface.theme.value])
     }
     updateTool()
 }
