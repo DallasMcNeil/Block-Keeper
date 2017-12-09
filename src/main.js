@@ -172,7 +172,7 @@ app.on('ready', function() {
         var titleBar = "hidden"
     }
     
-    global.sharedObj = {dirName:__dirname,version:app.getVersion(),titleBar:titleBar}
+    global.appDetails = {dirName:__dirname,version:app.getVersion(),titleBar:titleBar}
 
     let mainWindowState = windowStateKeeper({
         defaultWidth: 960,
