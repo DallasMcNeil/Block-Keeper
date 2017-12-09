@@ -36,8 +36,8 @@
             } else if (message === "CommandOrControl+,") {
                 openPreferences();
             } else if (message === "CommandOrControl+R") {
-                if (hasVideo && preferences.recordSolve && !videoLoading) {
-                    showPreview();
+                if (record.hasVideo && preferences.recordSolve && !record.recording()) {
+                    record.showPreview();
                 }
             }
         }

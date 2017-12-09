@@ -432,7 +432,7 @@ function closeTimeDialog() {
     $("#addToolButton").prop('disabled', false)
     $("#addToolButton").removeClass("disabled")
         
-    if (hasVideo && preferences.recordSolve && !videoLoading) {
+    if (record.hasVideo() && preferences.recordSolve) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
@@ -1641,7 +1641,7 @@ function closeShowInfo() {
     $("#addToolButton").prop('disabled', false)
     $("#addToolButton").removeClass("disabled")
         
-    if (hasVideo && preferences.recordSolve && !videoLoading) {
+    if (record.hasVideo && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }

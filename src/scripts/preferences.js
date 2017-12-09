@@ -116,7 +116,7 @@ function loadPreferences() {
         }
 
         if (preferences.recordSolve) {
-            setupRecorder()
+            record.setupRecorder()
         }
     }
     
@@ -250,12 +250,12 @@ function closePreferences() {
     $("#addToolButton").prop('disabled', false)
     $("#addToolButton").removeClass("disabled")
         
-    if (hasVideo && preferences.recordSolve && !videoLoading) {
+    if (record.hasVideo() && preferences.recordSolve && !videoLoading) {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
     
-    setupRecorder()
+    record.setupRecorder()
     setStylesheet()
     
     preferencesOpen = false
@@ -528,7 +528,7 @@ function importCSTime(doImport) {
         $("#addTimeButton").removeClass("disabled")
         
                 
-        if (hasVideo && preferences.recordSolve && !videoLoading) {
+        if (record.hasVideo() && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")
             $("#previewButton").prop("disabled",false)
         }

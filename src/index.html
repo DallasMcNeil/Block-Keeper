@@ -11,8 +11,6 @@ Created by Dallas McNeil
     <title>Block Keeper</title>
     <link type="text/css" rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet/less" type="text/css" href="styles/base.less">
-    
-    <script src="scripts/globals.js"></script>
     <script>
         less = {
             async: true,
@@ -20,6 +18,7 @@ Created by Dallas McNeil
         };
     </script>
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="scripts/globals.js"></script>
     <script src="scripts/libs/less.min.js"></script>
     <script src="scripts/libs/jQuery.js"></script>
     <script src="scripts/libs/jQuery UI.js"></script>
@@ -36,6 +35,7 @@ Created by Dallas McNeil
     <script src="scripts/libs/stackmat.js"></script>
     <script src="scripts/libs/confetti.js"></script>
     <script src="scripts/libs/solver.js"></script>
+    <script src="scripts/utilities.js"></script>
     <script>if (window.module) module = window.module;</script>
 </head>
     
@@ -128,7 +128,7 @@ Created by Dallas McNeil
         </div>
     </div>
 
-    <button title="Video Preview" id="previewButton" onclick="showPreview()"></button>
+    <button title="Video Preview" id="previewButton" onclick="record.showPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
     <select title="Tool Select" id="toolSelect" onchange="updateTool()">
         <option value="crossSolver">Cross Solver</option>
@@ -144,8 +144,8 @@ Created by Dallas McNeil
 
     <div id="tools">
     </div>
-    <button title="Add Tool" id="addToolButton" onclick="addTool()"></button>
-    
+    <button title="Add Tool" id="addToolButton" onclick="addTool()"></button> 
+    </div>
         
     <div id="dialogAddTime">
         <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
@@ -162,9 +162,9 @@ Created by Dallas McNeil
     </div>
     
     <div id="dialogPreview">
-        <button id="closePreview" class="cross" onclick="closePreview()"></button><br>
+        <button id="closePreview" class="cross" onclick="record.closePreview()"></button><br>
         <video id="previewVideo" controls></video>
-        <button title="Save video as file" id="savePreview" onclick="savePreview()">Save Video</button>
+        <button title="Save video as file" id="savePreview" onclick="record.saveVideo()">Save Video</button>
     </div>
         
     <div id="dialogScramble">
@@ -282,8 +282,6 @@ Created by Dallas McNeil
         
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
         <button title="Save preferences and close" id="savePreferences" onclick="savePreferencesForm()">Save</button>
-    </div>
-        
     </div>
     
     <div id="versionBannerContainer">

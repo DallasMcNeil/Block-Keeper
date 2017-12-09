@@ -371,7 +371,7 @@ function startInspection() {
     s3 = true
     s7 = true
     if (preferences.extendedVideos) {
-        startRecorder()
+        record.startRecorder()
     }
 }
 
@@ -404,7 +404,7 @@ function readyTimer() {
 // Start timer recording
 function startTimer() {
     if (!preferences.extendedVideos||(!preferences.inspection&&preferences.extendedVideos)) {
-        startRecorder()
+        record.startRecorder()
     }
     timerState = "timing"
     timerText.style.color = normalColor
@@ -434,10 +434,10 @@ function stopTimer() {
     cooldown = true
     timerResult = "OK";
     if (!preferences.extendedVideos) {
-        stopRecorder()
+        record.stopRecorder()
     } else {
         setTimeout(function(){
-            stopRecorder()
+            record.stopRecorder()
         },3000)
     }
 }
@@ -459,7 +459,7 @@ function cancelTimer() {
     $("#toolSelect").fadeIn()
     $("#previewButton").fadeIn()
     if (preferences.extendedVideos) {
-        cancelRecorder()
+        record.cancelRecorder()
     }
 }
 
@@ -527,7 +527,7 @@ function SMCallback(state) {
                     $("#addToolButton").fadeOut()
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
-                    startRecorder()
+                    record.startRecorder()
                     timerText.style.color = normalColor
                 }
 
@@ -601,7 +601,7 @@ function SMCallback(state) {
                     $("#toolSelect").fadeOut()
                     $("#previewButton").fadeOut()
                     if (!preferences.extendedVideos) {
-                        startRecorder()
+                        record.startRecorder()
                     }
                     timerText.style.color = normalColor
                 }
@@ -649,10 +649,10 @@ function SMCallback(state) {
                     
                     $("#previewButton").fadeIn()
                     if (!preferences.extendedVideos) {
-                        stopRecorder()
+                        record.stopRecorder()
                     } else {
                         setTimeout(function(){
-                            stopRecorder()
+                            record.stopRecorder()
                         },3000)
                     }
                 }   
@@ -673,10 +673,10 @@ function SMCallback(state) {
                 
                 $("#previewButton").fadeIn()
                 if (!preferences.extendedVideos) {
-                    stopRecorder()
+                    record.stopRecorder()
                 } else {
                     setTimeout(function(){
-                        stopRecorder()
+                        record.stopRecorder()
                     },3000)
                 }
             }
