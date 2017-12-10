@@ -54,7 +54,7 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id=scramble></p>
+    <p id="scramble" onclick="scramble.openScramble()"></p>
         
     <div id="stats">
         <select title="Event Select" id="puzzleSelect" onchange="setPuzzle()"></select>
@@ -128,7 +128,7 @@ Created by Dallas McNeil
         </div>
     </div>
 
-    <button title="Video Preview" id="previewButton" onclick="record.showPreview()"></button>
+    <button title="Video Preview" id="previewButton" onclick="record.openPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
     <select title="Tool Select" id="toolSelect" onchange="updateTool()">
         <option value="crossSolver">Cross Solver</option>
@@ -170,7 +170,7 @@ Created by Dallas McNeil
     <div id="dialogScramble">
         <p>Scrambler: <select id="scramblerSelect"></select></p>
         <p>Custom scramble<br><textarea rows="3" id="customScramble"></textarea></p>
-        <p><button onclick="closeScramble()">Done</button></p>
+        <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
         
     <div id="dialogShowInfo">

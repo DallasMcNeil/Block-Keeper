@@ -162,37 +162,19 @@ $("#dialogPreferences").dialog({
     evt.stopPropagation();
 });
 
-var preferencesOpen = false
-
 // Open preferences dialog
 function openPreferences() {
     if ($('#dialogPreferences').dialog('isOpen')) {
         closePreferences()
     } else { 
         $("#dialogPreferences").dialog("open")
-        $("#stats").addClass("disabled")
-        $("#timer").addClass("disabled")
-        $("#scramble").addClass("disabled")
-        $("#previewButton").addClass("disabled")
-        $("#stats").prop("disabled",true)
-        $("#timer").prop("disabled",true)
-        $("#scramble").prop("disabled",true)
-        $("#previewButton").prop("disabled",true)
-        $("#puzzleSelect").prop('disabled', true)
-        $("#sessionSelect").prop('disabled', true)
-        $("#sessionButton").prop('disabled', true)
-        $("#toolSelect").prop('disabled', true)
-        $("#tools").prop('disabled', true)
-        $("#toolSelect").addClass("disabled")
-        $("#tools").addClass("disabled")
-        
-        $("#addToolButton").prop('disabled', true)
-        $("#addToolButton").addClass("disabled")
+        disableAllElements("preferencesButton");
+    
         if (timerState == "inspectReady") {
             cancelTimer()
         }
         
-        preferencesOpen = true
+        globals.menuOpen = true
     }
 }
 
@@ -234,31 +216,12 @@ function closePreferences() {
     timerText.innerHTML = (0).toFixed(preferences.timerDetail)
        
     $("#dialogPreferences").dialog("close")
-    $("#stats").removeClass("disabled")
-    $("#timer").removeClass("disabled")
-    $("#scramble").removeClass("disabled")
-    $("#stats").prop("disabled",false)
-    $("#timer").prop("disabled",false)
-    $("#scramble").prop("disabled",false)
-    $("#puzzleSelect").prop('disabled', false)
-    $("#sessionSelect").prop('disabled', false)
-    $("#sessionButton").prop('disabled', false)
-    $("#toolSelect").prop('disabled', false)
-    $("#tools").prop('disabled', false)
-    $("#toolSelect").removeClass("disabled")
-    $("#tools").removeClass("disabled")
-    $("#addToolButton").prop('disabled', false)
-    $("#addToolButton").removeClass("disabled")
-        
-    if (record.hasVideo() && preferences.recordSolve && !videoLoading) {
-        $("#previewButton").removeClass("disabled")
-        $("#previewButton").prop("disabled",false)
-    }
+    enableAllElements();
     
     record.setupRecorder()
     setStylesheet()
     
-    preferencesOpen = false
+    globals.menuOpen = false
 }
 
 // Save preferences and close dialog
@@ -408,7 +371,7 @@ function importCS() {
                 }
             }
                 
-            preferencesOpen = true
+            globals.menuOpen = true
             $("#dialogPreferences").dialog("close")
             $("#preferencesButton").addClass("disabled")
             $("#preferencesButton").prop("disabled",true)
@@ -494,7 +457,7 @@ function importCSTime(doImport) {
             importCSTime(false)
         }
     } else {
-        preferencesOpen = false
+        globals.menuOpen = false
         $("#dialogCSTimer").dialog("close")
 
         $("#stats").removeClass("disabled")

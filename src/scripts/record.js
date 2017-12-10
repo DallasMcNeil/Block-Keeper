@@ -140,15 +140,14 @@ const record = function() {
     }
 
     // Show the dialog which presents the recording
-    function showPreview() {
+    function openPreview() {
         if ($('#dialogPreview').dialog('isOpen')) {
             closePreview();
         } else { 
             $("#dialogPreview").dialog("open");
             disableAllElements("previewButton");
 
-            // TODO
-            preferencesOpen = true;
+            globals.menuOpen = true;
             if (timerState == "inspectReady") {
                 cancelTimer();
             }
@@ -159,8 +158,7 @@ const record = function() {
     function closePreview() {
         $("#dialogPreview").dialog("close");
         enableAllElements();
-        // TODO
-        preferencesOpen = false;
+        globals.menuOpen = false;
     }
 
     // TODO
@@ -211,7 +209,7 @@ const record = function() {
         startRecorder:startRecorder,
         stopRecorder:stopRecorder,
         cancelRecorder:cancelRecorder,
-        showPreview:showPreview,
+        openPreview:openPreview,
         closePreview:closePreview,
         saveVideo:saveVideo,
         hasVideo:returnHasVideo,

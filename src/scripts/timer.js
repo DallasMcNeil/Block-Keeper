@@ -145,7 +145,7 @@ function timerUpdate() {
     rightIndicator.style.opacity = 0
     switch (timerState) {
         case "normal":       
-            if (!preferencesOpen && !sessionButtonsShowing) {
+            if (!globals.menuOpen && !sessionButtonsShowing) {
                 if ((preferences.endSplit||OHSplitEnabled)&&splitEnabled&&cooldown) {
                     if (leftDown) {
                         leftIndicator.style.backgroundColor = secondColour
@@ -422,7 +422,7 @@ function stopTimer() {
     timerText.innerHTML = formatTime(timerTime)
     submitTime()
     inspectionTime = currentTime.getTime()
-    scramble()
+    scramble.scramble()
     $("#stats").fadeIn()
     $("#scramble").fadeIn()
     $("#preferencesButton").fadeIn()
@@ -487,7 +487,7 @@ function SMCallback(state) {
                 if (mainDown&&inspectionEnabled) {
                     readyInspection()
                 }
-                if (!preferencesOpen && !sessionButtonsShowing) {
+                if (!globals.menuOpen && !sessionButtonsShowing) {
                     leftIndicator.style.opacity = 1
                     if (leftDown) {
                         leftIndicator.style.backgroundColor = prepareColor
@@ -639,7 +639,7 @@ function SMCallback(state) {
                     timerState = "normal"
                     timerText.style.color = normalColor
                     submitTime()
-                    scramble()
+                    scramble.scramble()
                     $("#stats").fadeIn()
                     $("#scramble").fadeIn()
                     $("#preferencesButton").fadeIn()
@@ -663,7 +663,7 @@ function SMCallback(state) {
                 timerState = "normal"
                 timerText.style.color = normalColor
                 submitTime()
-                scramble()
+                scramble.scramble()
                 $("#stats").fadeIn()
                 $("#scramble").fadeIn()
                 $("#preferencesButton").fadeIn()

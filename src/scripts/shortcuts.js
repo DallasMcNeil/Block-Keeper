@@ -7,7 +7,7 @@
     
     // Recieve shortcuts and perform the acording actions
     require('electron').ipcRenderer.on('shortcut', function(event, message) { 
-        if (timerState === "normal" && !preferencesOpen) {
+        if (timerState === "normal" && !globals.menuOpen) {
             if (message === "CommandOrControl+1") {
                 currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length - 1;
                 recordResultOK();
@@ -36,8 +36,8 @@
             } else if (message === "CommandOrControl+,") {
                 openPreferences();
             } else if (message === "CommandOrControl+R") {
-                if (record.hasVideo && preferences.recordSolve && !record.recording()) {
-                    record.showPreview();
+                if (record.hasVideo() && preferences.recordSolve && !record.recording()) {
+                    record.openPreview();
                 }
             }
         }

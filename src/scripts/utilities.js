@@ -3,6 +3,11 @@
 // Block Keeper
 // Created by Dallas McNeil
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 // Disable a specific element so it cannot be interacted with
 function disableElement(elem) {
     $(elem).addClass("disabled");
@@ -29,6 +34,15 @@ function disableAllElements(exception = "") {
 function enableAllElements() {
     var elements = $("#content").children();
     for (e in elements) {
-        enableElement("#"+elements[e].id);
+        if (elements[e].id === "previewButton") {
+            console.log("Enable")
+            console.log(record.hasVideo())
+            if (record.hasVideo() && preferences.recordSolve && !record.recording()) {
+                console.log("YEP")
+                enableElement("#"+elements[e].id);
+            }
+        } else {
+            enableElement("#"+elements[e].id);
+        }
     }
 }

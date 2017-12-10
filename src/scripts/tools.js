@@ -121,7 +121,7 @@ function updateTool() {
             var ctx = canvases[i].getContext("2d")
             distribution(ctx)
         } else if (toolTypes[i] == "scramble") {
-            drawScramble(canvases[i])
+            scramble.drawScramble(canvases[i])
         } else if (toolTypes[i] == "eventStats") {
             var ctx = canvases[i].getContext("2d")
             eventStats(ctx)
@@ -751,8 +751,8 @@ function distribution(ctx) {
 var crossSolverID = 0;
 function crossSolver(ctx) {
     clearTimeout(crossSolverID)
-    if (scrambleStr == "333") {
-        ctx.clearRect(0,0,300,200)
+    ctx.clearRect(0,0,300,200)
+    if (scramble.scrambleType() == "333") {
         ctx.strokeStyle = secondColour
         ctx.fillStyle = mainColour
         ctx.lineWidth = 1
@@ -780,7 +780,7 @@ function crossSolver(ctx) {
                 }
                 ctx.textAlign = "left"
                 ctx.fillStyle = DColors[i]
-                ctx.fillText(solveCross(currentScramble,i),70,30*(1+i))
+                ctx.fillText(scramble.solveCross(scramble.currentScramble(),i),70,30*(1+i))
             }
         },0)
     }
@@ -789,8 +789,8 @@ function crossSolver(ctx) {
 var EOLineSolverID = 0;
 function EOLineSolver(ctx) {
     clearTimeout(EOLineSolverID)
-    if (scrambleStr == "333") {
-        ctx.clearRect(0,0,300,200)
+    ctx.clearRect(0,0,300,200)
+    if (scramble.scrambleType() == "333") {
         ctx.strokeStyle = secondColour
         ctx.fillStyle = mainColour
         ctx.lineWidth = 1
@@ -818,7 +818,7 @@ function EOLineSolver(ctx) {
                 }
                 ctx.textAlign = "left"
                 ctx.fillStyle = DColors[i]
-                ctx.fillText(solveEOLine(currentScramble,i),70,30*(1+i))
+                ctx.fillText(scramble.solveEOLine(scramble.currentScramble(),i),70,30*(1+i))
             }
         },0)
     }
@@ -828,8 +828,8 @@ function EOLineSolver(ctx) {
 var firstBlockSolverID = 0;
 function firstBlockSolver(ctx) {
     clearTimeout(firstBlockSolverID)
-    if (scrambleStr == "333") {
-        ctx.clearRect(0,0,300,200)
+    ctx.clearRect(0,0,300,200)
+    if (scramble.scrambleType() == "333") {
         ctx.strokeStyle = secondColour
         ctx.fillStyle = mainColour
         ctx.lineWidth = 1
@@ -857,7 +857,7 @@ function firstBlockSolver(ctx) {
                 }
                 ctx.textAlign = "left"
                 ctx.fillStyle = DColors[i]
-                ctx.fillText(solveFirstBlock(currentScramble,i),70,30*(1+i))
+                ctx.fillText(scramble.solveFirstBlock(scramble.currentScramble(),i),70,30*(1+i))
             }
         },0)
     }

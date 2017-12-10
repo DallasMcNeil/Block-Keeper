@@ -373,7 +373,7 @@ function createRecord(time,result) {
             },5000)
         }
     }
-    var record = {time:time,scramble:currentScramble,result:result}
+    var record = {time:time,scramble:scramble.currentScramble(),result:result}
     puzzles[currentPuzzle].sessions[currentSession].records.push(record)
     $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER+"px"},100)
     if (!disableUpdate) {
@@ -408,7 +408,7 @@ function showTimeDialog() {
     
     $("#addToolButton").prop('disabled', true)
     $("#addToolButton").addClass("disabled")
-    preferencesOpen = true
+    globals.menuOpen = true
 }
 
 // Close the time dialog
@@ -436,7 +436,7 @@ function closeTimeDialog() {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
-    preferencesOpen = false
+    globals.menuOpen = false
 }
 
 // Create record from the timer
@@ -452,7 +452,7 @@ function addTime() {
     createRecord(t,"OK")
     puzzles[currentPuzzle].sessions[currentSession].records[puzzles[currentPuzzle].sessions[currentSession].records.length-1].scramble = document.getElementById("addScrambleInput").value
     timerText.innerHTML = formatTime(t)
-    scramble()
+    scramble.scramble()
     closeTimeDialog()
 }
 
@@ -475,7 +475,7 @@ function setPuzzle() {
     currentSession = puzzles[currentPuzzle].sessions.length-1
     sessionSelect.value = currentSession
     updateRecords()
-    scramble()
+    scramble.scramble()
 }
 
 // Populate the event dropdown with events
@@ -955,7 +955,7 @@ function updateRecords() {
         extraHeight=extraHeight+30
     }
     $("#sessionRecords td").hover(function(e) {
-        if (!preferencesOpen) {
+        if (!globals.menuOpenf) {
             var column = parseInt( $(this).index());
             var row = parseInt( $(this).parent().index());  
             if (column == 1 && row > 0) {
@@ -1195,7 +1195,7 @@ $("#dialogShowInfo").dialog({
 })
 
 function openShowInfo(type,a) {
-    if (preferencesOpen) {
+    if (globals.menuOpen) {
         return
     }
     var str = ""
@@ -1618,7 +1618,7 @@ function openShowInfo(type,a) {
     if (timerState == "inspectReady") {
         cancelTimer()
     }
-    preferencesOpen = true
+    globals.menuOpen = true
 }
 
 function closeShowInfo() {
@@ -1645,7 +1645,7 @@ function closeShowInfo() {
         $("#previewButton").removeClass("disabled")
         $("#previewButton").prop("disabled",false)
     }
-    preferencesOpen = false
+    globals.menuOpen = false
 }
 
 // Confetti functions

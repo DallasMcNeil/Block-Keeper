@@ -129,6 +129,7 @@ const globals = function() {
     return {
         cubeColors:colorScheme,
         minxColors:minxColors,
-        themeColors:themeColors
+        themeColors:themeColors,
+        menuOpen:false
     }
 }()
