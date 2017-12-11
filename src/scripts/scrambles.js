@@ -81,7 +81,7 @@ var scramble = function() {
     // Sets up a select element with all the scrambler options
     function setScramblerOptions(selectElem) {
         var keys = Object.keys(scrambleOptions);
-        for (var i=0;i<Object.keys(scrambleOptions).length;i++) {
+        for (var i = 0; i < keys.length; i++) {
             var t = keys[i];
             var o = document.createElement("option");
             o.value = t;
@@ -119,8 +119,8 @@ var scramble = function() {
 
     // Use the recommended scrambler for the event
     function scrambleRecommended() {
-        if (scrambleOptions[puzzles[currentPuzzle].scrambler] != undefined) {
-            scrambleOptions[puzzles[currentPuzzle].scrambler]()
+        if (scrambleOptions[events.getCurrentEvent().scrambler] != undefined) {
+            scrambleOptions[events.getCurrentEvent().scrambler]()
         } else {
             scrambleNone()
         }
@@ -228,7 +228,7 @@ var scramble = function() {
             moves.push("D");
         }
 
-        for (var i=2;i<=(n/2);i++) {
+        for (var i = 0; i < n / 2; i++) {
             moves.push(i+"R");
             moves.push(i+"L");
             moves.push(i+"F");
@@ -238,13 +238,13 @@ var scramble = function() {
         }
 
         var finalMoves = moves;
-        for (m in moves) {
+        for (var m = 0; i < moves.length; i++) {
             finalMoves.push(moves[m] + "'");
             finalMoves.push(moves[m] + "2");
         }
 
         var s = "";
-        for (i in length) {
+        for (var i = 0; i < length; i++) {
             s += finalMoves[Math.floor(Math.random() * finalMoves.length)] + " ";
         }
         scrambleStr = "" + n + n + n;
@@ -332,7 +332,7 @@ var scramble = function() {
     function returnScrambleType() {
         return scrambleStr;
     }
-    
+
     return {
         currentScramble:returnCurrentScramble,
         scramble:scramble,

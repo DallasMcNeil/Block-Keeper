@@ -164,7 +164,7 @@ const record = function() {
     // TODO
     // Save the previewed video to a .webm file
     function saveVideo() {
-        finishedRecorder.save(puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name);
+        finishedRecorder.save(events.getCurrentEvent().name + " " + events.getCurrentSession().name);
     }
 
     // Saves the current video automatically to a set location
@@ -172,13 +172,11 @@ const record = function() {
         var d = new Date();
         var time = d.getHours()+"-"+d.getMinutes();
 
-        // TODO
-        var path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace(new RegExp("/","g"),"-")+" "+time+".webm";
+        var path = preferences.autosaveLocation + "/" + events.getCurrentEvent().name + " " + events.getCurrentSession().name.replace(new RegExp("/","g"),"-") + " " + time + ".webm";
 
         var n = 1;
         while (fs.existsSync(path)) {
-            // TODO
-            path = preferences.autosaveLocation+"/"+puzzles[currentPuzzle].name+" "+puzzles[currentPuzzle].sessions[currentSession].name.replace(new RegExp("/","g"),"-")+" "+time+" "+n+".webm";
+            var path = preferences.autosaveLocation + "/" + events.getCurrentEvent().name + " " + events.getCurrentSession().name.replace(new RegExp("/","g"),"-") + " " + time + " " + n + ".webm";
             n++;
         }
 

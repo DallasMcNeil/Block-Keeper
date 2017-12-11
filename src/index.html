@@ -44,7 +44,7 @@ Created by Dallas McNeil
     <link type="text/css" rel="stylesheet" href="styles/standardWindowBar.css" id="titleBarStyle">
     <div id="windowBar"></div>
     <div id="content">
-    <div id="background" onclick="resetUI()">
+    <div id="background" onclick="events.resetUI()">
         <canvas id="confetti"></canvas>
         <div id="centreBackground">
             <p id="timer">0.000</p>
@@ -57,14 +57,14 @@ Created by Dallas McNeil
     <p id="scramble" onclick="scramble.openScramble()"></p>
         
     <div id="stats">
-        <select title="Event Select" id="puzzleSelect" onchange="setPuzzle()"></select>
+        <select title="Event Select" id="eventSelect" onchange="events.setEvent()"></select>
         <div id="sessionContainer">
-            <select title="Session Select" id="sessionSelect" onchange="setSession()"></select>
-            <button title="Edit Session" id="sessionButton" onclick="toggleSessionButtons()"></button>
+            <select title="Session Select" id="sessionSelect" onchange="events.setSession()"></select>
+            <button title="Edit Session" id="sessionButton" onclick="events.toggleSessionButtons()"></button>
         </div>
         <div id="sessionButtons">
-            <button title="Create a new session" id="newSessionButton" onclick="createSessionButton()">New</button>
-            <button title="Delete this session" id="deleteSessionButton" onclick="deleteSessionButton()">Delete</button>
+            <button title="Create a new session" id="newSessionButton" onclick="events.createSessionButton()">New</button>
+            <button title="Delete this session" id="deleteSessionButton" onclick="events.deleteSessionButton()">Delete</button>
         </div>
         <table id="sessionDetails">
             <tr>
@@ -110,20 +110,22 @@ Created by Dallas McNeil
         </table>
         <div id="sessionRecordsContainer"> 
         <table id="sessionRecords">
-            <tr>
-                <td>
-                    <button title="Add Time" id="addTimeButton" onclick="showTimeDialog()">+</button>
-                </td>
-                <td>
-                    <p>Time</p>
-                </td>
-                <td>
-                    <p>Ao5</p>
-                </td>
-                <td>
-                    <p>Ao12</p>
-                </td>
-            </tr>
+            <thead>
+                <tr>
+                    <td>
+                        <button title="Add Time" id="addTimeButton" onclick="events.openTimeDialog()">+</button>
+                    </td>
+                    <td>
+                        <p>Time</p>
+                    </td>
+                    <td>
+                        <p>Ao5</p>
+                    </td>
+                    <td>
+                        <p>Ao12</p>
+                    </td>
+                </tr>
+            </thead>
         </table>
         </div>
     </div>
@@ -150,14 +152,14 @@ Created by Dallas McNeil
     <div id="dialogAddTime">
         <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
         <p>Scramble (optional) <textarea rows="3" id="addScrambleInput"></textarea></p>
-        <p><button onclick="addTime()">Add</button> <button onclick="closeTimeDialog()">Cancel</button></p>
+        <p><button onclick="events.addRecord()">Add</button> <button onclick="events.closeTimeDialog()">Cancel</button></p>
     </div>
     
     <div id="dialogRecord">
-        <button title="Set result to OK" onclick="recordResultOK()">OK</button>
-        <button title="Set result to +2 penalty" onclick="recordResult2()">+2</button>
-        <button title="Set result to DNF penalty" onclick="recordResultDNF()">DNF</button>
-        <button title="Delete this time" style="margin-right:0px;" onclick="deleteRecord()">Delete</button>
+        <button title="Set result to OK" onclick="events.recordResultOK()">OK</button>
+        <button title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
+        <button title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
+        <button title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
         <p id="recordScramble"></p>
     </div>
     
@@ -174,7 +176,7 @@ Created by Dallas McNeil
     </div>
         
     <div id="dialogShowInfo">
-        <button id="closeShowInfo" class="cross" onclick="closeShowInfo()"></button><br>
+        <button id="closeShowInfo" class="cross" onclick="events.closeShowInfo()"></button><br>
         <p id="messageShowInfo"></p>
     </div>
         
@@ -294,7 +296,7 @@ Created by Dallas McNeil
     <script src="scripts/scrambles.js"></script> 
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>
-    <script src="scripts/sessions.js"></script> 
+    <script src="scripts/events.js"></script> 
     <script src="scripts/timer.js"></script>
     <script src="scripts/windowBar.js"></script>
     <script src="scripts/tools.js"></script>

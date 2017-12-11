@@ -9,30 +9,30 @@
     require('electron').ipcRenderer.on('shortcut', function(event, message) { 
         if (timerState === "normal" && !globals.menuOpen) {
             if (message === "CommandOrControl+1") {
-                currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length - 1;
-                recordResultOK();
-                updateRecords();
+                events.setCurrentRecord(events.getCurrentSession().records.length - 1);
+                events.recordResultOK();
+                events.updateRecords();
             } else if (message === "CommandOrControl+2") {
-                currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length - 1;
-                recordResult2();
-                updateRecords();
+                events.setCurrentRecord(events.getCurrentSession().records.length - 1);
+                events.recordResult2();
+                events.updateRecords();
             } else if (message === "CommandOrControl+3") {
-                currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length - 1;
-                recordResultDNF();
-                updateRecords();
+                events.setCurrentRecord(events.getCurrentSession().records.length - 1);
+                events.recordResultDNF();
+                events.updateRecords();
             } else if (message === "CommandOrControl+Backspace") {
-                currentRecord = puzzles[currentPuzzle].sessions[currentSession].records.length - 1;
-                deleteRecord();
+                events.setCurrentRecord(events.getCurrentSession().records.length - 1);
+                events.deleteRecord();
             } else if (message === "CommandOrControl+N") {
-                createSession();
-                updateSessions();
-                updateRecords();
+                events.createSession();
+                events.setSessionOptions($("#sessionSelect")[0]);
+                events.updateRecords();
             } else if (message === "CommandOrControl+E") {
-                toggleSessionButtons();
+                events.toggleSessionButtons();
             } else if (message === "CommandOrControl+S") {
-                scramble();
+                scramble.scramble();
             } else if (message === "CommandOrControl+T") {
-                showTimeDialog();
+                events.showTimeDialog();
             } else if (message === "CommandOrControl+,") {
                 openPreferences();
             } else if (message === "CommandOrControl+R") {

@@ -373,32 +373,7 @@ function importCS() {
                 
             globals.menuOpen = true
             $("#dialogPreferences").dialog("close")
-            $("#preferencesButton").addClass("disabled")
-            $("#preferencesButton").prop("disabled",true)
-            $("#stats").prop("disabled",false)
-            $("#stats").removeClass("disabled")
-            $("#puzzleSelect").prop('disabled', false)
-            $("#puzzleSelect").removeClass("disabled")
-            $("#sessionDetails").prop("disabled",true)
-            $("#sessionDetails").addClass("disabled")
-            $("#sessionRecords").prop("disabled",true)
-            $("#sessionRecords").addClass("disabled")
-            $("#sessionStats").prop("disabled",true)
-            $("#sessionStats").addClass("disabled")
-            $("#sessionSelect").prop('disabled', true)
-            $("#sessionSelect").addClass("disabled")
-            $("#sessionButton").prop('disabled', true)
-            $("#sessionButton").addClass("disabled")
-            $("#toolSelect").prop('disabled', true)
-            $("#tools").prop('disabled', true)
-            $("#toolSelect").addClass("disabled")
-            $("#tools").addClass("disabled")
-            $("#addTimeButton").prop('disabled', true)
-            $("#addTimeButton").addClass("disabled")
-            $("#addToolButton").prop('disabled', true)
-            $("#addToolButton").addClass("disabled")
-            $("#dialogCSTimer").dialog("open")
-
+            disableAllElements();
             importCSTime(false) 
         });
     }
@@ -459,37 +434,7 @@ function importCSTime(doImport) {
     } else {
         globals.menuOpen = false
         $("#dialogCSTimer").dialog("close")
-
-        $("#stats").removeClass("disabled")
-        $("#timer").removeClass("disabled")
-        $("#scramble").removeClass("disabled")
-        $("#stats").prop("disabled",false)
-        $("#timer").prop("disabled",false)
-        $("#scramble").prop("disabled",false)
-        $("#puzzleSelect").prop('disabled', false)
-        $("#sessionSelect").prop('disabled', false)
-        $("#sessionButton").prop('disabled', false)
-        $("#preferencesButton").removeClass("disabled")
-        $("#preferencesButton").prop("disabled",false)
-        $("#sessionDetails").prop("disabled",false)
-        $("#sessionDetails").removeClass("disabled")
-        $("#sessionRecords").prop("disabled",false)
-        $("#sessionRecords").removeClass("disabled")
-        $("#sessionStats").prop("disabled",false)
-        $("#sessionStats").removeClass("disabled")
-        $("#sessionSelect").prop('disabled', false)
-        $("#sessionSelect").removeClass("disabled")
-        $("#sessionButton").prop('disabled', false)
-        $("#sessionButton").removeClass("disabled")
-        $("#toolSelect").prop('disabled', false)
-        $("#tools").prop('disabled', false)
-        $("#toolSelect").removeClass("disabled")
-        $("#tools").removeClass("disabled")
-        $("#addToolButton").prop('disabled', false)
-        $("#addToolButton").removeClass("disabled")
-        $("#addTimeButton").prop('disabled', false)
-        $("#addTimeButton").removeClass("disabled")
-        
+        enableAllElements();
                 
         if (record.hasVideo() && preferences.recordSolve && !videoLoading) {
             $("#previewButton").removeClass("disabled")

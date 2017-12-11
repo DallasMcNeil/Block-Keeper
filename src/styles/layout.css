@@ -256,7 +256,7 @@ button:active {
 
 #sessionButtons {
     display: block;
-    margin-top:50px;
+    margin-top:20px;
     height:0px;
     overflow-y:hidden;
 }

@@ -81,7 +81,7 @@ window.onkeydown = function(e) {
         
     }
 
-    if(e.keyCode == 32 && !sessionButtonsShowing) {
+    if (e.keyCode == 32 && !globals.menuOpen) {
         e.preventDefault();
         return false;
     }
@@ -132,9 +132,9 @@ document.getElementById("background").onmouseup = function(e) {
 
 // Update the timer frequently
 function timerUpdate() {
-    inspectionEnabled = (preferences.inspection&&!puzzles[currentPuzzle].blind)
-    splitEnabled = preferences.split||(puzzles[currentPuzzle].name.endsWith("OH")&&preferences.OHSplit)
-    OHSplitEnabled = preferences.OHSplit&&puzzles[currentPuzzle].OH
+    inspectionEnabled = (preferences.inspection&&!events.getCurrentEvent().blind)
+    splitEnabled = preferences.split||(events.getCurrentEvent().OH&&preferences.OHSplit)
+    OHSplitEnabled = preferences.OHSplit&&events.getCurrentEvent().OH
     if (!preferences.stackmat) {
     document.getElementById("background").focus()
     currentTime = new Date();
@@ -145,7 +145,7 @@ function timerUpdate() {
     rightIndicator.style.opacity = 0
     switch (timerState) {
         case "normal":       
-            if (!globals.menuOpen && !sessionButtonsShowing) {
+            if (!globals.menuOpen) {
                 if ((preferences.endSplit||OHSplitEnabled)&&splitEnabled&&cooldown) {
                     if (leftDown) {
                         leftIndicator.style.backgroundColor = secondColour
@@ -465,7 +465,7 @@ function cancelTimer() {
 
 // Submit a time to be created
 function submitTime() {
-    createRecord(timerTime,timerResult)
+    events.createRecord(timerTime,timerResult);
 }
 
 // Get stackmat information is used and display it
@@ -487,7 +487,7 @@ function SMCallback(state) {
                 if (mainDown&&inspectionEnabled) {
                     readyInspection()
                 }
-                if (!globals.menuOpen && !sessionButtonsShowing) {
+                if (!globals.menuOpen) {
                     leftIndicator.style.opacity = 1
                     if (leftDown) {
                         leftIndicator.style.backgroundColor = prepareColor

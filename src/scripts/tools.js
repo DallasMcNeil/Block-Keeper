@@ -102,6 +102,7 @@ function addTool() {
 
 // Update Tools based on new session data or scramble
 function updateTool() {
+    return; // RESUME HERE
     if (preferencesInterface.theme.value == "custom") {
         mainColour = readTheme()[5]
         secondColour = readTheme()[4]
@@ -209,20 +210,6 @@ function rangeForTimes(times) {
     return {range:fmax-fmin,divide:divide,segments:segments,max:fmax,min:fmin}
 }
 
-// Extract times from records, taking into account results of records
-function extractTimes(records) {
-    var times = []
-    for (var i=0;i<records.length;i++) {
-        if (records[i].result == "OK") {
-            times.push(records[i].time)
-        } else if (records[i].result == "+2") {
-            times.push(records[i].time+2)
-        } else if (records[i].result == "DNF") {
-            times.push(-1)    
-        }
-    }
-    return times
-}
 
 function eventStats(ctx) {
     ctx.clearRect(0,0,300,200)
