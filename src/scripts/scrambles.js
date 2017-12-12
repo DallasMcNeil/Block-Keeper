@@ -106,7 +106,7 @@ var scramble = function() {
             scrambleOptions["None"]();
         }
         scrambleText.innerHTML = currentScramble;      
-        updateTool();
+        tools.updateTools();
     }
     
     // Draw the current scramble in the canvas, if possible

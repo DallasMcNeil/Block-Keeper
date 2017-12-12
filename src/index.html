@@ -132,7 +132,7 @@ Created by Dallas McNeil
 
     <button title="Video Preview" id="previewButton" onclick="record.openPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
-    <select title="Tool Select" id="toolSelect" onchange="updateTool()">
+    <select title="Tool Select" id="toolSelect" onchange="tools.updateTools()">
         <option value="crossSolver">Cross Solver</option>
         <option value="distribution">Distribution</option>
         <option value="scramble">Drawn Scramble</option>
@@ -146,7 +146,7 @@ Created by Dallas McNeil
 
     <div id="tools">
     </div>
-    <button title="Add Tool" id="addToolButton" onclick="addTool()"></button> 
+    <button title="Add Tool" id="addToolButton" onclick="tools.addTool()"></button> 
     </div>
         
     <div id="dialogAddTime">

@@ -126,10 +126,13 @@ const globals = function() {
         "#FFFFFF"
     ]];
     
+    var toolColors = ["#F20","#5F0","#0060FF"];
+    
     return {
         cubeColors:colorScheme,
         minxColors:minxColors,
         themeColors:themeColors,
+        toolColors:toolColors,
         menuOpen:false
     }
 }()

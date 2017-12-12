@@ -260,7 +260,7 @@ function savePreferencesForm() {
     writeTheme(preferences.customTheme) 
 
     savePreferences()
-    updateRecords()
+    events.updateRecords();
     closePreferences()
 }
 
@@ -282,7 +282,7 @@ function previewStylesheet() {
     } else {
         style.setStyle(globals.themeColors[preferencesInterface.theme.value])
     }
-    updateTool()
+    tools.updateTools();
 }
 
 // Read the theme from the preferences form and return an array of values
@@ -321,7 +321,7 @@ function importBK() {
                 if (result.puzzles != null) {
                     puzzles = mergeSessions(puzzles,result.puzzles)
                     setPuzzleOptions()
-                    updateSessions()
+                    events.updateSessions();
                 }
             })
         }
@@ -402,7 +402,7 @@ function importCSTime(doImport) {
         if (doImport) {
             createSession()
             puzzles[currentPuzzle].sessions[currentSession].name = "csTimer Import"
-            disableUpdate = true
+            events.shouldUpdateStats(false);
             for (var i=0;i<CSData[currentCS].length;i++) {
                 if (CSData[currentCS][i][0][0] == 0) {
                     createRecord(CSData[currentCS][i][0][1]/1000,"OK")
@@ -415,8 +415,8 @@ function importCSTime(doImport) {
                 }
                 puzzles[currentPuzzle].sessions[currentSession].records[i].scramble = CSData[currentCS][i][1]
             }
-            disableUpdate = false
-            updateSessions()
+            events.shouldUpdateStats(true);
+            events.updateSessions();
             currentCS++
         }
         if (CSData[currentCS].length > 0) {

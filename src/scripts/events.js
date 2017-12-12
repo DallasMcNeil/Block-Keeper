@@ -68,7 +68,7 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
-        storage.set("puzzles",{puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:toolTypes}, function(error) {
+        storage.set("puzzles",{puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
             if (error) {
                 throw error;
             }
@@ -168,7 +168,7 @@ var events = function() {
             }
             
             if (object.tools != null) {
-                setupTools(object.tools);
+                tools.setupTools(object.tools);
             }
 
             setEventOptions(eventSelect);
@@ -278,9 +278,8 @@ var events = function() {
             var btime = Number.MAX_SAFE_INTEGER;
             var sessions = getCurrentEvent().sessions;
             for (var s = 0; s < sessions.length; s++) {
-                btime = Math.min(btime, removeDNFs(extractTimes(sessions[s].records)).min);
+                btime = Math.min(btime, removeDNFs(extractTimes(sessions[s].records)).min());
             }
-
             if (time <= btime && btime !== Number.MAX_SAFE_INTEGER && result !== "DNF") {
                 // New PB, launch the confetti
                 launchConfetti()
@@ -596,7 +595,7 @@ var events = function() {
                 $("#sessionRecordsContainer").css("max-height","calc(100vh - (" + extraHeight + "px + 170px))");
             }, 10);
 
-            updateTool();
+            tools.updateTools();
             saveSessions();
         }, 0)
     }
@@ -1015,6 +1014,10 @@ var events = function() {
         return currentRecord;
     }
     
+    function returnCurrentSession() {
+        return currentSession;
+    }
+    
     function setCurrentRecord(i) {
         currentRecord = i;
     }
@@ -1048,6 +1051,7 @@ var events = function() {
         recordResultDNF:recordResultDNF,
         setSession:setSession,
         resetUI:resetUI,
-        setSessionOptions:setSessionOptions
+        setSessionOptions:setSessionOptions,
+        currentSession:returnCurrentSession
     }
 }()

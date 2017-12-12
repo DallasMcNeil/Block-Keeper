@@ -164,8 +164,6 @@ function formatRecord(record) {
 // Average the last 'a' records of a list
 function averageLastRecords(times, a) {
     if (a > 4) {
-        console.log(times.length - a);
-        console.log(times.slice(times.length - a));
         return averageTimes(times.slice(times.length - a));
     } else {
         return meanTimes(times.slice(times.length - a));
