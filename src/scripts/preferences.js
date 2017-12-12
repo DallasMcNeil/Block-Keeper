@@ -169,10 +169,6 @@ function openPreferences() {
     } else { 
         $("#dialogPreferences").dialog("open")
         disableAllElements("preferencesButton");
-    
-        if (timerState == "inspectReady") {
-            cancelTimer()
-        }
         
         globals.menuOpen = true
     }

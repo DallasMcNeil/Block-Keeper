@@ -7,7 +7,7 @@
     
     // Recieve shortcuts and perform the acording actions
     require('electron').ipcRenderer.on('shortcut', function(event, message) { 
-        if (timerState === "normal" && !globals.menuOpen) {
+        if (!timer.timerRunning() && !globals.menuOpen) {
             if (message === "CommandOrControl+1") {
                 events.setCurrentRecord(events.getCurrentSession().records.length - 1);
                 events.recordResultOK();

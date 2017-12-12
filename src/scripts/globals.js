@@ -133,6 +133,9 @@ const globals = function() {
         minxColors:minxColors,
         themeColors:themeColors,
         toolColors:toolColors,
+        prepareColor:"#FF0000",
+        inspectColor:"#FFFF00",
+        readyColor:"#00FF00",
         menuOpen:false
     }
 }()

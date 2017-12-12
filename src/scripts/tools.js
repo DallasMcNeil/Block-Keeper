@@ -15,9 +15,8 @@ var tools = function() {
 
     var mainColor = globals.themeColors[0][5];
     var secondColor = globals.themeColors[0][4];
-
     var colors = globals.toolColors;
-
+    
     // Remove a tool from the list at index
     function deleteTool(index) {
         tools.removeChild(canvases[index].parentNode);

@@ -11,54 +11,45 @@ const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
 const windowStateKeeper = require('electron-window-state');
 
 const path = require('path');
-const url = require('url')
+const url = require('url');
 var os = require("os");
 
 let win;
 
+// Setup menu bar items
 const template = [{
     label: "Timer",
-    submenu: [
+    submenu:[
         {label:"Result OK", accelerator:"CmdOrCtrl+1", click() {win.webContents.send('shortcut', 'CommandOrControl+1')}},
         {label:"Result +2", accelerator:"CmdOrCtrl+2", click() {win.webContents.send('shortcut', 'CommandOrControl+2')}},
-        {label:"Result DNF", accelerator:"CmdOrCtrl+3", click() {win.webContents.send('shortcut', 'CommandOrControl+3')}}
-        ,{
-            type:'separator'
-        },
+        {label:"Result DNF", accelerator:"CmdOrCtrl+3", click() {win.webContents.send('shortcut', 'CommandOrControl+3')}},
+        {type:'separator'},
         {label:"Add Time", accelerator: "CmdOrCtrl+T", click() {win.webContents.send('shortcut', 'CommandOrControl+T')}},
-        {label:"Delete Lastest Time", accelerator: "CmdOrCtrl+Backspace", click (){win.webContents.send('shortcut', 'CommandOrControl+Backspace')}}
-        ,{
-            type:'separator'
-        },
+        {label:"Delete Lastest Time", accelerator: "CmdOrCtrl+Backspace", click (){win.webContents.send('shortcut', 'CommandOrControl+Backspace')}},
+        {type:'separator'},
         {label:"New Session", accelerator:"CmdOrCtrl+N", click() {win.webContents.send('shortcut', 'CommandOrControl+N')}},
-        {label:"Edit Session", accelerator:"CmdOrCtrl+E", click() {win.webContents.send('shortcut', 'CommandOrControl+E')}}
-        ,{
-            type:'separator'
-        },
-        {label:"Scramble", accelerator:"CmdOrCtrl+S", click() {win.webContents.send('shortcut', 'CommandOrControl+S')}}
-        ,{
-            type:'separator'
-        },
+        {label:"Edit Session", accelerator:"CmdOrCtrl+E", click() {win.webContents.send('shortcut', 'CommandOrControl+E')}},
+        {type:'separator'},
+        {label:"Scramble", accelerator:"CmdOrCtrl+S", click() {win.webContents.send('shortcut', 'CommandOrControl+S')}},
+        {type:'separator'},
         {label:"View Recording", accelerator:"CmdOrCtrl+P", click() {win.webContents.send('shortcut', 'CommandOrControl+P')}}
-        ]},{
+    ]}, {
     label: "Edit",
-    submenu: [
+    submenu:[
         {label:"Cut", accelerator:"CmdOrCtrl+X", selector: "cut:"},
         {label:"Copy", accelerator:"CmdOrCtrl+C", selector: "copy:"},
         {label:"Paste", accelerator:"CmdOrCtrl+V", selector: "paste:"},
         {label:"Select All", accelerator:"CmdOrCtrl+A", selector:"selectAll:"}
-    ]},{
+    ]}, {
     role:'window',
     submenu: [
         {role:'close'},
         {role:'minimize'},
         {role:'togglefullscreen'},
-        {
-            type:'seperator'
-        },
-        {label:"Toggle Dev Tools", click() {win.toggleDevTools()}},
-        {role: 'reload'}
-    ]},{
+        {type:'separator'},
+        {label:"Toggle Dev Tools", accelerator:"Shirt+CmdOrCtrl+I", click() {win.toggleDevTools()}},
+        {role:'reload'}
+    ]}, {
     role:'help',
     submenu: [
         {label:'Block Keeper Guide', click() { require('electron').shell.openExternal('https://dallasmcneil.com/projects/blockkeeper/guide')}}
@@ -69,66 +60,31 @@ if (process.platform === 'darwin') {
     template.unshift({
         label:app.getName(),
         submenu:[
-            {
-            role:'about'
-            },
-            {
-            type:'separator'
-            },
-            {label:"Preferences...",accelerator:"CmdOrCtrl+,",click() {win.webContents.send('shortcut', 'CommandOrControl+,')}}
-            ,{
-            type:'separator'
-            }, 
-            {
-            type:'separator'
-            },
-            {
-            role:'hide'
-            },
-            {
-            role:'hideothers'
-            },
-            {
-            role:'unhide'
-            },
-            { 
-            type:'separator'
-            },
-            {
-            role: 'quit'
-            }
-        ]})
+            {role:'about'},
+            {type:'separator'},
+            {label:"Preferences...", accelerator:"CmdOrCtrl+,", click() {win.webContents.send('shortcut', 'CommandOrControl+,')}},
+            {type:'separator'}, 
+            {role:'hide'},
+            {role:'hideothers'},
+            {role:'unhide'},
+            {type:'separator'},
+            {role: 'quit'}
+        ]}
+    )
 
     template[3].submenu = [
-        {
-        label:'Close',
-        accelerator:'CmdOrCtrl+W',
-        role:'close'
-        },
-        {
-        label:'Minimize',
-        accelerator:'CmdOrCtrl+M',
-        role:'minimize'
-        }, 
-        {
-        role:'togglefullscreen'
-        },
-        {
-        type:'separator'
-        },
-        {
-        label:'Bring All to Front',
-        role:'front'
-        },
-        {
-        type:'separator'
-        },
-        {label:"Toggle Dev Tools", click() {win.toggleDevTools()}},
-        {role: 'reload'}
+        {label:'Close', accelerator:'CmdOrCtrl+W', role:'close'},
+        {label:'Minimize', accelerator:'CmdOrCtrl+M', role:'minimize'}, 
+        {role:'togglefullscreen'},
+        {type:'separator'},
+        {label:'Bring All to Front', role:'front'},
+        {type:'separator'},
+        {label:"Toggle Dev Tools", accelerator:"Shift+CmdOrCtrl+I", click() {win.toggleDevTools()}},
+        {role:'reload'}
     ]
 }
 
-
+// Setup touch bar for new MacBook Pro's
 const OKButton = new TouchBarButton({
     label:' OK ',
     backgroundColor:"#22BB22",
@@ -177,12 +133,12 @@ const touchBar = new TouchBar([
 const menu = Menu.buildFromTemplate(template);
 
 app.on('ready', function() {
-    var titleBar = "default"
+    var titleBar = "default";
     if (os.type() === "Darwin") {
-        var titleBar = "hidden"
+        var titleBar = "hidden";
     }
     
-    global.appDetails = {version:app.getVersion(), titleBar:titleBar}
+    global.appDetails = {version:app.getVersion(), titleBar:titleBar};
 
     let mainWindowState = windowStateKeeper({
         defaultWidth:960,
@@ -206,9 +162,9 @@ app.on('ready', function() {
         slashes:true
     }))
     
-    mainWindowState.manage(win)
+    mainWindowState.manage(win);
        
-    Menu.setApplicationMenu(menu)
+    Menu.setApplicationMenu(menu);
     
     if (devToolsOpen) {
         win.toggleDevTools();

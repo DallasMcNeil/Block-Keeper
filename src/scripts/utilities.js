@@ -23,13 +23,16 @@ webFrame.setZoomLevelLimits(1, 1);
 // Disable a specific element so it cannot be interacted with
 function disableElement(elem) {
     $(elem).addClass("disabled");
-    $(elem).prop("disabled",true);
+    $(elem).prop("disabled", true);
+    if (timer.timerState() === "inspectReady") {
+        timer.cancelTimer();
+    }
 }
 
 // Enable a specific element to be interacted with
 function enableElement(elem) {
     $(elem).removeClass("disabled");
-    $(elem).prop("disabled",false);
+    $(elem).prop("disabled", false);
 }
 
 // Disable all major elements, with exception

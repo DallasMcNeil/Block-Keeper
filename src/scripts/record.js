@@ -146,11 +146,7 @@ const record = function() {
         } else { 
             $("#dialogPreview").dialog("open");
             disableAllElements("previewButton");
-
             globals.menuOpen = true;
-            if (timerState == "inspectReady") {
-                cancelTimer();
-            }
         }
     }
 

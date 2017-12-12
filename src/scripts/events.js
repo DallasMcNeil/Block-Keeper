@@ -325,7 +325,7 @@ var events = function() {
         createRecord(t, "OK");
        
         getLastRecord().scramble = document.getElementById("addScrambleInput").value;
-        timerText.innerHTML = formatTime(t);
+        $("#timerText")[0].innerHTML = formatTime(t);
         scramble.scramble();
         closeTimeDialog();
     }
@@ -918,9 +918,6 @@ var events = function() {
         $("#messageShowInfo").html(str);
         $("#dialogShowInfo").dialog("open");
         disableAllElements();
-        if (timerState === "inspectReady") {
-            cancelTimer();
-        }
         globals.menuOpen = true;
     }
 
