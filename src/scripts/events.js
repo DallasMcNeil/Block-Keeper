@@ -522,9 +522,7 @@ var events = function() {
             } else {
                 $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatTime(mean));
                 $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(standardDeviation(times)));
-
-                var sortedTimes = times.filter(function(t) {return t != -1}).sort();
-                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime((sortedTimes[Math.ceil((sortedTimes.length - 1) / 2)] + sortedTimes[Math.floor((sortedTimes.length - 1) / 2)]) / 2));
+                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(medianTimes(times)));
             }
             $("#sessionSolves").prop("innerHTML", "<b>Solves:</b> " + (records.length - DNFsolves) + "/" + records.length);
 
@@ -812,7 +810,7 @@ var events = function() {
     
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
-        str = infoHeader();
+        str = infoHeader() + "<br>";
         var toRemove = [];
         var ts = extractTimes(r);
         if (size == 1) {
@@ -905,6 +903,8 @@ var events = function() {
             if (a == 1) {
                 var records = getCurrentSession().records;
                 str = infoHeader() + "<br>Time list<br>";
+                str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
+                str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
                 str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
                 for (var i = 0; i < records.length; i++) {
                     str += "<br>" + (i + 1) + ". ";

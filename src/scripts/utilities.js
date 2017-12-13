@@ -89,11 +89,25 @@ function formatTime(time) {
 function standardDeviation(times) {
     var sum = 0;
     var t = removeDNFs(times);
-    var mean = meanTimes(t);
-    for (var i = 0; i < t.length; i++) {
-        sum += ((t[i] - mean) * (t[i] - mean));
+    if (t.length > 1) {
+        var mean = meanTimes(t);
+        for (var i = 0; i < t.length; i++) {
+            sum += ((t[i] - mean) * (t[i] - mean));
+        }
+        return Math.sqrt(sum / t.length);
+    } else {
+        return 0;
     }
-    return Math.sqrt(sum / t.length);
+}
+
+function medianTimes(times) {
+    if (times.length == 0) {
+        return 0;
+    }
+    var sortedTimes = times.sort();
+    var a = sortedTimes[Math.ceil((sortedTimes.length - 1) / 2)];
+    var b = sortedTimes[Math.floor((sortedTimes.length - 1) / 2)];
+    return (a + b) / 2;
 }
 
 // Average all the times, DNF's being -1
@@ -125,8 +139,9 @@ function averageTimes(times) {
 function meanTimes(times) {
     var sum = 0;
     if (times.length == 0) {
-        return -1;
+        return 0;
     }
+    
     for (var i = 0; i < times.length; i++) {
         sum += times[i];
         if (times[i] === -1) {

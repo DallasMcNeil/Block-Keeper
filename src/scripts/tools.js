@@ -452,6 +452,9 @@ var tools = function() {
                 continue;
             }
             var times = removeDNFs(extractTimes(sessions[i].records));
+            if (times.length === 0) {
+                continue;
+            }
             bests.push(times.min());
             if (bests[i] === undefined) {
                 bests[i] = -1;
