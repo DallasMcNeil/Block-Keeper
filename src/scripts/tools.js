@@ -177,7 +177,7 @@ var tools = function() {
         var min = times.min();
         var max = times.max();
         var range = max - min;
-        var divide = 0;
+        var divide = 1;
 
         if (range <= 1) {
             divide = 0.125;
@@ -202,7 +202,6 @@ var tools = function() {
         } else {
             divide = 60;
         }
-        
         var fmin = Math.floor(min / divide) * divide;
         var fmax = Math.ceil(max / divide) * divide;
         var segments = (fmax - fmin) / divide;
@@ -383,7 +382,7 @@ var tools = function() {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor
             ctx.textAlign = "center";
-            ctx.textBaseline = "center";
+            ctx.textBaseline = "middle";
             ctx.fillText("No Data", width / 2, height / 2);
             return;
         }
@@ -394,7 +393,7 @@ var tools = function() {
         ctx.lineWidth = 1;
         ctx.font = "12px workSans";
         ctx.textAlign = "center";
-        ctx.textBaseline = "center";
+        ctx.textBaseline = "middle";
         var graphHeight = height * 0.8;
         var margin = width * (1/30);
         for (var i = 0; i < dis.segments + 1; i++) {
@@ -402,7 +401,7 @@ var tools = function() {
             ctx.moveTo(width / 6, i * (graphHeight / dis.segments) + margin);
             ctx.lineTo(width - margin, i * (graphHeight / dis.segments) + margin);
             ctx.stroke();
-            ctx.fillText(formatTime((dis.max - (dis.divide * i))), width / 12, (i + 0.5) * (graphHeight / dis.segments));   
+            ctx.fillText(formatTime((dis.max - (dis.divide * i))), width / 12, i * (graphHeight / dis.segments) + margin);   
         }
         ctx.lineWidth = 2;
         
@@ -411,6 +410,7 @@ var tools = function() {
         drawTrendline(ctx, dis, times, times.length, 5, colors[1], width, height);
         drawTrendline(ctx, dis, times, times.length, 12, colors[2], width, height);
 
+        ctx.textBaseline = "alphabetic";
         ctx.fillStyle = mainColor;
         ctx.fillText("Time", width / 3, height * 0.95); 
         ctx.fillStyle = colors[0];
@@ -440,7 +440,7 @@ var tools = function() {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor;
             ctx.textAlign = "center";
-            ctx.textBaseline = "center";
+            ctx.textBaseline = "middle";
             ctx.fillText("No Data",width / 2, height / 2);
             return;
         }
@@ -448,6 +448,9 @@ var tools = function() {
         var bests = [];
         var bestAo5 = [];
         for (var i = 0; i < sessions.length; i++) {   
+            if (sessions[i].records.length === 0) {
+                continue;
+            }
             var times = removeDNFs(extractTimes(sessions[i].records));
             bests.push(times.min());
             if (bests[i] === undefined) {
@@ -464,14 +467,13 @@ var tools = function() {
                 bestAo5.push(ao5s.min());
             }
         }
-
         var dis = rangeForTimes(removeDNFs(means.concat(bests.concat(bestAo5))));
 
         if (sessions.length < 2) {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor;
             ctx.textAlign = "center";
-            ctx.textBaseline = "center";
+            ctx.textBaseline = "middle";
             ctx.fillText("No Data", width / 2, height / 2);
             return;
         }
@@ -480,7 +482,7 @@ var tools = function() {
         ctx.lineWidth = 1;
         ctx.font = "12px workSans";
         ctx.textAlign = "center";
-        ctx.textBaseline = "center";
+        ctx.textBaseline = "middle";
         
         var graphHeight = height * 0.8;
         var margin = width * (1/30);
@@ -489,7 +491,7 @@ var tools = function() {
             ctx.moveTo(width / 6, i * (graphHeight / dis.segments) + margin);
             ctx.lineTo(width - margin, i * (graphHeight / dis.segments) + margin);
             ctx.stroke();
-            ctx.fillText(formatTime((dis.max - (dis.divide * i))), width / 12, (i + 0.5) * (graphHeight / dis.segments));   
+            ctx.fillText(formatTime((dis.max - (dis.divide * i))), width / 12, i * (graphHeight / dis.segments) + margin);   
         }
         
         ctx.lineWidth = 2;
@@ -497,21 +499,21 @@ var tools = function() {
         drawTrendline(ctx, dis, bestAo5, bests.length, 1, colors[1], width, height);
         drawTrendline(ctx, dis, bests, bests.length, 1, colors[2], width, height);
         
-        ctx.fillStyle = colors[0]
-        ctx.fillText("Mean Time",100,190) 
-        ctx.fillStyle = colors[1]
-        ctx.fillText("Best Ao5",175,190) 
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = colors[0];
+        ctx.fillText("Mean Time", 100, 190);
+        ctx.fillStyle = colors[1];
+        ctx.fillText("Best Ao5", 175, 190);
         ctx.fillStyle = colors[2]
-        ctx.fillText("Best Time",250,190) 
+        ctx.fillText("Best Time", 250, 190); 
 
-        ctx.strokeStyle = mainColor
-        ctx.lineWidth = 2
-
-        ctx.beginPath()
-        ctx.moveTo(50,10)
-        ctx.lineTo(50,170)
-        ctx.lineTo(290,170)
-        ctx.stroke()
+        ctx.strokeStyle = mainColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(width / 6, margin);
+        ctx.lineTo(width / 6, height * 0.85);
+        ctx.lineTo(width - margin, height * 0.85);
+        ctx.stroke();
     }
 
     // Draw distribution of current session
@@ -525,7 +527,7 @@ var tools = function() {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor;
             ctx.textAlign = "center";
-            ctx.textBaseline = "center";
+            ctx.textBaseline = "middle";
             ctx.fillText("No Data",width / 2, height / 2);
             return;
         }
