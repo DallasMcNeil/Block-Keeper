@@ -108,8 +108,8 @@ var tools = function() {
     // Update Tools based on new session data or scramble
     function updateTools() {
         if (preferencesInterface.theme.value === "custom") {
-            mainColor = readTheme()[5];
-            secondColor = readTheme()[4];
+            mainColor = prefs.readTheme()[5];
+            secondColor = prefs.readTheme()[4];
         } else {
             mainColor = globals.themeColors[preferencesInterface.theme.value][5];
             secondColor = globals.themeColors[preferencesInterface.theme.value][4];
@@ -378,14 +378,16 @@ var tools = function() {
         ctx.clearRect(0, 0, width, height);
 
         var times = extractTimes(events.getCurrentSession().records);
-        if (times.length == 0) {
+        
+        if (removeDNFs(times).length < 2) {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor
+            ctx.textAlign = "center";
             ctx.textBaseline = "center";
             ctx.fillText("No Data", width / 2, height / 2);
             return;
         }
-        var dis = rangeForTimes(times);
+        var dis = rangeForTimes(removeDNFs(times));
 
         ctx.strokeStyle = secondColor;
         ctx.fillStyle = mainColor;
@@ -434,6 +436,14 @@ var tools = function() {
         ctx.clearRect(0, 0, width, height);
 
         var sessions = events.getCurrentEvent().sessions;
+        if (events.getCurrentSession().records.length === 0) {
+            ctx.font = "20px workSans";
+            ctx.fillStyle = mainColor;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "center";
+            ctx.fillText("No Data",width / 2, height / 2);
+            return;
+        }
         var means = [];
         var bests = [];
         var bestAo5 = [];
@@ -457,6 +467,14 @@ var tools = function() {
 
         var dis = rangeForTimes(removeDNFs(means.concat(bests.concat(bestAo5))));
 
+        if (sessions.length < 2) {
+            ctx.font = "20px workSans";
+            ctx.fillStyle = mainColor;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "center";
+            ctx.fillText("No Data", width / 2, height / 2);
+            return;
+        }
         ctx.strokeStyle = secondColor;
         ctx.fillStyle = mainColor;
         ctx.lineWidth = 1;
@@ -486,12 +504,6 @@ var tools = function() {
         ctx.fillStyle = colors[2]
         ctx.fillText("Best Time",250,190) 
 
-        if (means.filter(Boolean).length == 0) {
-            ctx.font = "20px workSans";
-            ctx.fillStyle = mainColor
-            ctx.fillText("No Data",175,90) 
-        }
-
         ctx.strokeStyle = mainColor
         ctx.lineWidth = 2
 
@@ -509,6 +521,14 @@ var tools = function() {
         ctx.clearRect(0, 0, width, height);
 
         var times = removeDNFs(extractTimes(events.getCurrentSession().records));
+        if (times.length == 0) {
+            ctx.font = "20px workSans";
+            ctx.fillStyle = mainColor;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "center";
+            ctx.fillText("No Data",width / 2, height / 2);
+            return;
+        }
         var dis = rangeForTimes(times);
         var totals = [];
         for (var s = 0; s < dis.segments ; s++) {
@@ -563,12 +583,6 @@ var tools = function() {
             ctx.restore();
         }
 
-        if (times.length == 0) {
-            ctx.font = "20px workSans";
-            ctx.fillStyle = mainColor;
-            ctx.fillText("No Data",150,80);
-        }
-
         ctx.strokeStyle = mainColor;
         ctx.lineWidth = 2;
 
@@ -578,6 +592,7 @@ var tools = function() {
         ctx.stroke();
     }
 
+    // Shows first stage solutions for 3x3x3 scrambles
     var crossSolverID = 0;
     function crossSolver(ctx) {
         var width = 300;
@@ -660,8 +675,6 @@ var tools = function() {
         }
     }
 
-
-    // 
     var firstBlockSolverID = 0;
     function firstBlockSolver(ctx) {
         var width = 300;

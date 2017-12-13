@@ -131,7 +131,7 @@ Created by Dallas McNeil
     </div>
 
     <button title="Video Preview" id="previewButton" onclick="record.openPreview()"></button>
-    <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
+    <button title="Preferences" id="preferencesButton" onclick="prefs.openPreferences()"></button>
     <select title="Tool Select" id="toolSelect" onchange="tools.updateTools()">
         <option value="crossSolver">Cross Solver</option>
         <option value="distribution">Distribution</option>
@@ -182,11 +182,12 @@ Created by Dallas McNeil
         
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
-        <button title="Import into selected session" id="importCSTimer" onclick="importCSTime(true)">Import</button>
+        <button title="Import into selected session" id="importCSTimer" onclick="prefs.importCSTime(true)">Import</button>
+        <button title="Stop importing sessions" id="cancelCSTimer" onclick="prefs.cancelCSTime()">Cancel</button>
     </div>
         
     <div id="dialogPreferences">
-        <button id="closePreferences" class="cross" onclick="closePreferences()"></button>
+        <button id="closePreferences" class="cross" onclick="prefs.closePreferences()"></button>
         <div id="tabs">
             <ul>
             <li class="tab"><a href="#tabs-1"><button>General</button></a></li>
@@ -205,7 +206,7 @@ Created by Dallas McNeil
                     <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
                     <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
                     <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
-                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
+                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
                 </form> 
             </div>
@@ -232,7 +233,7 @@ Created by Dallas McNeil
                 </form>
             </div>
             <div id="tabs-3">
-                <form name="preferencesInterface">
+                <form name="preferencesInterface" onsubmit="return false">
                     <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce Best Time</p>
                     <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
@@ -251,8 +252,8 @@ Created by Dallas McNeil
                         <option value="center">Center</option>
                         <option value="right" selected>Right</option>
                     </select></p>
-                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
-                    <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="previewStylesheet()" style="width:200px;">
+                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="prefs.selectImage(); return false;">Select</button></p>
+                    <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="prefs.previewStylesheet();return false" style="width:200px;">
                         <option value=0>Dark</option>
                         <option value=1>Light</option>
                         <option value=2>Black</option>
@@ -268,22 +269,21 @@ Created by Dallas McNeil
                         <option value=12>Neon Blue</option>
                         <option value="custom">Custom...</option>
                     </select></p>
-                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="previewStylesheet();return false;">Refresh Theme</button></p>
+                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="prefs.previewStylesheet();return false;">Refresh Theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
                     <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
                 </form>
             </div>
             <div id="tabs-4">
-                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="importBK()">Import</button>  <button onclick="exportBK()">Export</button></p>
-                <p title="Import csTimer Sessions">csTimer:  <button onclick="importCS()">Import</button></p>
-                <p title="Export all times as flat CSV file">CSV:  <button onclick="exportCSV()">Export</button></p>
-                <p title="Export the currently selected session as as readable text with session statistics and times">Current Session as Pretty Text:  <button onclick="exportPretty()">Export</button>  <button onclick="clipboardPretty()">Copy</button></p>
+                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
+                <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
+                <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
             </div>
         </div>
         
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
-        <button title="Save preferences and close" id="savePreferences" onclick="savePreferencesForm()">Save</button>
+        <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
     
     <div id="versionBannerContainer">

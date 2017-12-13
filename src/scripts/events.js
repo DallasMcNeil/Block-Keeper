@@ -34,7 +34,7 @@ var events = function() {
 
         {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false},
         {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true},
-        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:false,OH:false,blind:true},
+        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true},
         {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true},
         {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false},
 
@@ -68,11 +68,29 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
-        storage.set("puzzles",{puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
+        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
             if (error) {
                 throw error;
             }
         })
+    }
+    
+    // Merges current events with other events
+    function mergeEvents(newEvents) {
+        for (var i=0; i < newEvents.length; i++) {
+            var didAdd = false;
+            for (var j=0; j < internalEvents.length; j++) {
+                if (newEvents[i].name === internalEvents[j].name && newEvents[i].name != undefined) {
+                    internalEvents[j].sessions = internalEvents[j].sessions.concat(newEvents[i].sessions);
+                    didAdd = true;
+                    break;
+                }
+            }
+            if (!didAdd) {
+                internalEvents.push(newEvents[i]);
+            }
+        }
+        setSessionOptions(sessionSelect);
     }
 
     // Save events to a seperate backup file before closing
@@ -148,26 +166,26 @@ var events = function() {
     function loadSessions() {
         // Setup loaded object
         var setup = function(object) {
-            if (object.puzzles !== null) {
+            if (object.puzzles !== undefined) {
                 if (object.puzzles.length !== 0) {
                     internalEvents = mergeSessions(internalEvents, object.puzzles);
                 }
             }
 
-            if (object.puzzle !== null) {
+            if (object.puzzle !== undefined) {
                 currentEvent = object.puzzle;
                 if (currentEvent >= internalEvents.length || isNaN(currentEvent)) {
                     currentEvent = 0;
                 }
             }
-            if (object.session !== null) {
+            if (object.session !== undefined) {
                 currentSession = object.session;
                 if (currentSession >= getCurrentEvent().sessions.length) {
                     currentSession = 0;
                 }
             }
             
-            if (object.tools != null) {
+            if (object.tools != undefined) {
                 tools.setupTools(object.tools);
             }
 
@@ -249,7 +267,6 @@ var events = function() {
                 }
             }
         }   
-
         var session = {date:new Date(), name:name, records:[]};
         getCurrentEvent().sessions.push(session);
         currentSession = getCurrentEvent().sessions.length - 1;
@@ -325,7 +342,7 @@ var events = function() {
         createRecord(t, "OK");
        
         getLastRecord().scramble = document.getElementById("addScrambleInput").value;
-        $("#timerText")[0].innerHTML = formatTime(t);
+        $("#timer")[0].innerHTML = formatTime(t);
         scramble.scramble();
         closeTimeDialog();
     }
@@ -594,7 +611,7 @@ var events = function() {
                 extraHeight+=$("#sessionDetails").height();
                 $("#sessionRecordsContainer").css("max-height","calc(100vh - (" + extraHeight + "px + 170px))");
             }, 10);
-
+            
             tools.updateTools();
             saveSessions();
         }, 0)
@@ -785,7 +802,6 @@ var events = function() {
     
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
-        console.log(a+":"+size)
         str = infoHeader();
         var toRemove = [];
         var ts = extractTimes(r);
@@ -797,7 +813,6 @@ var events = function() {
         } else {
             str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
             toRemove = getMinsAndMaxs(ts);
-            console.log(toRemove)
         }
         for (var i = 0; i < size; i++) {
             var didRemove = false;
@@ -1019,9 +1034,14 @@ var events = function() {
         currentRecord = i;
     }
     
+    function returnEvents() {
+        return internalEvents;
+    }
+    
     loadSessions();
         
     return {
+        getAllEvents:returnEvents,
         getCurrentEvent:getCurrentEvent,
         getCurrentSession:getCurrentSession,
         getCurrentRecord:getCurrentRecord,
@@ -1049,6 +1069,8 @@ var events = function() {
         setSession:setSession,
         resetUI:resetUI,
         setSessionOptions:setSessionOptions,
-        currentSession:returnCurrentSession
+        currentSession:returnCurrentSession,
+        mergeEvents:mergeEvents,
+        setEventOptions:setEventOptions
     }
 }()

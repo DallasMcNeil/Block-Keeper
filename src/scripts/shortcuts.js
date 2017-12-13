@@ -32,10 +32,10 @@
             } else if (message === "CommandOrControl+S") {
                 scramble.scramble();
             } else if (message === "CommandOrControl+T") {
-                events.showTimeDialog();
+                events.openTimeDialog();
             } else if (message === "CommandOrControl+,") {
-                openPreferences();
-            } else if (message === "CommandOrControl+R") {
+                prefs.openPreferences();
+            } else if (message === "CommandOrControl+P") {
                 if (record.hasVideo() && preferences.recordSolve && !record.recording()) {
                     record.openPreview();
                 }

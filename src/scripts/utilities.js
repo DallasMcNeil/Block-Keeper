@@ -37,7 +37,11 @@ function enableElement(elem) {
 
 // Disable all major elements, with exception
 function disableAllElements(exception = "") {
-    var elements = $("#content").children();
+    var elements = $("#content").children().not("#stats");
+    elements = elements.add($("#stats").children().not("#sessionContainer"));
+    elements = elements.add($("#sessionContainer").children());
+    $("#addTimeButton").prop("disabled", true);
+    $(".closeTool").prop("disabled", true);
     for (var e in elements) {
         if (elements[e].id !== exception && elements[e].id !== undefined) {
             disableElement("#"+elements[e].id);
@@ -47,7 +51,11 @@ function disableAllElements(exception = "") {
 
 // Enable all major elements
 function enableAllElements() {
-    var elements = $("#content").children();
+    var elements = $("#content").children().not("#stats");
+    elements = elements.add($("#stats").children().not("#sessionContainer"));
+    elements = elements.add($("#sessionContainer").children());
+    $("#addTimeButton").prop("disabled", false);
+    $(".closeTool").prop("disabled", false);
     for (var e in elements) {
         if (elements[e].id === "previewButton") {
             if (record.hasVideo() && preferences.recordSolve && !record.recording()) {
@@ -193,6 +201,6 @@ function getMinsAndMaxs(times) {
     if (t.length < 40) {
         return [t[0],t[t.length - 1]];
     } else {
-        return t.slice(0, Math.floor(t.length * 0.05)) + t.slice(-Math.floor(t.length * 0.05), t.length);
+        return t.slice(0, Math.floor(t.length * 0.05)).concat(t.slice(-Math.floor(t.length * 0.05), t.length));
     }
 }

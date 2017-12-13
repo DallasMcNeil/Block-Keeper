@@ -5,9 +5,9 @@
 
 var timer = function() {
     
-    var leftIndicator = document.getElementById("leftIndicator")
-    var rightIndicator = document.getElementById("rightIndicator")
-    
+    var leftIndicator = document.getElementById("leftIndicator");
+    var rightIndicator = document.getElementById("rightIndicator");
+    var timerText = document.getElementById("timer");
     // Various timer and indicator colors
     var prepareColor = globals.prepareColor;
     var inspectColor = globals.inspectColor;
@@ -43,6 +43,9 @@ var timer = function() {
     var cooldown = false;
     var s3 = true;
     var s7 = true;
+    var s3voice = new Audio("sounds/male8s.mp3");
+    var s7voice = new Audio("sounds/male12s.mp3");
+
 
     // Diffent timer properties based on event and preferences
     var inspectionEnabled = false;
@@ -632,6 +635,8 @@ var timer = function() {
             }
         }
     }
+    
+    timerText.innerHTML = (0).toFixed(preferences.timerDetail)
 
     // Update timer every 17 milliseconds
     window.setInterval(timerUpdate, 17);
@@ -644,9 +649,20 @@ var timer = function() {
         return timerState;
     }
     
+    function setS3Voice(v) {
+        s3voice = v;
+    }
+    
+    function setS7Voice(v) {
+        s7voice = v;
+    }
+    
     return {
         timerRunning:returnTimerRunning,
         timerState:returnTimerState,
-        cancelTimer:cancelTimer
+        cancelTimer:cancelTimer,
+        SMCallback:SMCallback,
+        s3voice:setS3Voice,
+        s7voice:setS7Voice
     }
 }()
