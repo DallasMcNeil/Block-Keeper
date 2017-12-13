@@ -441,6 +441,7 @@ var timer = function() {
     // Get stackmat information is used and display it
     function SMCallback(state) {
         if (preferences.stackmat) {
+            currentTime = new Date();
             // Boolean will guarantee the variable is not undefined
             leftDown = Boolean(state.leftHand);
             rightDown = Boolean(state.rightHand);

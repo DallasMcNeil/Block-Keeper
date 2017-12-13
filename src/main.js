@@ -3,7 +3,7 @@
 // Block Keeper
 // Created by Dallas McNeil
 
-var devToolsOpen = true;
+var devToolsOpen = false;
 
 'use strict';
 const {app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
@@ -48,7 +48,7 @@ const template = [{
         {role:'togglefullscreen'},
         {type:'separator'},
         {label:"Toggle Dev Tools", accelerator:"Shirt+CmdOrCtrl+I", click() {win.toggleDevTools()}},
-        {role:'reload'}
+        {label:"Reload", accelerator:"CmdOrCtrl+R", click() {win.webContents.send('shortcut', 'CommandOrControl+R')}}
     ]}, {
     role:'help',
     submenu: [
@@ -80,7 +80,7 @@ if (process.platform === 'darwin') {
         {label:'Bring All to Front', role:'front'},
         {type:'separator'},
         {label:"Toggle Dev Tools", accelerator:"Shift+CmdOrCtrl+I", click() {win.toggleDevTools()}},
-        {role:'reload'}
+        {label:"Reload", accelerator:"CmdOrCtrl+R", click() {win.webContents.send('shortcut', 'CommandOrControl+R')}}
     ]
 }
 

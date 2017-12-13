@@ -35,6 +35,8 @@
                 events.openTimeDialog();
             } else if (message === "CommandOrControl+,") {
                 prefs.openPreferences();
+            } else if (message === "CommandOrControl+R") {
+                events.reloadApp();
             } else if (message === "CommandOrControl+P") {
                 if (record.hasVideo() && preferences.recordSolve && !record.recording()) {
                     record.openPreview();

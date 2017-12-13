@@ -95,17 +95,27 @@ var events = function() {
 
     // Save events to a seperate backup file before closing
     var letClose = false;
+    var reloading = false;
     function closeApp() {
-        storage.set("puzzlesBackup", {puzzles:puzzles, puzzle:currentPuzzle, session:currentSession, tools:toolTypes}, function(error) {
+        storage.set("puzzlesBackup", {puzzles:events, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
             if (error) {
                 throw error;
             }
             letClose = true;
-            remote.getCurrentWindow().close();
+            if (reloading) {
+                remote.getCurrentWindow().reload();
+            } else {
+                remote.getCurrentWindow().close();
+            }
         })
     }
+    
+    function reloadApp() {
+        reloading = true;
+        closeApp();
+    }
 
-    window.onbeforeunload = function (e) {
+    window.onbeforeunload = function(e) {
         if (!letClose) {
             closeApp();
             return false;
@@ -1071,6 +1081,7 @@ var events = function() {
         setSessionOptions:setSessionOptions,
         currentSession:returnCurrentSession,
         mergeEvents:mergeEvents,
-        setEventOptions:setEventOptions
+        setEventOptions:setEventOptions,
+        reloadApp:reloadApp
     }
 }()
