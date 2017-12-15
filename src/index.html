@@ -58,6 +58,7 @@ Created by Dallas McNeil
         
     <div id="stats">
         <select title="Event Select" id="eventSelect" onchange="events.setEvent()"></select>
+        <button title="Edit Events" id="eventButton" onclick="events.openEvents()"></button>
         <div id="sessionContainer">
             <select title="Session Select" id="sessionSelect" onchange="events.setSession()"></select>
             <button title="Edit Session" id="sessionButton" onclick="events.toggleSessionButtons()"></button>
@@ -147,6 +148,12 @@ Created by Dallas McNeil
     <div id="tools">
     </div>
     <button title="Add Tool" id="addToolButton" onclick="tools.addTool()"></button> 
+    </div>
+    
+    <div id="dialogManageEvents">
+        <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:75px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:120px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:50px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
+        <ul id="eventsList"></ul>
+        <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add Event</button>   <button onclick="events.closeEvents()">Done</button></p>
     </div>
         
     <div id="dialogAddTime">

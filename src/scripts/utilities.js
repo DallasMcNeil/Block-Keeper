@@ -41,7 +41,11 @@ function disableAllElements(exception = "") {
     elements = elements.add($("#stats").children().not("#sessionContainer"));
     elements = elements.add($("#sessionContainer").children());
     $("#addTimeButton").prop("disabled", true);
+    $("#addTimeButton").addClass("disabled");
     $(".closeTool").prop("disabled", true);
+    $(".closeTool").addClass("disabled");
+    $(".selectable").prop("disabled", true);
+    $(".selectable").addClass("disabled");
     for (var e in elements) {
         if (elements[e].id !== exception && elements[e].id !== undefined) {
             disableElement("#"+elements[e].id);
@@ -55,7 +59,11 @@ function enableAllElements() {
     elements = elements.add($("#stats").children().not("#sessionContainer"));
     elements = elements.add($("#sessionContainer").children());
     $("#addTimeButton").prop("disabled", false);
+    $("#addTimeButton").removeClass("disabled");
     $(".closeTool").prop("disabled", false);
+    $(".closeTool").removeClass("disabled");
+    $(".selectable").prop("disabled", false);
+    $(".selectable").removeClass("disabled");
     for (var e in elements) {
         if (elements[e].id === "previewButton") {
             if (record.hasVideo() && preferences.recordSolve && !record.recording()) {

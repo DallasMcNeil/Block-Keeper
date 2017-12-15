@@ -224,7 +224,7 @@ button:active {
     background-color: #303030;
 }
 
-#sessionButton {
+#sessionButton, #eventButton {
     width:30px;
     margin-left: 10px;
     margin-top: 0px;
@@ -234,6 +234,11 @@ button:active {
     padding: 0px;
     position: absolute;
     top:40px;
+    left:240px;
+}
+
+#eventButton {
+    top:0px;
     left:240px;
 }
 
@@ -297,14 +302,6 @@ button.disabled:active {
     transition: 0.1s;
 }
 
-#puzzleSelect.disabled:hover {
-    cursor: default;
-    background-color: #303030;
-    border-color: #606060;
-    color:#F0F0F0;
-    transition: 0.1s;
-}
-
 select {
     -webkit-appearance: none;
     width: 280px;
@@ -332,6 +329,14 @@ select:hover {
     transition: 0.1s;
 }
 
+select.disabled:hover {
+    cursor: default;
+    background-color: #303030;
+    border-color: #606060;
+    color:#F0F0F0;
+    transition: 0.1s;
+}
+
 #sessionSelect {
     width:240px;
     position: absolute;
@@ -339,10 +344,8 @@ select:hover {
     left:0px;
 }
 
-#puzzleSelect {
-    position: absolute;
-    top: 0px;
-    left: 0px;
+#eventSelect {
+    width:240px;
 }
 
 input[type="text"],textarea {
@@ -554,7 +557,7 @@ td p {
     cursor:default;
 }
 
-#dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
+#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -910,4 +913,40 @@ ul {
     background: #F0F0F0;
     cursor: pointer;
     -webkit-box-shadow: 0px 5px 10px 3px rgba(0,0,0,0.4);
+}
+
+#dialogManageEvents {
+    padding-top: 10px;
+}
+
+#eventsList {
+    width:calc(100%);
+    height:374px;
+    list-style-type: none; 
+    margin: 0; 
+    margin-top:10px;
+    padding: 0;
+    border-bottom: solid 1px #606060;
+    border-top: solid 1px #606060;
+    overflow-y:scroll;
+}
+
+.eventItem {
+    display: block;
+    padding-top:0px;
+    width:calc(100% - 2px);
+    height: 30px;
+    border: solid 1px #606060;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='#F0F0F0' points='7,10 12,5 17,10'></polyline><polyline stroke-width='2' cap='square' fill='#F0F0F0' points='7,14 12,19 17,14'></polyline></svg>"); 
+    
+    background-color: #303030;
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+}
+
+.delete {
+    width:30px;
+    height:30px;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='6,12 18,12'></polyline></svg>"); 
+    background-color: #303030;
 }

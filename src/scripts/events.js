@@ -19,26 +19,26 @@ var events = function() {
     // All events, holding all session and record data
     // These are the default events and settings
     var internalEvents = [
-        {name:"3x3x3",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false},
-        {name:"2x2x2",sessions:[],scrambler:"2x2x2",enabled:true,OH:false,blind:false},
-        {name:"4x4x4",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:false},
-        {name:"5x5x5",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:false},
+        {name:"3x3x3",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true},
+        {name:"2x2x2",sessions:[],scrambler:"2x2x2",enabled:true,OH:false,blind:false,default:true},
+        {name:"4x4x4",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:false,default:true},
+        {name:"5x5x5",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:false,default:true},
 
-        {name:"Pyraminx",sessions:[],scrambler:"Pyraminx",enabled:true,OH:false,blind:false},
-        {name:"Skewb",sessions:[],scrambler:"Skewb",enabled:true,OH:false,blind:false},
-        {name:"Megaminx",sessions:[],scrambler:"Megaminx",enabled:true,OH:false,blind:false},
-        {name:"Square-1",sessions:[],scrambler:"Square-1",enabled:true,OH:false,blind:false},
-        {name:"Clock",sessions:[],scrambler:"Clock",enabled:true,OH:false,blind:false},
-        {name:"6x6x6",sessions:[],scrambler:"6x6x6",enabled:true,OH:false,blind:false},
-        {name:"7x7x7",sessions:[],scrambler:"7x7x7",enabled:true,OH:false,blind:false},
+        {name:"Pyraminx",sessions:[],scrambler:"Pyraminx",enabled:true,OH:false,blind:false,default:true},
+        {name:"Skewb",sessions:[],scrambler:"Skewb",enabled:true,OH:false,blind:false,default:true},
+        {name:"Megaminx",sessions:[],scrambler:"Megaminx",enabled:true,OH:false,blind:false,default:true},
+        {name:"Square-1",sessions:[],scrambler:"Square-1",enabled:true,OH:false,blind:false,default:true},
+        {name:"Clock",sessions:[],scrambler:"Clock",enabled:true,OH:false,blind:false,default:true},
+        {name:"6x6x6",sessions:[],scrambler:"6x6x6",enabled:true,OH:false,blind:false,default:true},
+        {name:"7x7x7",sessions:[],scrambler:"7x7x7",enabled:true,OH:false,blind:false,default:true},
 
-        {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false},
-        {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true},
-        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true},
-        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true},
-        {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false},
+        {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false,default:true},
+        {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true,default:true},
+        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true,default:true},
+        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true,default:true},
+        {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true},
 
-        {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false}
+        {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false,default:true}
     ]
 
     var currentEvent = 0;
@@ -125,51 +125,50 @@ var events = function() {
     // Merge two sets of events, overriding x with y
     function mergeSessions(x,y) {
         var final = [];
-        var a = x.slice();
-        var b = y.slice();
-        
         // Override all defaults (x) with saved (y)
-        for (var i in a) {
+        for (var i = 0; i < y.length; i++) {
             var shared = false;
-            for (var j in b) {
-                if (b[j].name !== null) {
-                    if (b[j].name === a[i].name) {
+            var j;
+            for (j = 0; j < x.length; j++) {
+                if (x[j].name !== null) {
+                    if (x[j].name === y[i].name) {
                         shared = true;
                         break;
                     }
                 }
             }
-            if (shared && (b[j].name !== null)) {
-                final.push(Object.assign({}, a[i], b[j]));
-                b.splice(j, 1);
+            if (shared) {
+                final.push(Object.assign({}, x[j], y[i]));
+                x.splice(j, 1);
             } else {
-                final.push(a[i]);
+                if (y[i].name === undefined) {
+                    y[i].name = "Unknown";
+                }
+                if (y[i].scrambler === undefined) {
+                    y[i].scramble = "None";
+                }
+                if (y[i].OH === undefined) {
+                    y[i].OH = false;
+                }
+                if (y[i].blind === undefined) {
+                    y[i].blind = false;
+                }
+                if (y[i].enabled === undefined) {
+                    y[i].enabled = true;
+                }
+                if (y[i].sessions === undefined) {
+                    y[i].sessions = [];
+                }
+                y[i].default = false;
+                final.push(y[i]);
             }
         }
-        
         // Add all other saved (y)
-        var length = b.length
+        var length = x.length;
         for (var i = length - 1; i >= 0; i--) {
-            if ((b[i].name !== null)) {
-                if (!b[i].scrambler) {
-                    b[i].scramble = "None";
-                }
-                if (!b[i].OH) {
-                    b[i].OH = false;
-                }
-                if (!b[i].blind) {
-                    b[i].blind = false;
-                }
-                if (!b[i].enabled) {
-                    b[i].enabled = true;
-                }
-                if (!b[i].sessions) {
-                    b[i].sessions = [];
-                }
-                final.push(b[i]);
-            }
+            final.push(x[i]);
         }
-        return final;
+        return final.filter(function(a) {return !$.isEmptyObject(a)});
     }
 
     // Load session from file
@@ -210,13 +209,12 @@ var events = function() {
                     storage.get("puzzlesBackup", function(error, object) {
                         if (error) {
                              if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
-                                letClose = true;
-                                remote.getCurrentWindow().close();
+                                 letClose = true;
+                                 remote.getCurrentWindow().close();
                              } else {
                                  setup({});
                              }
                         } else {
-                            setup(object);
                             alert("Sessions were restored from backup. Some recent records may be missing.");
                         }
                     })
@@ -443,6 +441,7 @@ var events = function() {
                         cell.appendChild(document.createElement("p"));
                         cell = row.insertCell(-1);
                         cell.appendChild(document.createElement("p"));
+                        cell.className+=" selectable";
                         cell = row.insertCell(-1);
                         cell.appendChild(document.createElement("p"));
                         var n = sessionRecordsTable.rows.length - 1;
@@ -693,18 +692,17 @@ var events = function() {
 
     // Hide the session stats
     function disableStats() {
-        disableElement("#puzzleSelect");
-        disableElement("#sessionStats");
-        disableElement("#sessionRecordsContainer");
-        disableElement("#sessionDetails");
+        disableAllElements("sessionSelectText");
+        enableElement("#sessionContainer");
+        enableElement("#sessionButton");
+        enableElement("#sessionButtons");
+        globals.menuOpen = true;
     }
 
     // Show the session stats
     function enableStats() {
-        enableElement("#puzzleSelect");
-        enableElement("#sessionStats");
-        enableElement("#sessionRecordsContainer");
-        enableElement("#sessionDetails");
+        enableAllElements();
+        globals.menuOpen = false;
     }
 
     // Reset the session buttons
@@ -803,6 +801,229 @@ var events = function() {
         }        
         evt.stopPropagation();
     })
+    
+    $("#dialogManageEvents").dialog({
+        autoOpen:false,
+        modal:true,    
+        position: {
+            my:"center",
+            at:"center",
+            of:"#background"
+        },
+        width:"640",
+        height:"480",
+        show:"fade",
+        hide:"fade"
+    }).on('keydown', function(evt) {
+        if (evt.keyCode === $.ui.keyCode.ESCAPE) {
+            closeEvents();
+        } else if (evt.keyCode === 13) {
+            closeEvents();
+            evt.preventDefault();
+        }        
+        evt.stopPropagation();
+    })
+    
+    function addEventItem(list, index) {
+        // Enabled, name, scrambler, OH, Blind, remove
+        (function() {
+            var li = document.createElement("li");
+            li.eventname = internalEvents[index].name; 
+            li.style.position = "relative";
+                
+            event = internalEvents[index];
+
+            var enable = document.createElement("input");
+            enable.type = "checkbox";
+            enable.className = "checkbox";
+            enable.style.position = "absolute";
+            enable.style.top = "3px";
+            enable.style.left = "30px";
+            
+            enable.checked = event.enabled;
+            li.appendChild(enable);
+            enable.onchange = function() {
+                internalEvents[index].enabled = enable.checked;
+            }
+
+            if (internalEvents[index].default) {
+                var name = document.createElement("p");
+                name.style.width = "200px"; 
+                name.style.display = "inline-block";
+                name.style.lineHeight = "30px";
+                name.style.margin = "0px";
+                name.style.position = "absolute";
+                name.style.top = "0px";
+                name.style.left = "65px";
+                name.innerHTML = event.name;
+                li.appendChild(name);
+            } else {
+                var name = document.createElement("input");
+                name.type = "text";
+                name.style.width = "200px"; 
+                name.style.position = "absolute";
+                name.style.top = "0px";
+                name.style.left = "65px";
+                name.value = event.name;
+                li.appendChild(name);
+                name.onchange = function() {
+                    var n = name.value;
+                    var mod = 1;
+                    var didMod = false;
+                    do {
+                        didMod = false;
+                        for (var i = 0; i < internalEvents.length; i++) {
+                            if (mod > 1) {
+                                if (internalEvents[i].name === (n + " " + mod)) {
+                                    mod++;
+                                    didMod = true;
+                                    break;
+                                }
+                            } else {
+                                if (internalEvents[i].name === n || n === "") {
+                                    mod++;
+                                    didMod = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } while (didMod);
+                    if (mod === 1) {
+                        name.value = n;
+                    } else {
+                        name.value = n + " " + mod;
+                    }
+                    internalEvents[index].name = name.value;
+                    li.eventname = name.value;
+                }
+            }
+
+            var scrambler = document.createElement("select");
+            scramble.setScramblerOptions(scrambler);
+            scrambler.options.remove(0);
+            scrambler.style.width = "200px"; 
+            scrambler.style.position = "absolute";
+            scrambler.style.top = "0px";
+            scrambler.style.left = "275px";
+            scrambler.value = event.scrambler;
+            li.appendChild(scrambler);
+            scrambler.onchange = function() {
+                internalEvents[index].scrambler = scrambler.value;
+            }
+
+            var OH = document.createElement("input");
+            OH.type = "checkbox";
+            OH.className = "checkbox";
+            OH.checked = event.OH;
+            OH.style.position = "absolute";
+            OH.style.top = "3px";
+            OH.style.left = "485px";
+            
+            li.appendChild(OH);
+            OH.onchange = function() {
+                internalEvents[index].OH = OH.checked;
+            }
+
+            var blind = document.createElement("input");
+            blind.type = "checkbox";
+            blind.className = "checkbox";
+            blind.checked = event.blind;
+            blind.style.position = "absolute";
+            blind.style.top = "3px";
+            blind.style.left = "520px";
+            
+            
+            li.appendChild(blind);
+            blind.onchange = function() {
+                internalEvents[index].blind = blind.checked;
+            }
+            
+            if (!internalEvents[index].default) {
+                var remove = document.createElement("button");
+                remove.className = "delete";
+                remove.style.position = "absolute";
+                remove.style.top = "0px";
+                remove.style.left = "570px";
+            
+                
+                remove.onclick = function() {
+                    var scroll = $("#eventsList")[0].scrollTop;
+                    var n = internalEvents[index].name;
+                    removeEventsList();
+                    for (var i = 0; i < internalEvents.length; i++) {
+                        if (internalEvents[i].name === n) {
+                            internalEvents.splice(i,1);
+                            break;
+                        } 
+                    }
+                    for (var i = 0; i < internalEvents.length; i++) {
+                        addEventItem($("#eventsList")[0], i);
+                    }
+                    $("#eventsList").sortable();
+                    $("#eventsList").disableSelection();
+                    $("#eventsList")[0].scrollTop = scroll;
+                }
+                li.appendChild(remove);
+            }
+
+            li.className = "eventItem";
+            list.appendChild(li);
+        })()
+    }
+    
+    function openEvents() {
+        if (globals.menuOpen) {
+            closeEvents();
+            return;
+        }
+        var eventsList = document.getElementById("eventsList");
+        for (var i = 0; i < internalEvents.length; i++) {
+            addEventItem(eventsList, i);
+        }
+        $("#eventsList").sortable();
+        $("#eventsList").disableSelection();
+        $("#dialogManageEvents").dialog("open");
+        disableAllElements("eventButton");
+        globals.menuOpen = true;
+    }
+    
+    function createNewEvent() {
+        var newEvent = {name:"New Event",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:false};
+        internalEvents.push(newEvent);
+        addEventItem($("#eventsList")[0], internalEvents.length - 1);
+        $("#eventsList").sortable();
+        $("#eventsList").disableSelection();
+        $("#eventsList")[0].scrollTop = Number.MAX_SAFE_INTEGER;
+    }
+    
+    function removeEventsList() {
+        var eventsList = document.getElementById("eventsList");
+        var newEvents = [];
+        while (eventsList.firstChild) {
+            for (var i = 0; i < internalEvents.length; i++) {
+                if (eventsList.firstChild.eventname === internalEvents[i].name) {
+                    console.log(internalEvents[i].name)
+                    newEvents.push(internalEvents[i]);
+                    break;
+                }
+            }
+            eventsList.removeChild(eventsList.firstChild);
+        }
+        internalEvents = newEvents;
+        
+        eventSelect.value =  eventSelect.firstChild.value;
+        setEvent();
+        setEventOptions(eventSelect);
+        saveSessions();
+    }
+
+    function closeEvents() {
+        removeEventsList();
+        saveSessions();
+        $("#dialogManageEvents").dialog("close");
+        enableAllElements();
+        globals.menuOpen = false;
+    }
     
     function infoHeader() {
         return "Generated by Block Keeper on " + new Date().toDateString() + "<br>"
@@ -1048,6 +1269,10 @@ var events = function() {
         return internalEvents;
     }
     
+    function returnSessionButtonsShowing() {
+        return sessionButtonsShowing;
+    }
+    
     loadSessions();
         
     return {
@@ -1082,6 +1307,10 @@ var events = function() {
         currentSession:returnCurrentSession,
         mergeEvents:mergeEvents,
         setEventOptions:setEventOptions,
-        reloadApp:reloadApp
+        reloadApp:reloadApp,
+        openEvents:openEvents,
+        closeEvents:closeEvents,
+        sessionButtonsShowing:returnSessionButtonsShowing,
+        createNewEvent:createNewEvent
     }
 }()

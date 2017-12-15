@@ -306,7 +306,7 @@ var tools = function() {
             if ((ao12 < sao12 || sao12 === -2 || stime === -1) && ao12 != -2) {
                 sao12 = ao12;
             }
-            if ((mean < smean || smean === -2) && (mean != -2)) {
+            if ((mean < smean || smean === -2) && mean != -2 && mean != 0) {
                 smean = mean;
             }
         }
@@ -317,7 +317,7 @@ var tools = function() {
             } else {
                 ctx.fillStyle = mainColor;
             }
-            if (c === -2) {
+            if (c === -2 || c === 0) {
                 ctx.fillStyle = mainColor;
                 ctx.fillText("-", x, y);
             } else if (c === -1) {
@@ -327,7 +327,7 @@ var tools = function() {
                 ctx.fillText(formatTime(c), x, y); 
             }
             
-            if (s === -2) {
+            if (s === -2 || s === 0) {
                 ctx.fillStyle = mainColor;
                 ctx.fillText("-", x2, y);
             } else if (s === -1) {

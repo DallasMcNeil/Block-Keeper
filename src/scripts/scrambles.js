@@ -342,6 +342,7 @@ var scramble = function() {
         closeScramble:closeScramble,
         solveCross:solveCross,
         solveEOLine:solveEOLine,
-        solveFirstBlock:solveFirstBlock
+        solveFirstBlock:solveFirstBlock,
+        setScramblerOptions:setScramblerOptions
     }
 }()
