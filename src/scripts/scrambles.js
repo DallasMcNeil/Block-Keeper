@@ -256,16 +256,12 @@ var scramble = function() {
             moves.push(i+"Dw");
         }
 
-        console.log(moves);
-
         var finalMoves = [];
         moves.forEach((element) => {
             finalMoves.push(element);
             finalMoves.push(element + "'");
             finalMoves.push(element + "2");
         });
-        
-        console.log(finalMoves);
 
         var s = "";
         for (var i = 0; i < length; i++) {
