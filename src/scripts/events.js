@@ -68,7 +68,7 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
-        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
+        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
             if (error) {
                 throw error;
             }
@@ -192,6 +192,11 @@ var events = function() {
                 if (currentSession >= getCurrentEvent().sessions.length) {
                     currentSession = 0;
                 }
+            }
+            
+            if (object.currentScrambler !== undefined) {
+                console.log("SCRAMBLE SET")
+                scramble.setCurrentScrambler(object.currentScrambler);
             }
             
             if (object.tools != undefined) {
@@ -919,7 +924,6 @@ var events = function() {
             blind.style.position = "absolute";
             blind.style.top = "3px";
             blind.style.left = "485px";
-            
             
             var OH = document.createElement("input");
             OH.type = "checkbox";

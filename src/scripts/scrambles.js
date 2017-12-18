@@ -4,6 +4,40 @@
 // Created by Dallas McNeil
 
 var scramble = function() {
+
+    // cubesolver is used to solve Cross, EOLine and first block for tools
+    // Scrambo is used to scramble major events and draw scrambles for tool
+
+    // To add a new scramble
+    // 1. Write a function which generates a scramble. The function must set 'currentScramble' to the final scramble. It should also set 'scrambleStr' to the type of puzzle and if possible set up the 'scrambleState' object. The 'scrambleState.scramble_str' should be the same as 'currentScramble' and 'scrambleState.STATE' to the face colors of the puzzle, if possible. If this cannot be done, or the puzzle doesn't support drawing, set the scrambleStr to 'none'. Check out https://github.com/nickcolley/scrambo for more information
+    // 2. Add the scramble to the 'scrambleOptions' object with the key being the displayed name of the scramble and the value being the function. If the function must be called with paramaters, call it within another function
+    
+    // All scramblers and which one is currently being used
+    // Scramblers are in displayed order
+    var currentScrambler = "Recommended";
+    var scrambleOptions = {
+        "Recommended":scrambleRecommended,
+        "Custom...":scrambleCustom,
+        "3x3x3":scramble3x3x3,
+        "2x2x2":scramble2x2x2,
+        "4x4x4":scramble4x4x4,
+        "5x5x5":scramble5x5x5,
+        "Pyraminx":scramblePyraminx,
+        "Skewb":scrambleSkewb,
+        "Megaminx":scrambleMegaminx,
+        "Square-1":scrambleSquare1,
+        "Clock":scrambleClock,
+        "6x6x6":scramble6x6x6,
+        "7x7x7":scramble7x7x7,   
+        "3x3x3 BLD":scramble3x3x3BLD,
+        "8x8x8":function(){scrambleNxNxN(8,100)},
+        "9x9x9":function(){scrambleNxNxN(9,120)},
+        "10x10x10":function(){scrambleNxNxN(10,140)},
+        "11x11x11":function(){scrambleNxNxN(11,160)},
+        "2x2x2 - 5x5x5":scramble2to5Relay,
+        "2x2x2 - 7x7x7":scramble2to7Relay,
+        "None":scrambleNone
+    }
     
     // Internal scrambler being used for tool drawing
     var scrambleStr = "";
@@ -52,30 +86,6 @@ var scramble = function() {
         enableAllElements();
         globals.menuOpen = false;
         scramble();
-    }
-
-    // All scramblers and which on is currently being used
-    var currentScrambler = "Recommended";
-    var scrambleOptions = {
-        "Recommended":scrambleRecommended,
-        "Custom...":scrambleCustom,
-        "3x3x3":scramble3x3x3,
-        "2x2x2":scramble2x2x2,
-        "4x4x4":scramble4x4x4,
-        "5x5x5":scramble5x5x5,
-        "Pyraminx":scramblePyraminx,
-        "Skewb":scrambleSkewb,
-        "Megaminx":scrambleMegaminx,
-        "Square-1":scrambleSquare1,
-        "Clock":scrambleClock,
-        "6x6x6":scramble6x6x6,
-        "7x7x7":scramble7x7x7,   
-        "3x3x3 BLD":scramble3x3x3BLD,
-        "8x8x8":function(){scrambleNxNxN(8,100)},
-        "9x9x9":function(){scrambleNxNxN(9,120)},
-        "10x10x10":function(){scrambleNxNxN(10,140)},
-        "11x11x11":function(){scrambleNxNxN(11,160)},
-        "None":scrambleNone
     }
 
     // Sets up a select element with all the scrambler options
@@ -251,6 +261,32 @@ var scramble = function() {
         scrambleState = {scramble_string:""};
         currentScramble = s;
     }
+    
+    // Scramble for 2x2x2 to 5x5x5 relay
+    function scramble2to5Relay() {
+        var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
+        str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
+        str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
+        str += "(5x5x5) " + scramblers["555"].getRandomScramble().scramble_string;
+        
+        scrambleStr = "relay";
+        scrambleState.scramble_string = str;
+        currentScramble = str;
+    }
+    
+    // Scramble for 2x2x2 to 7x7x7 relay
+    function scramble2to7Relay() {
+        var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
+        str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
+        str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
+        str += "(5x5x5) " + scramblers["555"].getRandomScramble().scramble_string + "<br>";
+        str += "(6x6x6) " + scramblers["666"].getRandomScramble().scramble_string + "<br>";
+        str += "(7x7x7) " + scramblers["777"].getRandomScramble().scramble_string;
+        
+        scrambleStr = "relay";
+        scrambleState.scramble_string = str;
+        currentScramble = str;
+    }
 
     // Find cross solution to scramble for side
     function solveCross(scramble,type) {
@@ -329,6 +365,15 @@ var scramble = function() {
         return currentScramble;
     }
     
+    function getCurrentScrambler() {
+        return currentScrambler;
+    }
+    
+    function setCurrentScrambler(s) {
+        currentScrambler = s;
+        scrambleSelect.value = s;
+    }
+    
     function returnScrambleType() {
         return scrambleStr;
     }
@@ -343,6 +388,8 @@ var scramble = function() {
         solveCross:solveCross,
         solveEOLine:solveEOLine,
         solveFirstBlock:solveFirstBlock,
-        setScramblerOptions:setScramblerOptions
+        setScramblerOptions:setScramblerOptions,
+        getCurrentScrambler:getCurrentScrambler,
+        setCurrentScrambler:setCurrentScrambler
     }
 }()
