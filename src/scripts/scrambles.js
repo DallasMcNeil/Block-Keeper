@@ -248,28 +248,31 @@ var scramble = function() {
         }
 
         for (var i = 3; i <= n / 2; i++) {
-            moves.push(i+"Rw");
-            moves.push(i+"Lw");
-            moves.push(i+"Fw");
-            moves.push(i+"Bw");
-            moves.push(i+"Uw");
-            moves.push(i+"Dw");
+            moves.push(i + "Rw");
+            moves.push(i + "Lw");
+            moves.push(i + "Fw");
+            moves.push(i + "Bw");
+            moves.push(i + "Uw");
+            moves.push(i + "Dw");
         }
-
-        var finalMoves = [];
-        moves.forEach((element) => {
-            finalMoves.push(element);
-            finalMoves.push(element + "'");
-            finalMoves.push(element + "2");
-        });
-
-        var s = "";
+ 
+        var str = "";
+        var lastMove = "";
+        var move = "";
         for (var i = 0; i < length; i++) {
-            s += finalMoves[Math.floor(Math.random() * finalMoves.length)] + " ";
+            while (move == lastMove) {
+                move = moves[Math.floor(Math.random() * moves.length)];
+            }
+            
+            lastMove = move;
+            
+            var mod = ["","'","2"][Math.floor(Math.random() * 3)];
+            str += move + mod + " ";
         }
+        
         scrambleStr = "" + n + n + n;
-        scrambleState = {scramble_string:""};
-        currentScramble = s;
+        scrambleState = {scramble_string:str};
+        currentScramble = str;    
     }
     
     // Scramble for 2x2x2 to 5x5x5 relay
