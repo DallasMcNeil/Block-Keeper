@@ -138,7 +138,7 @@ app.on('ready', function() {
         var titleBar = "hidden";
     }
     
-    global.appDetails = {version:app.getVersion(), titleBar:titleBar};
+    global.appDetails = {version:require('./package.json').version, titleBar:titleBar};
 
     let mainWindowState = windowStateKeeper({
         defaultWidth:960,
