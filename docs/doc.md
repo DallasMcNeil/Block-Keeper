@@ -1,23 +1,25 @@
 # Introduction
 
-Block Keeper is a cross platform, desktop cubing timer. Block Keeper provides an event based session system with an elegant interface to provide relevant statistics and tools for speedcubing.
+Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
-![](images/blockkeeper.gif)
+![alt text](https://github.com/DallasMcNeil/Block-Keeper/blob/master/docs/images/blockkeeper.gif)
 
 Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
 - 100% offline and no Java required
-- Event based session organisation
+- Customizable event based session organisation
 - Simple and stylish interface with multiple themes
-- Scrambler for all WCA events
+- Scrambler for all WCA events and more
 - WCA inspection support with voice announcements
-- Event and session graphs
+- Blind and one handed event accomidations
+- Event and session results graphs
 - Video recorder to view and save last solve
 - Stackmat support
 - Session import and export
 
 If you encounter any bugs, issues or want to suggest any improvements, please let me know so I can make Block Keeper even better. You can contact me on Twitter [@dmcneil_](https://twitter.com/dmcneil_) or email [dallas@dallasmcneil.com](mailto:dallas@dallasmcneil.com).
+
 
 ## System Requirements
 
@@ -46,27 +48,29 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 ![](images/interface.png)
 
 1. Timer: Displays the current time of a solve and the time of the last solve in addition to inspection countdown
-2. Scramble: Displays a scramble for the current event and solve  
+2. Scramble: Displays a scramble for the current event and solve. Click to set the scrambler or a custom scramble
 3. Stats and Times: See below for additional information
 4. Tools: Provides additional information and tools. See the Tools section
-5. Tool Select and Add: Used to select a tool and add it above
+5. Tool Select: Used to select a tool to add
+6. Add Tool: Add the selected tool
 6. Preferences: Open preferences menu to view options. See the Preferences section
 7. Video Preview: Open video menu to view and save recorder video. See the Video Record section
 
 ![](images/stats.png)
 
 1. Event Select: Used to select the current event
-2. Session Select: Used to select the current session
-3. Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session or delete the current session
-4. Session Statistics
+2. Event Manager: Open event manager. See Sessions section
+3. Session Select: Used to select the current session
+4. Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session or delete the current session
+5. Session Statistics
     * Solves: Number of valid solves (not including DNF solves) over number of solves.
     * Mean: Total time of all valid solves over the number of valid solves, a mean of all valid solves.
     * Median: Middle time of all valid solves in order.
     * Standard Deviation: Rough measure of average distance from mean time any  
-    * Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result.
-5. Records Table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking any average results will present the list of times and scrambles used to generate the average.
-6. Add Time: Shows dialog with option to add custom time and scramble to session
-7. Solve Details: Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely
+    * Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result. Clicking the label will present a list of all results, e.g click Ao5 to see list of all Ao5's.
+6. Records Table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely. Clicking any average results will present the list of times and scrambles used to generate the average.
+7. Add Time: Shows dialog with option to add custom time and scramble to session
+
 
 ## Keyboard and Menu Shortcuts
 
@@ -88,11 +92,13 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 
 ### Window
 
-| Keys               | Description          |
-|--------------------|----------------------|
-| `CTRL + W`         | Close Block Keeper   |
-| `SHIFT + CTRL + F` | Toggle fullscreen    |
-| `CTRL + M`         | Minimise/hide window |
+| Keys               | Description            |
+|--------------------|------------------------|
+| `CTRL + W`         | Close Block Keeper     |
+| `SHIFT + CTRL + F` | Toggle fullscreen      |
+| `CTRL + M`         | Minimise/hide window   |
+| `CTRL + R`         | Refresh                |
+| `SHIFT + CTRL + I` | Toggle Developer Tools |
 
 ### MacOS Specific
 
@@ -131,7 +137,13 @@ Block Keeper divides sessions into event categories. Selecting an event from the
 
 In this system, every session belongs to a specific event, keeping them organised and providing the correct scramble for every solve. 
 
-Everyone chooses to use sessions differently, however, with this system it allows for many more sessions to be created and used effectively. As an example, you could create a session each day to record your times. Your more than free to use sessions however you choose.
+Everyone chooses to use sessions differently, however, with this system it allows for many more sessions to be created and used effectively. As an example, you could create a session each day to record your times. You're free to use sessions however you choose.
+
+### Event Management
+
+You may also create new events using the event manager, available next to the event select dropdown. A table of all the events will appear which allows you to modify properties of event, name and the scrambler. If an event is not enabled, it will not be shown in the event select, however it still exists and all of it's sessions are still kept. You cannot delete a default event, but you may disable it. Deleting an event will delete all of it's sessions as well.
+
+You could create a new event for a specific method, or training technique, e.g A '3x3x3 Roux' event or a '3x3x3 Cross' event.
 
 ## Video Record
 
@@ -143,10 +155,13 @@ After enabling Video Record Solves in preferences, your webcam or attached camer
 
 Tools offer additional visual information and functionality. After selecting a tool to add form the selection menu, click the plus button to add the tool. Multiple tools can be added. To remove any tool, press the cross button on it.
 
+* Cross Solver: Shows all cross solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.
 * Distribution: Shows a histogram of times within the currently selected session, showing the number of times within certain ranges.
 * Drawn Scramble: Shows the current scramble for the current event applied to a solved puzzle. Some events such as Skewb and MBLD are not supported.
+* EOLine Solver: Shows all edge orientation and line solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.
 * Event Statistics: Shows a table of current and best time, Mo3, Ao5, Ao12 and session means for the current event.
 * Event Trend: Shows a trend-line of session stats within the currently selected event for best time, best Ao5 and mean. This shows your progress in an event.
+* First Block Solver: Shows all left first block solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.
 * Metronome: Presents a metronome which can be started, stopped and adjusted to a set tempo. This can be used while timing or not.
 * Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.
 
@@ -188,7 +203,6 @@ Tools offer additional visual information and functionality. After selecting a t
 * Block Keeper Import: Imports all session data from a compatible JSON file. This merges the data with pre-existing data.
 * csTimer Import: Imports session times, results and scrambles from a csTimer JSON file. After selecting the file, you will need to specify the event you would like to place each session under. The first time and result for each session will be shown to identify the session. Use the event select dropdown to choose the event to import the session into. Repeat this for all sessions.
 * CSV Export: Exports all session times into a flat CSV file, specifying the event, session, order, time, result and scramble for every record stored.
-* Current Session as Pretty Text: Exports current session to a text file or copies text to clipboard specifying the currently selected sessions times and results along with session bests. This is designed to share and present.
 
 
-Thanks for using Block Keeper!
+**Thanks for using Block Keeper!**
