@@ -195,7 +195,6 @@ var events = function() {
             }
             
             if (object.currentScrambler !== undefined) {
-                console.log("SCRAMBLE SET")
                 scramble.setCurrentScrambler(object.currentScrambler);
             }
             
@@ -320,7 +319,7 @@ var events = function() {
         getCurrentSession().records.push(record);
         $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
         if (updateStats) {
-            updateRecords();
+            updateRecords(getCurrentSession().records.length-1);
         }
     }
            
@@ -429,8 +428,22 @@ var events = function() {
     // RESUME HERE
 
     // Update all records displayed on screen
-    function updateRecords() {
+    var calculatedTimes = {
+        times:[],
+        mo3s:[],
+        ao5s:[],
+        ao12s:[],
+        ao50s:[],
+        ao100s:[],
+        ao500s:[],
+        ao1000s:[],
+    }
+        
+    function updateRecords(updateFrom = 0) {
         setTimeout(function() { 
+            var debugTime = new Date();
+            console.log("Benchmark Start")
+            
             var records = getCurrentSession().records;
             // Set records table up for adding records
             var length = sessionRecordsTable.rows.length - 1;
@@ -467,70 +480,74 @@ var events = function() {
                     }())
                 }
             }
-
+            
             // Calculate all times, means, averages
-            var times = [];
-            var mo3s = records.length > 2 ? new Array(records.length - 2) : [];
-            var ao5s = records.length > 4 ? new Array(records.length - 4) : [];
-            var ao12s = records.length > 11 ? new Array(records.length - 11) : [];
-            var ao50s = records.length > 49 ? new Array(records.length - 49) : [];
-            var ao100s = records.length > 99 ? new Array(records.length - 99) : [];
-            var ao500s = records.length > 499 ? new Array(records.length - 499) : [];
-            var ao1000s = records.length > 999 ? new Array(records.length - 999) : [];
+            calculatedTimes.times = [];
+            if (updateFrom === 0 || calculatedTimes.length === 0) {
+                calculatedTimes.mo3s = records.length > 2 ? new Array(records.length - 2) : [];
+                calculatedTimes.ao5s = records.length > 4 ? new Array(records.length - 4) : [];
+                calculatedTimes.ao12s = records.length > 11 ? new Array(records.length - 11) : [];
+                calculatedTimes.ao50s = records.length > 49 ? new Array(records.length - 49) : [];
+                calculatedTimes.ao100s = records.length > 99 ? new Array(records.length - 99) : [];
+                calculatedTimes.ao500s = records.length > 499 ? new Array(records.length - 499) : [];
+                calculatedTimes.ao1000s = records.length > 999 ? new Array(records.length - 999) : [];
+            }
             var DNFsolves = 0;
 
             for (var i = 0; i < records.length; i++) {
                 if (records[i].result === "DNF") {
                     DNFsolves++;
                 }
-                times.push(extractTime(records[i]));
-                var ao5t = "-";
-                var ao12t = "-";
-                
-                if (i >= 2) {
-                    mo3s[i-2] = averageLastRecords(times, 3);
+                calculatedTimes.times.push(extractTime(records[i]));
+                if (i >= updateFrom) {
+                    var ao5t = "-";
+                    var ao12t = "-";
+
+                    if (i >= 2) {
+                        calculatedTimes.mo3s[i-2] = averageLastRecords(calculatedTimes.times, 3);
+                    }
+                    if (i >= 4) {
+                        calculatedTimes.ao5s[i-4] = averageLastRecords(calculatedTimes.times, 5);
+                        ao5t = calculatedTimes.ao5s[i-4];
+                    }
+                    if (i >= 11) {
+                        calculatedTimes.ao12s[i-11] = averageLastRecords(calculatedTimes.times, 12);
+                        ao12t = calculatedTimes.ao12s[i-11];
+                    }
+                    if (i >= 49) {
+                        calculatedTimes.ao50s[i-49] = averageLastRecords(calculatedTimes.times, 50);
+                    }
+                    if (i >= 99) {
+                        calculatedTimes.ao100s[i-99] = averageLastRecords(calculatedTimes.times, 100);
+                    } 
+                    if (i >= 499) {
+                        calculatedTimes.ao500s[i-499] = averageLastRecords(calculatedTimes.times, 500);
+                    }
+                    if (i >= 999) {
+                        calculatedTimes.ao1000s[i-999] = averageLastRecords(calculatedTimes.times, 1000);
+                    }
+
+                    sessionRecordsTable.rows[i + 1].cells[0].children[0].innerHTML = i + 1;
+                    sessionRecordsTable.rows[i + 1].cells[1].children[0].innerHTML = formatRecord(records[i]);
+                    sessionRecordsTable.rows[i + 1].cells[2].children[0].innerHTML = formatTime(ao5t);
+                    sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);   
                 }
-                if (i >= 4) {
-                    ao5s[i-4] = averageLastRecords(times, 5);
-                    ao5t = ao5s[i-4];
-                }
-                if (i >= 11) {
-                    ao12s[i-11] = averageLastRecords(times, 12);
-                    ao12t = ao12s[i-11];
-                }
-                if (i >= 49) {
-                    ao50s[i-49] = averageLastRecords(times, 50);
-                }
-                if (i >= 99) {
-                    ao100s[i-99] = averageLastRecords(times, 100);
-                } 
-                if (i >= 499) {
-                    ao500s[i-499] = averageLastRecords(times, 500);
-                }
-                if (i >= 999) {
-                    ao1000s[i-999] = averageLastRecords(times, 1000);
-                }
-                
-                sessionRecordsTable.rows[i + 1].cells[0].children[0].innerHTML = i + 1;
-                sessionRecordsTable.rows[i + 1].cells[1].children[0].innerHTML = formatRecord(records[i]);
-                sessionRecordsTable.rows[i + 1].cells[2].children[0].innerHTML = formatTime(ao5t);
-                sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);   
             }
 
             // Create session stats
-            var mean = meanTimes(removeDNFs(times));
+            var mean = meanTimes(removeDNFs(calculatedTimes.times));
             if (mean === -1) {
                 $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatTime(0));
                 $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(0));
                 $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(0));
             } else {
                 $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatTime(mean));
-                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(standardDeviation(times)));
-                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(medianTimes(times)));
+                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(standardDeviation(calculatedTimes.times)));
+                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(medianTimes(calculatedTimes.times)));
             }
             $("#sessionSolves").prop("innerHTML", "<b>Solves:</b> " + (records.length - DNFsolves) + "/" + records.length);
 
-           while (sessionStatsTable.rows.length > 1) {
+            while (sessionStatsTable.rows.length > 1) {
                 sessionStatsTable.deleteRow(-1);
             }
             
@@ -566,11 +583,11 @@ var events = function() {
                         openShowInfo("Best", size);
                     } 
                     var bestP = document.createElement("p");
-                    if (times.length == 0) {
+                    if (calculatedTimes.times.length == 0) {
                         bestP.innerHTML = "-";
                     } else {
                         var t = removeDNFs(ts).min();
-                        if (t == Infinity) {// TODO FIX
+                        if (t == Infinity) { // TODO FIX
                             bestP.innerHTML = "DNF";
                         } else {
                             bestP.innerHTML = formatTime(t);
@@ -582,14 +599,14 @@ var events = function() {
             }
             
             // Create session stats
-            createRow("Time",1,times);
-            createRow("Mo3",3,mo3s);
-            createRow("Ao5",5,ao5s);
-            createRow("Ao12",12,ao12s);
-            createRow("Ao50",50,ao50s);
-            createRow("Ao100",100,ao100s);
-            createRow("Ao500",500,ao500s);
-            createRow("Ao1000",1000,ao1000s);
+            createRow("Time",1,calculatedTimes.times);
+            createRow("Mo3",3,calculatedTimes.mo3s);
+            createRow("Ao5",5,calculatedTimes.ao5s);
+            createRow("Ao12",12,calculatedTimes.ao12s);
+            createRow("Ao50",50,calculatedTimes.ao50s);
+            createRow("Ao100",100,calculatedTimes.ao100s);
+            createRow("Ao500",500,calculatedTimes.ao500s);
+            createRow("Ao1000",1000,calculatedTimes.ao1000s);
 
             // On hover record details
             $("#sessionRecords td").hover(function(e) {
@@ -626,6 +643,9 @@ var events = function() {
             
             tools.updateTools();
             saveSessions();
+            
+            console.log("Done: " + (new Date().getTime() - debugTime))
+            
         }, 0)
     }
 
@@ -722,7 +742,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "OK";
             $("#dialogRecord").dialog("close");
-            updateRecords();
+            updateRecords(currentRecord);
         }
     }
 
@@ -731,7 +751,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "+2";
             $("#dialogRecord").dialog("close");
-            updateRecords();
+            updateRecords(currentRecord);
         }
     }
 
@@ -740,7 +760,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "DNF";
             $("#dialogRecord").dialog("close");
-            updateRecords();
+            updateRecords(currentRecord);
         }
     }
 
@@ -1012,7 +1032,6 @@ var events = function() {
         while (eventsList.firstChild) {
             for (var i = 0; i < internalEvents.length; i++) {
                 if (eventsList.firstChild.eventname === internalEvents[i].name) {
-                    console.log(internalEvents[i].name)
                     newEvents.push(internalEvents[i]);
                     break;
                 }

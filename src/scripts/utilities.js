@@ -108,7 +108,8 @@ function standardDeviation(times) {
     }
 }
 
-function medianTimes(times) {
+function medianTimes(t) {
+    var times = t.slice();
     if (times.length == 0) {
         return 0;
     }
