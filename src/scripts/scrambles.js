@@ -238,20 +238,30 @@ var scramble = function() {
             moves.push("D");
         }
 
-        for (var i = 0; i < n / 2; i++) {
-            moves.push(i+"R");
-            moves.push(i+"L");
-            moves.push(i+"F");
-            moves.push(i+"B");
-            moves.push(i+"U");
-            moves.push(i+"D");
+        if (n > 3) {
+            moves.push("Rw");
+            moves.push("Lw");
+            moves.push("Fw");
+            moves.push("Bw");
+            moves.push("Uw");
+            moves.push("Dw");
         }
 
-        var finalMoves = moves;
-        for (var m = 0; i < moves.length; i++) {
-            finalMoves.push(moves[m] + "'");
-            finalMoves.push(moves[m] + "2");
+        for (var i = 3; i <= n / 2; i++) {
+            moves.push(i+"Rw");
+            moves.push(i+"Lw");
+            moves.push(i+"Fw");
+            moves.push(i+"Bw");
+            moves.push(i+"Uw");
+            moves.push(i+"Dw");
         }
+
+        var finalMoves = [];
+        moves.forEach((element) => {
+            finalMoves.push(element);
+            finalMoves.push(element + "'");
+            finalMoves.push(element + "2");
+        });
 
         var s = "";
         for (var i = 0; i < length; i++) {
