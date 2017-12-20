@@ -67,6 +67,7 @@ A debug console is available to use for debugging and other purposes. In the tit
 Dallas McNeil ([dallasmcneil.com](https://dallasmcneil.com))
 
 Nicolas Brassard ([https://github.com/awesomecuber](https://github.com/awesomecuber))
+
 James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
 
 A huge thanks to the people who made these fantastic libraries, tools and assets, which make Block Keeper possible.
@@ -79,7 +80,7 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [mawie81/electron-window-state](https://github.com/mawie81/electron-window-state)
 - [muaz-khan/RecordRTC](https://github.com/muaz-khan/RecordRTC)
 - [less/less.js](https://github.com/less/less.js)
-- [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael/blob/master/license.txt)
+- [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael)
 - [cs0x7f/stackmat](https://github.com/cs0x7f/stackmat)
 - [jquery/jquery](https://github.com/jquery/jquery)
 - [jquery/jquery-ui](https://github.com/jquery/jquery-ui)
