@@ -77,7 +77,7 @@ var tools = function() {
             }
             BPMSlider.onchange = function () {
                 preferences.metronomeBPM = BPMSlider.value;
-                savePreferences();
+                prefs.savePreferences();
             }
             toolCanvas.appendChild(startStopButton);
             toolCanvas.appendChild(BPMLabel);
