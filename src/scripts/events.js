@@ -963,6 +963,15 @@ var events = function() {
                 internalEvents[index].blind = blind.checked;
             }
             
+            if (event.default) {
+                scrambler.className += " disabled";
+                scrambler.disabled = true;
+                OH.className += " disabled";
+                OH.disabled = true;
+                blind.className += " disabled";
+                blind.disabled = true;
+            }
+            
             if (!internalEvents[index].default) {
                 var remove = document.createElement("button");
                 remove.className = "delete";
