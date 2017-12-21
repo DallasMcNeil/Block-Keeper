@@ -36,7 +36,6 @@ body {
 :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
     -webkit-user-select: none;
     user-select: none;
-    cursor:text;
 }
 
 ::-webkit-scrollbar {
@@ -98,6 +97,7 @@ body {
     display:inline-block;
     margin:0px;
     z-index: -1;
+    cursor:default;
 }
 
 #rightIndicator {
@@ -173,6 +173,7 @@ body {
     left:10px;
     top:10px;
     background-color: rgba(0,0,0,0);
+    cursor:default;
 }
 
 button {
@@ -263,6 +264,7 @@ button:active {
     margin-top:20px;
     height:0px;
     overflow-y:hidden;
+    cursor:default;
 }
 
 #newSessionButton {
@@ -829,6 +831,7 @@ ul {
     border-style: solid;
     display: block;
     background-color: #282828;
+    cursor:default;
 }
 
 .closeTool {
@@ -871,6 +874,7 @@ ul {
     position: absolute;
     top:0px;
     left:0px;
+    cursor:default;
     z-index: -2;
 }
 
@@ -942,6 +946,7 @@ ul {
     background-color: #303030;
     background-position: 0% 50%;
     background-repeat: no-repeat;
+    cursor:move;
 }
 
 .delete {
