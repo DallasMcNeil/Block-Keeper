@@ -1,10 +1,4 @@
-@background: #181818;
-@timer: #F0F0F0;
-@scramble: #B0B0B0;
-@base: #303030;
-@border: #606060;
-@text: #E0E0E0;
-
+@background: #181818; @timer: #F0F0F0; @scramble: #B0B0B0; @base: #303030; @border: #606060; @text: #E0E0E0;
 @darken: 40%;
 
 p {
@@ -41,12 +35,30 @@ body {
 
 #scramble {
     color:@scramble;
+    background-color:fade(@scramble,10%);
 }
 
-button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool {
+#scramble:hover {
+    background-color:fade(@scramble,20%);
+}
+
+#scramble.disabled:hover {
+    color:@scramble;
+    background-color:fade(@scramble,10%);
+    cursor: default;
+}
+
+button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,#dialogScramble,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool, select.disabled:hover, #dialogManageEvents {
     color:@text;
     background-color: @base;
     border-color: @border;
+}
+
+.closeTool.disabled:hover {
+    color:@text;
+    background-color: @base;
+    border-color: @border;
+    opacity: 0.4;
 }
 
 #sessionRecordsContainer {
@@ -69,7 +81,7 @@ button:active {
     background-color: @base;
 }
 
-#sessionButton {
+#sessionButton,#eventButton  {
     background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,12 6,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,6 6,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='4,18 6,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,12 20,12'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,6 20,6'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='8,18 20,18'></polyline></svg>");
     background-color: @base;
 }
@@ -84,7 +96,7 @@ button:active {
     background-color: @base;
 }
 
-.cross:active, #sessionButton:active, #previewButton:active, #preferencesButton:active {
+.cross:active, #eventButton:active, #sessionButton:active, #previewButton:active, #preferencesButton:active {
     background-color: darken(@base,@darken,relative);
 }
 
@@ -101,7 +113,7 @@ select {
 
 #addToolButton {
     border-color:@border;
-    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='6,12 20,12'></polyline></svg>"); 
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='12,6 12,18'></polyline><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='6,12 18,12'></polyline></svg>"); 
     background-color: @base;
 }
 
@@ -118,8 +130,19 @@ select:hover {
     color: darken(@text,@darken,relative);
 }    
 
+#sessionRecords td:nth-child(2).disabled:hover, #sessionRecords td:nth-child(2).disabled p:hover {
+    background: @base;
+    color: @text;
+    cursor: default;
+}   
+
 .selectable:hover, .selectable p:hover {
     background: darken(@base,@darken,relative);
+}
+
+.selectable.disabled:hover, .selectable.disabled p:hover {
+    background: @base;
+    cursor: default;
 }
 
 #sessionRecords tr:first-child td {
@@ -135,7 +158,7 @@ select:hover {
 }
 
 #recordScramble {
-    color:@scramble;
+    color:@text;
 }
 
 input[type="checkbox"]:checked {
@@ -199,4 +222,23 @@ button, select, input,textarea, #tool, #sessionRecords,#sessionStats,#sessionDet
 
 #metronomeBPMLabel {
     color: @text;
+}
+
+
+#eventsList {
+    border-bottom: solid 1px @border;
+    border-top: solid 1px @border;
+}
+
+.eventItem {
+    border: solid 1px @border;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='@{text}' points='7,10 12,5 17,10'></polyline><polyline stroke-width='2' cap='square' fill='@{text}' points='7,14 12,19 17,14'></polyline></svg>"); 
+    background-color: @base;
+    background-position: 0% 50%;
+    background-repeat: no-repeat;
+}
+
+.delete {
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='@{text}' points='6,12 18,12'></polyline></svg>"); 
+    background-color: @base;
 }

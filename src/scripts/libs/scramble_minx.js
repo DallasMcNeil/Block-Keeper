@@ -141,23 +141,7 @@ scramblers["minx"] = (function() {
   var s18 = function(i) {return Math.sin(Math.TAU*i/20);};
   var c18 = function(i) {return Math.cos(Math.TAU*i/20);};
 
-  /*var colors = [
-  	"#FFF",
-  	"#008",
-  	"#080",
-  	"#0FF",
-  	"#822",
-  	"#8AF",
-
-  	"#F00",
-  	"#00F",
-  	"#F0F",
-  	"#0F0",
-  	"#F80",
-  	"#FF0",
-
-  ];*/
-  var colors = minxColors
+  var colors = globals.minxColors
 
 	function drawPolygon(r, fillColor, arrx, arry) {
 

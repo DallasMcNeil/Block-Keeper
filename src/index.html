@@ -11,8 +11,6 @@ Created by Dallas McNeil
     <title>Block Keeper</title>
     <link type="text/css" rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet/less" type="text/css" href="styles/base.less">
-    
-    <script src="scripts/colorScheme.js"></script>
     <script>
         less = {
             async: true,
@@ -20,6 +18,7 @@ Created by Dallas McNeil
         };
     </script>
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="scripts/globals.js"></script>
     <script src="scripts/libs/less.min.js"></script>
     <script src="scripts/libs/jQuery.js"></script>
     <script src="scripts/libs/jQuery UI.js"></script>
@@ -35,6 +34,8 @@ Created by Dallas McNeil
     <script src="scripts/libs/scramble_skewb.js"></script>
     <script src="scripts/libs/stackmat.js"></script>
     <script src="scripts/libs/confetti.js"></script>
+    <script src="scripts/libs/solver.js"></script>
+    <script src="scripts/utilities.js"></script>
     <script>if (window.module) module = window.module;</script>
 </head>
     
@@ -43,7 +44,7 @@ Created by Dallas McNeil
     <link type="text/css" rel="stylesheet" href="styles/standardWindowBar.css" id="titleBarStyle">
     <div id="windowBar"></div>
     <div id="content">
-    <div id="background" onclick="resetUI()">
+    <div id="background" onclick="events.resetUI()">
         <canvas id="confetti"></canvas>
         <div id="centreBackground">
             <p id="timer">0.000</p>
@@ -53,17 +54,18 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id=scramble></p>
+    <p id="scramble" onclick="scramble.openScramble()"></p>
         
     <div id="stats">
-        <select title="Event Select" id="puzzleSelect" onchange="setPuzzle()"></select>
+        <select title="Event Select" id="eventSelect" onchange="events.setEvent()"></select>
+        <button title="Edit Events" id="eventButton" onclick="events.openEvents()"></button>
         <div id="sessionContainer">
-            <select title="Session Select" id="sessionSelect" onchange="setSession()"></select>
-            <button title="Edit Session" id="sessionButton" onclick="toggleSessionButtons()"></button>
+            <select title="Session Select" id="sessionSelect" onchange="events.setSession()"></select>
+            <button title="Edit Session" id="sessionButton" onclick="events.toggleSessionButtons()"></button>
         </div>
         <div id="sessionButtons">
-            <button title="Create a new session" id="newSessionButton" onclick="createSessionButton()">New</button>
-            <button title="Delete this session" id="deleteSessionButton" onclick="deleteSessionButton()">Delete</button>
+            <button title="Create a new session" id="newSessionButton" onclick="events.createSessionButton()">New</button>
+            <button title="Delete this session" id="deleteSessionButton" onclick="events.deleteSessionButton()">Delete</button>
         </div>
         <table id="sessionDetails">
             <tr>
@@ -109,72 +111,90 @@ Created by Dallas McNeil
         </table>
         <div id="sessionRecordsContainer"> 
         <table id="sessionRecords">
-            <tr>
-                <td>
-                    <button title="Add Time" id="addTimeButton" onclick="showTimeDialog()">+</button>
-                </td>
-                <td>
-                    <p>Time</p>
-                </td>
-                <td>
-                    <p>Ao5</p>
-                </td>
-                <td>
-                    <p>Ao12</p>
-                </td>
-            </tr>
+            <thead>
+                <tr>
+                    <td>
+                        <button title="Add Time" id="addTimeButton" onclick="events.openTimeDialog()">+</button>
+                    </td>
+                    <td>
+                        <p>Time</p>
+                    </td>
+                    <td>
+                        <p>Ao5</p>
+                    </td>
+                    <td>
+                        <p>Ao12</p>
+                    </td>
+                </tr>
+            </thead>
         </table>
         </div>
     </div>
 
-    <button title="Video Preview" id="previewButton" onclick="showPreview()"></button>
-    <button title="Preferences" id="preferencesButton" onclick="openPreferences()"></button>
-    <select title="Tool Select" id="toolSelect" onchange="updateTool()">
+    <button title="Video Preview" id="previewButton" onclick="record.openPreview()"></button>
+    <button title="Preferences" id="preferencesButton" onclick="prefs.openPreferences()"></button>
+    <select title="Tool Select" id="toolSelect" onchange="tools.updateTools()">
+        <option value="crossSolver">Cross Solver</option>
         <option value="distribution">Distribution</option>
         <option value="scramble">Drawn Scramble</option>
+        <option value="EOLineSolver">EOLine Solver</option>
         <option value="eventStats">Event Statistics</option>
         <option value="eventTrend">Event Trend</option>
+        <option value="firstBlockSolver">First Block Solver</option>
         <option value="sessionTrend">Session Trend</option>
         <option value="metronome">Metronome</option>
     </select>
 
     <div id="tools">
     </div>
-    <button title="Add Tool" id="addToolButton" onclick="addTool()"></button>
+    <button title="Add Tool" id="addToolButton" onclick="tools.addTool()"></button> 
+    </div>
     
+    <div id="dialogManageEvents">
+        <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:75px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:120px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:50px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
+        <ul id="eventsList"></ul>
+        <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add Event</button>   <button onclick="events.closeEvents()">Done</button></p>
+    </div>
         
     <div id="dialogAddTime">
         <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
         <p>Scramble (optional) <textarea rows="3" id="addScrambleInput"></textarea></p>
-        <p><button onclick="addTime()">Add</button> <button onclick="closeTimeDialog()">Cancel</button></p>
+        <p><button onclick="events.addRecord()">Add</button> <button onclick="events.closeTimeDialog()">Cancel</button></p>
     </div>
     
     <div id="dialogRecord">
-        <button title="Set result to OK" onclick="recordResultOK()">OK</button>
-        <button title="Set result to +2 penalty" onclick="recordResult2()">+2</button>
-        <button title="Set result to DNF penalty" onclick="recordResultDNF()">DNF</button>
-        <button title="Delete this time" style="margin-right:0px;" onclick="deleteRecord()">Delete</button>
+        <button title="Set result to OK" onclick="events.recordResultOK()">OK</button>
+        <button title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
+        <button title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
+        <button title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
         <p id="recordScramble"></p>
     </div>
     
     <div id="dialogPreview">
-        <button id="closePreview" class="cross" onclick="closePreview()"></button><br>
+        <button id="closePreview" class="cross" onclick="record.closePreview()"></button><br>
         <video id="previewVideo" controls></video>
-        <button title="Save video as file" id="savePreview" onclick="savePreview()">Save Video</button>
+        <button title="Save video as file" id="savePreview" onclick="record.saveVideo()">Save Video</button>
+    </div>
+        
+    <div id="dialogScramble">
+        <p>Scrambler: <select id="scramblerSelect"></select></p>
+        <p>Custom scramble<br><textarea rows="3" id="customScramble"></textarea></p>
+        <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
         
     <div id="dialogShowInfo">
-        <button id="closeShowInfo" class="cross" onclick="closeShowInfo()"></button><br>
+        <button id="closeShowInfo" class="cross" onclick="events.closeShowInfo()"></button><br>
         <p id="messageShowInfo"></p>
     </div>
         
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
-        <button title="Import into selected session" id="importCSTimer" onclick="importCSTime(true)">Import</button>
+        <button title="Import into selected session" id="importCSTimer" onclick="prefs.importCSTime(true)">Import</button>
+        <button title="Stop importing sessions" id="cancelCSTimer" onclick="prefs.cancelCSTime()">Cancel</button>
     </div>
         
     <div id="dialogPreferences">
-        <button id="closePreferences" class="cross" onclick="closePreferences()"></button>
+        <button id="closePreferences" class="cross" onclick="prefs.closePreferences()"></button>
         <div id="tabs">
             <ul>
             <li class="tab"><a href="#tabs-1"><button>General</button></a></li>
@@ -193,7 +213,7 @@ Created by Dallas McNeil
                     <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
                     <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
                     <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
-                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="selectLocation(); return false;">Select</button></p>
+                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
                 </form> 
             </div>
@@ -220,7 +240,7 @@ Created by Dallas McNeil
                 </form>
             </div>
             <div id="tabs-3">
-                <form name="preferencesInterface">
+                <form name="preferencesInterface" onsubmit="return false">
                     <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce Best Time</p>
                     <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
@@ -239,8 +259,8 @@ Created by Dallas McNeil
                         <option value="center">Center</option>
                         <option value="right" selected>Right</option>
                     </select></p>
-                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="selectImage(); return false;">Select</button></p>
-                    <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="previewStylesheet()" style="width:200px;">
+                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="prefs.selectImage(); return false;">Select</button></p>
+                    <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="prefs.previewStylesheet();return false" style="width:200px;">
                         <option value=0>Dark</option>
                         <option value=1>Light</option>
                         <option value=2>Black</option>
@@ -256,37 +276,34 @@ Created by Dallas McNeil
                         <option value=12>Neon Blue</option>
                         <option value="custom">Custom...</option>
                     </select></p>
-                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="previewStylesheet();return false;">Refresh Theme</button></p>
+                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="prefs.previewStylesheet();return false;">Refresh Theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
                     <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
                 </form>
             </div>
             <div id="tabs-4">
-                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="importBK()">Import</button>  <button onclick="exportBK()">Export</button></p>
-                <p title="Import csTimer Sessions">csTimer:  <button onclick="importCS()">Import</button></p>
-                <p title="Export all times as flat CSV file">CSV:  <button onclick="exportCSV()">Export</button></p>
-                <p title="Export the currently selected session as as readable text with session statistics and times">Current Session as Pretty Text:  <button onclick="exportPretty()">Export</button>  <button onclick="clipboardPretty()">Copy</button></p>
+                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
+                <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
+                <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
             </div>
         </div>
         
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
-        <button title="Save preferences and close" id="savePreferences" onclick="savePreferencesForm()">Save</button>
-    </div>
-        
+        <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
     
     <div id="versionBannerContainer">
-        <div id="versionBanner" onclick="downloadLatestVersion()">
+        <div id="versionBanner" onclick="update.download()">
             <p id="versionMessage">A newer version of Block Keeper is available! Click here to download</p>
         </div>
-        <button id="closeVersion" onclick="closeVersion()" class="cross"></button>
+        <button id="closeVersion" onclick="update.closeBanner()" class="cross"></button>
     </div>
     
     <script src="scripts/scrambles.js"></script> 
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>
-    <script src="scripts/sessions.js"></script> 
+    <script src="scripts/events.js"></script> 
     <script src="scripts/timer.js"></script>
     <script src="scripts/windowBar.js"></script>
     <script src="scripts/tools.js"></script>

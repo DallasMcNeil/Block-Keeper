@@ -1,4 +1,4 @@
-# Block Keeper 1.2.0
+# Block Keeper 1.3.0
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -7,12 +7,13 @@ Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an 
 Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
-- 100% offline and no Java required
-- Event based session organisation
+- Completely offline and no Java required
+- Customizable event based session organisation
 - Simple and stylish interface with multiple themes
-- Scrambler for all WCA events
+- Scrambler for all WCA events and more
 - WCA inspection support with voice announcements
-- Event and session graphs
+- Blind and one handed event accomidations
+- Event and session results graphs
 - Video recorder to view and save last solve
 - Stackmat support
 - Session import and export
@@ -59,11 +60,13 @@ Use the export script to create a standalone application. You can edit the scrip
 
 ## Debuging
 
-A debug console is available to use for debugging and other purposes. In `src/main.js` at the top, set `var debug = true` to use it. **Remeber** to set debug to false to hide the console.
+A debug console is available to use for debugging and other purposes. In the titlebar select `Window > Toggle Dev Tools`.
 
 ## Contributors
 
 Dallas McNeil ([dallasmcneil.com](https://dallasmcneil.com))
+
+Nicolas Brassard ([https://github.com/awesomecuber](https://github.com/awesomecuber))
 
 James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
 
@@ -77,13 +80,14 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [mawie81/electron-window-state](https://github.com/mawie81/electron-window-state)
 - [muaz-khan/RecordRTC](https://github.com/muaz-khan/RecordRTC)
 - [less/less.js](https://github.com/less/less.js)
-- [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael/blob/master/license.txt)
+- [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael)
 - [cs0x7f/stackmat](https://github.com/cs0x7f/stackmat)
 - [jquery/jquery](https://github.com/jquery/jquery)
 - [jquery/jquery-ui](https://github.com/jquery/jquery-ui)
 - [cubing/jsss](https://github.com/cubing/jsss)
 - [nickcolley/scrambo](https://github.com/nickcolley/scrambo)
 - [wesleycho/confetti.js](https://github.com/wesleycho/confetti.js/)
+- [torjusti/cube-solver](https://github.com/torjusti/cube-solver)
 
 ### Fonts
 
