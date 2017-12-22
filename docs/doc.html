@@ -1,18 +1,19 @@
 <h1 id="introduction">Introduction</h1>
-<p>Block Keeper is a cross platform, desktop cubing timer. Block Keeper provides an event based session system with an elegant interface to provide relevant statistics and tools for speedcubing.</p>
+<p>Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.</p>
 <div class="figure">
-<img src="images/blockkeeper.gif" />
-
+<img src="https://github.com/DallasMcNeil/Block-Keeper/blob/master/docs/images/blockkeeper.gif" alt="alt text" />
+<p class="caption">alt text</p>
 </div>
 <p>Main Features:</p>
 <ul>
 <li>Cross platform support, Windows, MacOS and Linux</li>
-<li>100% offline and no Java required</li>
-<li>Event based session organisation</li>
+<li>Completely offline and no Java required</li>
+<li>Customizable event based session organisation</li>
 <li>Simple and stylish interface with multiple themes</li>
-<li>Scrambler for all WCA events</li>
+<li>Scrambler for all WCA events and more</li>
 <li>WCA inspection support with voice announcements</li>
-<li>Event and session graphs</li>
+<li>Blind and one handed event accomidations</li>
+<li>Event and session results graphs</li>
 <li>Video recorder to view and save last solve</li>
 <li>Stackmat support</li>
 <li>Session import and export</li>
@@ -39,11 +40,11 @@
 </div>
 <ol style="list-style-type: decimal">
 <li>Timer: Displays the current time of a solve and the time of the last solve in addition to inspection countdown</li>
-<li>Scramble: Displays a scramble for the current event and solve<br />
-</li>
+<li>Scramble: Displays a scramble for the current event and solve. Click to set the scrambler or a custom scramble</li>
 <li>Stats and Times: See below for additional information</li>
 <li>Tools: Provides additional information and tools. See the Tools section</li>
-<li>Tool Select and Add: Used to select a tool and add it above</li>
+<li>Tool Select: Used to select a tool to add</li>
+<li>Add Tool: Add the selected tool</li>
 <li>Preferences: Open preferences menu to view options. See the Preferences section</li>
 <li>Video Preview: Open video menu to view and save recorder video. See the Video Record section</li>
 </ol>
@@ -53,6 +54,7 @@
 </div>
 <ol style="list-style-type: decimal">
 <li>Event Select: Used to select the current event</li>
+<li>Event Manager: Open event manager. See Sessions section</li>
 <li>Session Select: Used to select the current session</li>
 <li>Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session or delete the current session</li>
 <li>Session Statistics
@@ -62,11 +64,10 @@
 <li>Median: Middle time of all valid solves in order.</li>
 <li>Standard Deviation: Rough measure of average distance from mean time any<br />
 </li>
-<li>Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result.</li>
+<li>Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result. Clicking the label will present a list of all results, e.g click Ao5 to see list of all Ao5's.</li>
 </ul></li>
-<li>Records Table: Ordered table of records presenting times of solves. A <code>+</code> on the end of a time indicates a <code>+2</code> time penalty which is already added to the time and a <code>DNF</code> indicates a <code>DNF</code> penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A <code>-</code> indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking any average results will present the list of times and scrambles used to generate the average.</li>
+<li>Records Table: Ordered table of records presenting times of solves. A <code>+</code> on the end of a time indicates a <code>+2</code> time penalty which is already added to the time and a <code>DNF</code> indicates a <code>DNF</code> penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A <code>-</code> indicates that there are not enough solves to calculate a Ao5 or Ao12. Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely. Clicking any average results will present the list of times and scrambles used to generate the average.</li>
 <li>Add Time: Shows dialog with option to add custom time and scramble to session</li>
-<li>Solve Details: Hovering over a time will present the scramble used for the solve with options to change the penalty or delete the solve completely</li>
 </ol>
 <h2 id="keyboard-and-menu-shortcuts">Keyboard and Menu Shortcuts</h2>
 <p><em>NOTE: On MacOS, the <code>CTRL</code> key is replaced with the <code>Command</code> Key.</em></p>
@@ -138,6 +139,14 @@
 <td><code>CTRL + M</code></td>
 <td>Minimise/hide window</td>
 </tr>
+<tr class="even">
+<td><code>CTRL + R</code></td>
+<td>Refresh</td>
+</tr>
+<tr class="odd">
+<td><code>SHIFT + CTRL + I</code></td>
+<td>Toggle Developer Tools</td>
+</tr>
 </tbody>
 </table>
 <h3 id="macos-specific">MacOS Specific</h3>
@@ -181,17 +190,23 @@
 <h2 id="sessions">Sessions</h2>
 <p>Block Keeper divides sessions into event categories. Selecting an event from the event dropdown will show a list of it's sessions below in a separate dropdown. All sessions created will be added to the current event. A scramble for the current event will also be shown.</p>
 <p>In this system, every session belongs to a specific event, keeping them organised and providing the correct scramble for every solve.</p>
-<p>Everyone chooses to use sessions differently, however, with this system it allows for many more sessions to be created and used effectively. As an example, you could create a session each day to record your times. Your more than free to use sessions however you choose.</p>
+<p>Everyone chooses to use sessions differently, however, with this system it allows for many more sessions to be created and used effectively. As an example, you could create a session each day to record your times. You're free to use sessions however you choose.</p>
+<h3 id="event-management">Event Management</h3>
+<p>You may also create new events using the event manager, available next to the event select dropdown. A table of all the events will appear which allows you to modify properties of event, name and the scrambler. If an event is not enabled, it will not be shown in the event select, however it still exists and all of it's sessions are still kept. You cannot delete a default event, but you may disable it. Deleting an event will delete all of it's sessions as well.</p>
+<p>You could create a new event for a specific method, or training technique, e.g A '3x3x3 Roux' event or a '3x3x3 Cross' event.</p>
 <h2 id="video-record">Video Record</h2>
 <p>After enabling Video Record Solves in preferences, your webcam or attached camera will be used to record your solves. Upon starting the timer, the camera will begin recording, until the timer is stopped. There is also the option to record inspection and just after the solve. After a recording has been made, the video can be viewed through the video record button in the bottom right corner. The video can also be saved from here as a <code>.webm</code> file.</p>
 <p><strong>IMPORTANT:</strong> Only the most recent solve is available to view and save. When you begin another solve, the previous recorded video will be deleted. <strong>If you want to view/save your solve, do so before you start your next solve.</strong></p>
 <h2 id="tools">Tools</h2>
 <p>Tools offer additional visual information and functionality. After selecting a tool to add form the selection menu, click the plus button to add the tool. Multiple tools can be added. To remove any tool, press the cross button on it.</p>
 <ul>
+<li>Cross Solver: Shows all cross solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.</li>
 <li>Distribution: Shows a histogram of times within the currently selected session, showing the number of times within certain ranges.</li>
 <li>Drawn Scramble: Shows the current scramble for the current event applied to a solved puzzle. Some events such as Skewb and MBLD are not supported.</li>
+<li>EOLine Solver: Shows all edge orientation and line solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.</li>
 <li>Event Statistics: Shows a table of current and best time, Mo3, Ao5, Ao12 and session means for the current event.</li>
 <li>Event Trend: Shows a trend-line of session stats within the currently selected event for best time, best Ao5 and mean. This shows your progress in an event.</li>
+<li>First Block Solver: Shows all left first block solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.</li>
 <li>Metronome: Presents a metronome which can be started, stopped and adjusted to a set tempo. This can be used while timing or not.</li>
 <li>Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.</li>
 </ul>
@@ -232,6 +247,5 @@
 <li>Block Keeper Import: Imports all session data from a compatible JSON file. This merges the data with pre-existing data.</li>
 <li>csTimer Import: Imports session times, results and scrambles from a csTimer JSON file. After selecting the file, you will need to specify the event you would like to place each session under. The first time and result for each session will be shown to identify the session. Use the event select dropdown to choose the event to import the session into. Repeat this for all sessions.</li>
 <li>CSV Export: Exports all session times into a flat CSV file, specifying the event, session, order, time, result and scramble for every record stored.</li>
-<li>Current Session as Pretty Text: Exports current session to a text file or copies text to clipboard specifying the currently selected sessions times and results along with session bests. This is designed to share and present.</li>
 </ul>
-<p>Thanks for using Block Keeper!</p>
+<p><strong>Thanks for using Block Keeper!</strong></p>

@@ -7,7 +7,7 @@ Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an 
 Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
-- 100% offline and no Java required
+- Completely offline and no Java required
 - Customizable event based session organisation
 - Simple and stylish interface with multiple themes
 - Scrambler for all WCA events and more

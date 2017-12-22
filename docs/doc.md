@@ -2,12 +2,12 @@
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
-![alt text](https://github.com/DallasMcNeil/Block-Keeper/blob/master/docs/images/blockkeeper.gif)
+![alt text](images/blockkeeper.gif)
 
 Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
-- 100% offline and no Java required
+- Completely offline and no Java required
 - Customizable event based session organisation
 - Simple and stylish interface with multiple themes
 - Scrambler for all WCA events and more
