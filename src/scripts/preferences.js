@@ -383,7 +383,7 @@ var prefs = function() {
                 }
                 events.shouldUpdateStats(true);
                 events.setSessionOptions($("#sessionSelect")[0]);
-                events.updateRecords();
+                events.updateRecords(true);
                 currentCS++;
             }
             if (CSData[currentCS] && CSData[currentCS].length > 0) {

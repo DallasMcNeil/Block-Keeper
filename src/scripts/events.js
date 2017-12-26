@@ -318,10 +318,8 @@ var events = function() {
         
         var record = {time:time, scramble:scramble.currentScramble(), result:result};
         getCurrentSession().records.push(record);
-        $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
         if (updateStats) {
-            updateRecords(getCurrentSession().records.length-1);
-            $("#eventsList").scrollTop($("#eventsList")[0].scrollHeight);
+            updateRecords(true, getCurrentSession().records.length-1);
         }
     }
            
@@ -380,14 +378,14 @@ var events = function() {
         setSessionOptions(sessionSelect);
         currentSession = getCurrentEvent().sessions.length - 1;
         sessionSelect.value = currentSession;
-        updateRecords();
+        updateRecords(true);
         scramble.scramble();
     }
 
     // Set the session based on the dropdown
     function setSession() {
          currentSession = sessionSelect.value;   
-         updateRecords();
+         updateRecords(true);
     }
         
     // Populate a dropdown with events
@@ -441,7 +439,7 @@ var events = function() {
         ao1000s:[],
     }
         
-    function updateRecords(updateFrom = 0) {
+    function updateRecords(scrollDown = false, updateFrom = 0) {
         setTimeout(function() { 
             var debugTime = new Date();
             console.log("Benchmark Start")
@@ -641,7 +639,10 @@ var events = function() {
             setTimeout(function() {
                 extraHeight+=$("#sessionDetails").height();
                 $("#sessionRecordsContainer").css("max-height","calc(100vh - (" + extraHeight + "px + 170px))");
-            }, 10);
+                if (scrollDown) {
+                    $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
+                }
+            }, 20);
             
             tools.updateTools();
             saveSessions();
@@ -694,7 +695,7 @@ var events = function() {
         getCurrentSession().name = sessionSelect.value;
         createSession();
         sessionSelect.value = getCurrentSession().name; 
-        updateRecords();
+        updateRecords(true);
         if (getCurrentEvent().sessions.length > 1) {
             enableElement("#deleteSessionButton");
         }
@@ -712,7 +713,7 @@ var events = function() {
             setSessionOptions(sessionSelect);
             sessionButtonsShowing = false;
             enableStats();
-            updateRecords();
+            updateRecords(true);
             $("#sessionButtons").animate({height:'0px'}, 200);
         }
     }
@@ -744,7 +745,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "OK";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -753,7 +754,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "+2";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -762,7 +763,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "DNF";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -771,7 +772,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentSession().records.splice(currentRecord, 1);
             $("#dialogRecord").dialog("close");
-            updateRecords();
+            updateRecords(false);
         }
     }
 
