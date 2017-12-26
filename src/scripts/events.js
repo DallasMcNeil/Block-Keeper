@@ -282,6 +282,7 @@ var events = function() {
         var session = {date:new Date(), name:name, records:[]};
         getCurrentEvent().sessions.push(session);
         currentSession = getCurrentEvent().sessions.length - 1;
+        updateRecords();
     }
 
     // Deletes current session
@@ -320,6 +321,7 @@ var events = function() {
         $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
         if (updateStats) {
             updateRecords(getCurrentSession().records.length-1);
+            $("#eventsList").scrollTop($("#eventsList")[0].scrollHeight);
         }
     }
            
@@ -384,7 +386,7 @@ var events = function() {
 
     // Set the session based on the dropdown
     function setSession() {
-         currentSession = sessionSelect.value;
+         currentSession = sessionSelect.value;   
          updateRecords();
     }
         
@@ -1071,11 +1073,17 @@ var events = function() {
     
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
+        console.log(a)
+        console.log(size)
+        console.log(r)
         str = infoHeader() + "<br>";
         var toRemove = [];
         var ts = extractTimes(r);
-        if (size == 1) {
+        if (size === 1) {
             str += "Time: " + formatRecord(r[0]);
+            if (preferences.scramblesInList) {
+                str += " (" + r[0].scramble.trim() + ")";
+            }
             return str;
         } else if (size < 5) {
             str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
@@ -1124,8 +1132,8 @@ var events = function() {
             str = averageExport(getCurrentSession().records.length, a);
         } else if (type == "Best") {
             if (a == 1) {
-                var best = -1
-                var index = 0
+                var best = -1;
+                var index = 0;
                 var r = getCurrentSession().records;
                 for (var i = 0; i < r.length; i++) {
                     var t = extractTime(r[i]);
@@ -1134,31 +1142,31 @@ var events = function() {
                         index = i;
                     }
                 }
-                str = averageExport(i, 1);
+                str = averageExport(index + 1, 1);
             } else if (a == 3) {
-                var best = -1
-                var index = 0
+                var best = -1;
+                var index = 3;
                 var r = getCurrentSession().records;
                 for (var i = 3; i < r.length; i++) {
                     var t = meanTimes(extractTimes(r.slice(i - (a - 1), i + 1)));
                     if (t != -1 && (t < best || best == -1)) {
                         best = t;
-                        index = i;
+                        index = i + 1;
                     }
                 }
-                str = averageExport(i, 3);
+                str = averageExport(index, 3);
             } else {
                 var best = -1
-                var index = 0
+                var index = a;
                 var r = getCurrentSession().records;
                 for (var i = a; i < r.length; i++) {
                     var t = averageTimes(extractTimes(r.slice(i - (a - 1), i + 1)));
                     if (t != -1 && (t < best || best == -1)) {
                         best = t;
-                        index = i;
+                        index = i + 1;
                     }
                 }
-                str = averageExport(i, a);
+                str = averageExport(index, a);
             }
         } else if (type == "All") {
             if (a == 1) {
@@ -1194,7 +1202,7 @@ var events = function() {
                     means.push(averageTimes(extractTimes(records.slice(i, i + a))));
                 }
                 str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
-                for (var i = 0;i < means.length; i++) {
+                for (var i = 0; i < means.length; i++) {
                     str += "<br>" + (i + 1) + ". ";
                     str += formatTime(means[i]);
                 }
