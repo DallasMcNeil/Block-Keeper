@@ -435,7 +435,17 @@ input[type="text"],textarea {
     margin-left: 0px;
 }
 
+#sessionRecordsHeader {
+    display: block;
+    width:270px;
+	overflow: auto;
+    position: fixed;
+    border-collapse: collapse;
+    border-bottom: 1px solid #606060;
+}
+
 td {
+    height:30px;
     border: 1px solid #606060;
     padding-top: 0px;
     padding-bottom: 0px;
@@ -489,17 +499,18 @@ table td:first-child {
 #sessionStats td:nth-child(2) {
     width:105px;
 }
+
 #sessionStats td:nth-child(3) {
     width:105px;
 }
 
-#sessionRecords td:first-child {
+#sessionRecordsHeader td:nth-child(1), #sessionRecords td:first-child {
     width:28px;
     margin-left: 0px;
     margin-right:0px;
 }
 
-#sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
+#sessionRecordsHeader td:nth-child(2), #sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
     width:82px;
     cursor:pointer;
 }
@@ -508,10 +519,11 @@ table td:first-child {
     background: #202020;
 }    
 
-#sessionRecords td:nth-child(3) {
+#sessionRecordsHeader td:nth-child(3), #sessionRecords td:nth-child(3) {
     width:82px;
 }
-#sessionRecords td:nth-child(4) {
+
+#sessionRecordsHeader td:nth-child(4), #sessionRecords td:nth-child(4) {
     width:82px;
 }
 
