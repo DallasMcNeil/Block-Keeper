@@ -40,7 +40,8 @@ var preferences = {
     useMouse:false,
     extendedVideos:false,
     scramblesInList:true,
-    metronomeBPM:90
+    metronomeBPM:90,
+    onlyList:false
 }
 
 // Preference management functions
@@ -97,6 +98,7 @@ var prefs = function() {
         preferencesTimer.useMouse.checked = preferences.useMouse;
         preferencesGeneral.extendedVideos.checked = preferences.extendedVideos;
         preferencesGeneral.scramblesInList.checked = preferences.scramblesInList;
+        preferencesGeneral.onlyList.checked = preferences.onlyList;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -211,6 +213,7 @@ var prefs = function() {
         preferences.useMouse = preferencesTimer.useMouse.checked;
         preferences.extendedVideos = preferencesGeneral.extendedVideos.checked;
         preferences.scramblesInList = preferencesGeneral.scramblesInList.checked;
+        preferences.onlyList = preferencesGeneral.onlyList.checked;
 
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
@@ -420,7 +423,7 @@ var prefs = function() {
             if (fileName === undefined){
                 return;
             }  
-            var str = "Event, Session, SessionOrder, Order, Time, Result, Scramble"
+            var str = "Event, Session, SessionOrder, Order, Time, Result, Scramble, Date"
             var e = events.getAllEvents();
             for (var p = 0; p < e.length; p++) {
                 if (!e[p].sessions) {
@@ -430,8 +433,13 @@ var prefs = function() {
                     if (e[p].sessions[s].records.length === 0) {
                         continue;
                     }
+                    
                     for (var r = 0; r < e[p].sessions[s].records.length; r++) {
-                        str += "\n\"" + e[p].name + "\", \"" + e[p].sessions[s].name + "\", " + (s + 1) + ", " + (r + 1) + ", " + e[p].sessions[s].records[r].time + ", " + e[p].sessions[s].records[r].result + ", \"" + e[p].sessions[s].records[r].scramble + "\"";
+                        var d = 0;
+                        if (e[p].sessions[s].records[r].date != undefined) {
+                            d = e[p].sessions[s].records[r].date;
+                        }
+                        str += "\n\"" + e[p].name + "\", \"" + e[p].sessions[s].name + "\", " + (s + 1) + ", " + (r + 1) + ", " + e[p].sessions[s].records[r].time + ", " + e[p].sessions[s].records[r].result + ", \"" + e[p].sessions[s].records[r].scramble + "\", " + d;
                     }
                 }   
             }     

@@ -279,7 +279,7 @@ var events = function() {
                 }
             }
         }   
-        var session = {date:new Date(), name:name, records:[]};
+        var session = {date:new Date().getTime(), name:name, records:[]};
         getCurrentEvent().sessions.push(session);
         currentSession = getCurrentEvent().sessions.length - 1;
         updateRecords();
@@ -316,7 +316,7 @@ var events = function() {
             }
         }
         
-        var record = {time:time, scramble:scramble.currentScramble(), result:result};
+        var record = {time:time, scramble:scramble.currentScramble(), result:result, date: new Date().getTime()};
         getCurrentSession().records.push(record);
         if (updateStats) {
             updateRecords(true, getCurrentSession().records.length-1);
@@ -1074,27 +1074,35 @@ var events = function() {
     
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
-        console.log(a)
-        console.log(size)
-        console.log(r)
-        str = infoHeader() + "<br>";
+        var str = ""
         var toRemove = [];
         var ts = extractTimes(r);
-        if (size === 1) {
-            str += "Time: " + formatRecord(r[0]);
-            if (preferences.scramblesInList) {
-                str += " (" + r[0].scramble.trim() + ")";
+        
+        if (!preferences.onlyList) {
+            str = infoHeader() + "<br>";
+            if (size === 1) {
+                str += "Time: " + formatRecord(r[0]);
+                if (preferences.scramblesInList) {
+                    str += " (" + r[0].scramble.trim() + ")";
+                }
+                return str;
+            } else if (size < 5) {
+                str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
+            } else {
+                str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
             }
-            return str;
-        } else if (size < 5) {
-            str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
-        } else {
-            str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
+        }
+        if (size > 4) {
             toRemove = getMinsAndMaxs(ts);
         }
         for (var i = 0; i < size; i++) {
             var didRemove = false;
-            str+=("<br>" + (i + 1) + ". ")
+            if (preferences.onlyList) {
+                str += formatRecord(r[i]) + "<br>";
+                continue;
+            } else {
+                str += ("<br>" + (i + 1) + ". ");
+            }
             for (var j = 0; j < toRemove.length; j++) {
                 if (ts[i] === toRemove[j]) {
                     str += "(" + formatRecord(r[i]) + ")";
@@ -1172,40 +1180,58 @@ var events = function() {
         } else if (type == "All") {
             if (a == 1) {
                 var records = getCurrentSession().records;
-                str = infoHeader() + "<br>Time list<br>";
-                str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
-                str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
-                str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Time list<br>";
+                    str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
+                    str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
+                }
                 for (var i = 0; i < records.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatRecord(records[i]);
-                    if (preferences.scramblesInList) {
-                        str += " (" + records[i].scramble.trim() + ")";
+                    if (preferences.onlyList) {
+                        str += formatRecord(records[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatRecord(records[i]);
+                        if (preferences.scramblesInList) {
+                            str += " (" + records[i].scramble.trim() + ")";
+                        }
                     }
                 }
             } else if (a == 3) {
-                str = infoHeader() + "<br>Mo3 list<br>";
                 var means = [];
                 var records = getCurrentSession().records;
                 for (var i = 2; i < records.length; i++) {
                     means.push(meanTimes(extractTimes(records.slice(i - 2, i + 1))));
                 }
-                str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Mo3 list<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";    
+                }
                 for (var i = 0; i < means.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatTime(means[i]);
+                    if (preferences.onlyList) {
+                        str += formatTime(means[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatTime(means[i]);
+                    }
                 }
             } else {
-                str = infoHeader() + "<br>Ao" + a + " list<br>";
                 var means = [];
                 var records = getCurrentSession().records;
                 for (var i = 0; i < records.length - a + 1; i++) {
                     means.push(averageTimes(extractTimes(records.slice(i, i + a))));
                 }
-                str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Ao" + a + " list<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                }
                 for (var i = 0; i < means.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatTime(means[i]);
+                    if (preferences.onlyList) {
+                        str += formatTime(means[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatTime(means[i]);
+                    }
                 }
             }
         }

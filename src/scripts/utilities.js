@@ -77,6 +77,7 @@ function enableAllElements() {
 
 // Take a time and returns a string taking into account minutes and timer detail
 function formatTime(time) {
+    console.log(time)
     if (time === "-") {
         return "-";
     } else if (time === -1) {
@@ -84,12 +85,12 @@ function formatTime(time) {
     }
     if (preferences.formatTime && time >= 60) {
         if (time % 60 < 10) {
-            return Math.floor(time / 60) + ":0" + (time % 60).toFixed(preferences.timerDetail); 
+            return Math.floor(time / 60) + ":0" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
         } else {
-            return Math.floor(time / 60) + ":" + (time % 60).toFixed(preferences.timerDetail);
+            return Math.floor(time / 60) + ":" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
         }
     } else { 
-        return time.toFixed(preferences.timerDetail);
+        return time.toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
     }
 }
 
