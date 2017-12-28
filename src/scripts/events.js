@@ -717,6 +717,14 @@ var events = function() {
             $("#sessionButtons").animate({height:'0px'}, 200);
         }
     }
+    
+    // Clear the session by removing all records
+    function clearSessionButton() {
+        if (confirm("Delete all records?")) {
+            getCurrentSession().records = [];
+            updateRecords(true);
+        }
+    }
 
     // Hide the session stats
     function disableStats() {
@@ -1370,6 +1378,7 @@ var events = function() {
         openShowInfo:openShowInfo,
         closeShowInfo:closeShowInfo,
         createSessionButton:createSessionButton,
+        clearSessionButton:clearSessionButton,
         deleteSessionButton:deleteSessionButton,
         toggleSessionButtons:toggleSessionButtons,
         setCurrentRecord:setCurrentRecord,

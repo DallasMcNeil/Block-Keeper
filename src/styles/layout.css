@@ -268,13 +268,19 @@ button:active {
 }
 
 #newSessionButton {
-    width:133px;
+    width:84px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#clearSessionButton {
+    width:84px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
 #deleteSessionButton {
-    width:133px;
+    width:84px;
     margin-bottom: 10px;
 }
 

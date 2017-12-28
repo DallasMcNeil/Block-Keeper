@@ -77,7 +77,6 @@ function enableAllElements() {
 
 // Take a time and returns a string taking into account minutes and timer detail
 function formatTime(time) {
-    console.log(time)
     if (time === "-") {
         return "-";
     } else if (time === -1) {
