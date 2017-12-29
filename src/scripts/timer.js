@@ -398,14 +398,14 @@ var timer = function() {
 
     // Stop the timer
     function stopTimer() {
-        currentTime = new Date();
+        currentTime = new Date().getTime();
         timerState = "normal";
         timerText.style.color = normalColor;
         timerTime = ((currentTime - startTime) / 1000);
         timerText.innerHTML = formatTime(timerTime);
         submitTime();
         fadeInUI();
-        inspectionTime = currentTime.getTime();
+        inspectionTime = currentTime;
         scramble.scramble();
         cooldown = true;
         timerResult = "OK";
