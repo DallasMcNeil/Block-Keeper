@@ -619,8 +619,8 @@ var events = function() {
                             autoOpen:false,
                             modal:true,
                             hide:"fade",
-                            width:"199",
-                            height:"120",
+                            width:"251",
+                            height:"172",
                             position: {
                                 my:"left top",
                                 at:"right top",
@@ -629,6 +629,25 @@ var events = function() {
                         });
                         currentRecord = row - 1;
                         $("#recordScramble").html(getCurrentRecord().scramble);
+                        var detail = preferences.timerDetail;
+                        preferences.timerDetail = 3;
+                        $("#recordTime").html(formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result);
+                        preferences.timerDetail = detail;
+                        if (getCurrentRecord().date !== undefined) {
+                            // Doesn't include Daylight savings
+                            // Consider replacing with a library
+                            var d = new Date(getCurrentRecord().date);
+                            var options = {
+                                year: "numeric", 
+                                month: "short",  
+                                day: "numeric", 
+                                hour: "2-digit", 
+                                minute: "2-digit"  
+                            };  
+                            $("#recordDate").html(d.toLocaleTimeString("en-us",options));
+                        } else {
+                            $("#recordDate").html("-");
+                        }
                     } else {
                         if ($("#dialogRecord").dialog('isOpen')) {
                             $("#dialogRecord").dialog("close");
