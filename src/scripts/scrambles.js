@@ -209,12 +209,14 @@ var scramble = function() {
         currentScramble = scrambleState.scramble_string;
     }
 
-    // Add roation to
+    // Add roation to 3x3x3 scramble
     function scramble3x3x3BLD() {
         scrambleStr = "333bf";
         scrambleState = scramblers[scrambleStr].getRandomScramble();
-        scrambleState.scramble_string += [" x", " x'", " x2", ""][Math.floor(Math.random() * 4)];
-        scrambleState.scramble_string += [" z", " z'", " z2", ""][Math.floor(Math.random() * 4)];
+        
+        // Orientate up face and then orient front face
+        scrambleState.scramble_string += [" "," z"," z2"," z'"," x"," x'"][Math.floor(Math.random() * 6)];
+        scrambleState.scramble_string += [" y", " y'", " y2", ""][Math.floor(Math.random() * 4)];
         currentScramble = scrambleState.scramble_string;
     }
 
