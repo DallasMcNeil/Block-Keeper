@@ -172,7 +172,7 @@ app.on('ready', function() {
     
     win.on('enter-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "enter");
-    })
+    })   
     
     win.on('leave-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "leave");

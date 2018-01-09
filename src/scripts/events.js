@@ -279,9 +279,10 @@ var events = function() {
                 }
             }
         }   
-        var session = {date:new Date(), name:name, records:[]};
+        var session = {date:new Date().getTime(), name:name, records:[]};
         getCurrentEvent().sessions.push(session);
         currentSession = getCurrentEvent().sessions.length - 1;
+        updateRecords();
     }
 
     // Deletes current session
@@ -315,11 +316,10 @@ var events = function() {
             }
         }
         
-        var record = {time:time, scramble:scramble.currentScramble(), result:result};
+        var record = {time:time, scramble:scramble.currentScramble(), result:result, date: new Date().getTime()};
         getCurrentSession().records.push(record);
-        $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
         if (updateStats) {
-            updateRecords(getCurrentSession().records.length-1);
+            updateRecords(true, getCurrentSession().records.length-1);
         }
     }
            
@@ -378,14 +378,14 @@ var events = function() {
         setSessionOptions(sessionSelect);
         currentSession = getCurrentEvent().sessions.length - 1;
         sessionSelect.value = currentSession;
-        updateRecords();
+        updateRecords(true);
         scramble.scramble();
     }
 
     // Set the session based on the dropdown
     function setSession() {
-         currentSession = sessionSelect.value;
-         updateRecords();
+         currentSession = sessionSelect.value;   
+         updateRecords(true);
     }
         
     // Populate a dropdown with events
@@ -439,7 +439,7 @@ var events = function() {
         ao1000s:[],
     }
         
-    function updateRecords(updateFrom = 0) {
+    function updateRecords(scrollDown = false, updateFrom = 0) {
         setTimeout(function() { 
             var debugTime = new Date();
             console.log("Benchmark Start")
@@ -619,8 +619,8 @@ var events = function() {
                             autoOpen:false,
                             modal:true,
                             hide:"fade",
-                            width:"199",
-                            height:"120",
+                            width:"251",
+                            height:"172",
                             position: {
                                 my:"left top",
                                 at:"right top",
@@ -629,6 +629,25 @@ var events = function() {
                         });
                         currentRecord = row - 1;
                         $("#recordScramble").html(getCurrentRecord().scramble);
+                        var detail = preferences.timerDetail;
+                        preferences.timerDetail = 3;
+                        $("#recordTime").html(formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result);
+                        preferences.timerDetail = detail;
+                        if (getCurrentRecord().date !== undefined) {
+                            // Doesn't include Daylight savings
+                            // Consider replacing with a library
+                            var d = new Date(getCurrentRecord().date);
+                            var options = {
+                                year: "numeric", 
+                                month: "short",  
+                                day: "numeric", 
+                                hour: "2-digit", 
+                                minute: "2-digit"  
+                            };  
+                            $("#recordDate").html(d.toLocaleTimeString("en-us",options));
+                        } else {
+                            $("#recordDate").html("-");
+                        }
                     } else {
                         if ($("#dialogRecord").dialog('isOpen')) {
                             $("#dialogRecord").dialog("close");
@@ -639,7 +658,10 @@ var events = function() {
             setTimeout(function() {
                 extraHeight+=$("#sessionDetails").height();
                 $("#sessionRecordsContainer").css("max-height","calc(100vh - (" + extraHeight + "px + 170px))");
-            }, 10);
+                if (scrollDown) {
+                    $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
+                }
+            }, 20);
             
             tools.updateTools();
             saveSessions();
@@ -692,7 +714,7 @@ var events = function() {
         getCurrentSession().name = sessionSelect.value;
         createSession();
         sessionSelect.value = getCurrentSession().name; 
-        updateRecords();
+        updateRecords(true);
         if (getCurrentEvent().sessions.length > 1) {
             enableElement("#deleteSessionButton");
         }
@@ -710,8 +732,16 @@ var events = function() {
             setSessionOptions(sessionSelect);
             sessionButtonsShowing = false;
             enableStats();
-            updateRecords();
+            updateRecords(true);
             $("#sessionButtons").animate({height:'0px'}, 200);
+        }
+    }
+    
+    // Clear the session by removing all records
+    function clearSessionButton() {
+        if (confirm("Delete all records?")) {
+            getCurrentSession().records = [];
+            updateRecords(true);
         }
     }
 
@@ -742,7 +772,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "OK";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -751,7 +781,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "+2";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -760,7 +790,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "DNF";
             $("#dialogRecord").dialog("close");
-            updateRecords(currentRecord);
+            updateRecords(false,currentRecord);
         }
     }
 
@@ -769,7 +799,7 @@ var events = function() {
         if (getCurrentSession().records.length > 0) {
             getCurrentSession().records.splice(currentRecord, 1);
             $("#dialogRecord").dialog("close");
-            updateRecords();
+            updateRecords(false);
         }
     }
 
@@ -1071,21 +1101,35 @@ var events = function() {
     
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
-        str = infoHeader() + "<br>";
+        var str = ""
         var toRemove = [];
         var ts = extractTimes(r);
-        if (size == 1) {
-            str += "Time: " + formatRecord(r[0]);
-            return str;
-        } else if (size < 5) {
-            str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
-        } else {
-            str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
+        
+        if (!preferences.onlyList) {
+            str = infoHeader() + "<br>";
+            if (size === 1) {
+                str += "Time: " + formatRecord(r[0]);
+                if (preferences.scramblesInList) {
+                    str += " (" + r[0].scramble.trim() + ")";
+                }
+                return str;
+            } else if (size < 5) {
+                str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
+            } else {
+                str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
+            }
+        }
+        if (size > 4) {
             toRemove = getMinsAndMaxs(ts);
         }
         for (var i = 0; i < size; i++) {
             var didRemove = false;
-            str+=("<br>" + (i + 1) + ". ")
+            if (preferences.onlyList) {
+                str += formatRecord(r[i]) + "<br>";
+                continue;
+            } else {
+                str += ("<br>" + (i + 1) + ". ");
+            }
             for (var j = 0; j < toRemove.length; j++) {
                 if (ts[i] === toRemove[j]) {
                     str += "(" + formatRecord(r[i]) + ")";
@@ -1124,8 +1168,8 @@ var events = function() {
             str = averageExport(getCurrentSession().records.length, a);
         } else if (type == "Best") {
             if (a == 1) {
-                var best = -1
-                var index = 0
+                var best = -1;
+                var index = 0;
                 var r = getCurrentSession().records;
                 for (var i = 0; i < r.length; i++) {
                     var t = extractTime(r[i]);
@@ -1134,69 +1178,87 @@ var events = function() {
                         index = i;
                     }
                 }
-                str = averageExport(i, 1);
+                str = averageExport(index + 1, 1);
             } else if (a == 3) {
-                var best = -1
-                var index = 0
+                var best = -1;
+                var index = 3;
                 var r = getCurrentSession().records;
                 for (var i = 3; i < r.length; i++) {
                     var t = meanTimes(extractTimes(r.slice(i - (a - 1), i + 1)));
                     if (t != -1 && (t < best || best == -1)) {
                         best = t;
-                        index = i;
+                        index = i + 1;
                     }
                 }
-                str = averageExport(i, 3);
+                str = averageExport(index, 3);
             } else {
                 var best = -1
-                var index = 0
+                var index = a;
                 var r = getCurrentSession().records;
                 for (var i = a; i < r.length; i++) {
                     var t = averageTimes(extractTimes(r.slice(i - (a - 1), i + 1)));
                     if (t != -1 && (t < best || best == -1)) {
                         best = t;
-                        index = i;
+                        index = i + 1;
                     }
                 }
-                str = averageExport(i, a);
+                str = averageExport(index, a);
             }
         } else if (type == "All") {
             if (a == 1) {
                 var records = getCurrentSession().records;
-                str = infoHeader() + "<br>Time list<br>";
-                str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
-                str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
-                str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Time list<br>";
+                    str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
+                    str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
+                }
                 for (var i = 0; i < records.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatRecord(records[i]);
-                    if (preferences.scramblesInList) {
-                        str += " (" + records[i].scramble.trim() + ")";
+                    if (preferences.onlyList) {
+                        str += formatRecord(records[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatRecord(records[i]);
+                        if (preferences.scramblesInList) {
+                            str += " (" + records[i].scramble.trim() + ")";
+                        }
                     }
                 }
             } else if (a == 3) {
-                str = infoHeader() + "<br>Mo3 list<br>";
                 var means = [];
                 var records = getCurrentSession().records;
                 for (var i = 2; i < records.length; i++) {
                     means.push(meanTimes(extractTimes(records.slice(i - 2, i + 1))));
                 }
-                str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Mo3 list<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";    
+                }
                 for (var i = 0; i < means.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatTime(means[i]);
+                    if (preferences.onlyList) {
+                        str += formatTime(means[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatTime(means[i]);
+                    }
                 }
             } else {
-                str = infoHeader() + "<br>Ao" + a + " list<br>";
                 var means = [];
                 var records = getCurrentSession().records;
                 for (var i = 0; i < records.length - a + 1; i++) {
                     means.push(averageTimes(extractTimes(records.slice(i, i + a))));
                 }
-                str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
-                for (var i = 0;i < means.length; i++) {
-                    str += "<br>" + (i + 1) + ". ";
-                    str += formatTime(means[i]);
+                if (!preferences.onlyList) {
+                    str = infoHeader() + "<br>Ao" + a + " list<br>";
+                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                }
+                for (var i = 0; i < means.length; i++) {
+                    if (preferences.onlyList) {
+                        str += formatTime(means[i]) + "<br>";
+                    } else {
+                        str += "<br>" + (i + 1) + ". ";
+                        str += formatTime(means[i]);
+                    }
                 }
             }
         }
@@ -1335,6 +1397,7 @@ var events = function() {
         openShowInfo:openShowInfo,
         closeShowInfo:closeShowInfo,
         createSessionButton:createSessionButton,
+        clearSessionButton:clearSessionButton,
         deleteSessionButton:deleteSessionButton,
         toggleSessionButtons:toggleSessionButtons,
         setCurrentRecord:setCurrentRecord,

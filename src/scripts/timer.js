@@ -30,9 +30,9 @@ var timer = function() {
     var timerRunning = false;
     
     // Time information
-    var currentTime = new Date();
-    var startTime = currentTime.getTime()
-    var inspectionTime = currentTime.getTime()
+    var currentTime = Date.now();
+    var startTime = currentTime
+    var inspectionTime = currentTime
 
     // Current record information
     var timerTime = 0;
@@ -174,7 +174,7 @@ var timer = function() {
         
         if (!preferences.stackmat) {
             document.getElementById("background").focus()
-            currentTime = new Date();
+            currentTime = Date.now();
 
             leftIndicator.style.backgroundColor = indicatorColor;
             rightIndicator.style.backgroundColor = indicatorColor;
@@ -354,7 +354,7 @@ var timer = function() {
         timerState = "inspecting";
         timerText.style.color = inspectColor; 
         timerText.innerHTML = "15";
-        inspectionTime = currentTime.getTime();
+        inspectionTime = currentTime;
         timerResult = "OK";
         fadeOutUI();
         s3 = true;
@@ -392,20 +392,23 @@ var timer = function() {
         timerState = "timing";
         timerText.style.color = normalColor;
 
-        currentTime = new Date();
-        startTime = currentTime.getTime()
+        currentTime = Date.now();
+        startTime = currentTime;
+        console.log("Timer start: "+startTime);
     }
 
     // Stop the timer
     function stopTimer() {
-        currentTime = new Date();
+        currentTime = Date.now();
         timerState = "normal";
         timerText.style.color = normalColor;
+        console.log("Timer Stop: "+currentTime);
         timerTime = ((currentTime - startTime) / 1000);
+        console.log("Time: "+timerTime);
         timerText.innerHTML = formatTime(timerTime);
         submitTime();
         fadeInUI();
-        inspectionTime = currentTime.getTime();
+        inspectionTime = currentTime;
         scramble.scramble();
         cooldown = true;
         timerResult = "OK";
@@ -425,8 +428,8 @@ var timer = function() {
         timerText.innerHTML = (0).toFixed(preferences.timerDetail);
         timerTime = 0;
         timerResult = "OK";
-        inspectionTime = currentTime.getTime();
-        startTime = currentTime.getTime();
+        inspectionTime = currentTime;
+        startTime = currentTime;
         fadeInUI();
         if (preferences.extendedVideos) {
             record.cancelRecorder();
@@ -441,7 +444,7 @@ var timer = function() {
     // Get stackmat information is used and display it
     function SMCallback(state) {
         if (preferences.stackmat) {
-            currentTime = new Date();
+            currentTime = Date.now();
             // Boolean will guarantee the variable is not undefined
             leftDown = Boolean(state.leftHand);
             rightDown = Boolean(state.rightHand);
@@ -502,13 +505,13 @@ var timer = function() {
                     case "inspectReady":
                         timerText.style.color = readyColor;
                         if (!mainDown) {
-                            currentTime = new Date();
+                            currentTime = Date.now();
                             startInspection();
                         }
                         break;
                     case "inspecting":
                         timerText.style.color = prepareColor;
-                        var timeRemaining = Math.ceil(15 + (inspectionTime - currentTime) / 1000);
+                        var timeRemaining = Math.ceil(15 + ((inspectionTime - currentTime) / 1000));
                         if (timeRemaining <= -2 && inspectionEnabled) {
                             timerText.innerHTML = "DNF";
                             timerResult = "DNF";

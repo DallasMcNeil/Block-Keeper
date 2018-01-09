@@ -268,13 +268,19 @@ button:active {
 }
 
 #newSessionButton {
-    width:133px;
+    width:84px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+#clearSessionButton {
+    width:84px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
 #deleteSessionButton {
-    width:133px;
+    width:84px;
     margin-bottom: 10px;
 }
 
@@ -435,7 +441,17 @@ input[type="text"],textarea {
     margin-left: 0px;
 }
 
+#sessionRecordsHeader {
+    display: block;
+    width:270px;
+	overflow: auto;
+    position: fixed;
+    border-collapse: collapse;
+    border-bottom: 1px solid #606060;
+}
+
 td {
+    height:30px;
     border: 1px solid #606060;
     padding-top: 0px;
     padding-bottom: 0px;
@@ -489,17 +505,18 @@ table td:first-child {
 #sessionStats td:nth-child(2) {
     width:105px;
 }
+
 #sessionStats td:nth-child(3) {
     width:105px;
 }
 
-#sessionRecords td:first-child {
+#sessionRecordsHeader td:nth-child(1), #sessionRecords td:first-child {
     width:28px;
     margin-left: 0px;
     margin-right:0px;
 }
 
-#sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
+#sessionRecordsHeader td:nth-child(2), #sessionRecords td:nth-child(2), #sessionRecords td:nth-child(2) p {
     width:82px;
     cursor:pointer;
 }
@@ -508,10 +525,11 @@ table td:first-child {
     background: #202020;
 }    
 
-#sessionRecords td:nth-child(3) {
+#sessionRecordsHeader td:nth-child(3), #sessionRecords td:nth-child(3) {
     width:82px;
 }
-#sessionRecords td:nth-child(4) {
+
+#sessionRecordsHeader td:nth-child(4), #sessionRecords td:nth-child(4) {
     width:82px;
 }
 
@@ -547,7 +565,7 @@ td p {
 #dialogRecord {
     background: #303030;
     border-color:#606060;
-    border-width:1px;
+    border-width:2px;
     border-radius: 0px;
     border-style: solid;
     font-family: workSans;
@@ -660,21 +678,42 @@ td p {
     outline:0;
 }
 
+#recordDate, #recordTime {
+    -webkit-user-select: text;
+    user-select: text;
+    display: block;
+    font-size: 18px;
+    margin: 0px;
+    position: absolute;
+    color:#FFFFFF;
+    width: 193px;
+    height: 30px;
+    top:35px;
+    left:5px;
+    cursor:text;
+}
+
+#recordTime {
+    top:55px;
+}
+
 #recordScramble {
     -webkit-user-select: text;
     user-select: text;
     position: absolute;
     display: block;
     font-size: 18px;
-    top:13px;
-    left:5px;
-    margin-right: 0px;
-    margin-bottom: 0px;
+    border-top: solid 2px #FFFFFF;
+    top:63px;
+    left:0px;
+    padding-left:5px;
+    position: absolute;
     color:#FFFFFF;
     overflow-y: scroll;
     word-wrap:normal;
-    max-width: 193px;
-    max-height: 88px;
+    width: 244px;
+    max-height: 87px;
+    cursor:text;
 }
 
 input[type="checkbox"] {

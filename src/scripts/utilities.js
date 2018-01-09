@@ -83,13 +83,13 @@ function formatTime(time) {
         return "DNF";
     }
     if (preferences.formatTime && time >= 60) {
-        if (time % 60 < 10) {
-            return Math.floor(time / 60) + ":0" + (time % 60).toFixed(preferences.timerDetail); 
+        if (time % 60 <= 10) {
+            return Math.floor(time / 60) + ":0" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
         } else {
-            return Math.floor(time / 60) + ":" + (time % 60).toFixed(preferences.timerDetail);
+            return Math.floor(time / 60) + ":" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
         }
     } else { 
-        return time.toFixed(preferences.timerDetail);
+        return time.toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
     }
 }
 

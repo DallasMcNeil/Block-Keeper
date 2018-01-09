@@ -1,4 +1,4 @@
-# Block Keeper 1.3.0
+# Block Keeper 1.3.1
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 

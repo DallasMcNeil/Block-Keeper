@@ -65,6 +65,7 @@ Created by Dallas McNeil
         </div>
         <div id="sessionButtons">
             <button title="Create a new session" id="newSessionButton" onclick="events.createSessionButton()">New</button>
+            <button title="Remove all records from the session" id="clearSessionButton" onclick="events.clearSessionButton()">Clear</button>
             <button title="Delete this session" id="deleteSessionButton" onclick="events.deleteSessionButton()">Delete</button>
         </div>
         <table id="sessionDetails">
@@ -110,7 +111,8 @@ Created by Dallas McNeil
             </tr>
         </table>
         <div id="sessionRecordsContainer"> 
-        <table id="sessionRecords">
+            
+        <table id="sessionRecordsHeader">
             <thead>
                 <tr>
                     <td>
@@ -126,7 +128,9 @@ Created by Dallas McNeil
                         <p>Ao12</p>
                     </td>
                 </tr>
-            </thead>
+            </thead>    
+        </table>
+        <table id="sessionRecords">
         </table>
         </div>
     </div>
@@ -163,10 +167,12 @@ Created by Dallas McNeil
     </div>
     
     <div id="dialogRecord">
-        <button title="Set result to OK" onclick="events.recordResultOK()">OK</button>
-        <button title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
-        <button title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
-        <button title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
+        <button style="width:50px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
+        <button style="width:45px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
+        <button style="width:62px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
+        <button style="width:90px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
+        <p id="recordDate">4/11/18 12:40 PM</p>
+        <p id="recordTime">10:20.334</p>
         <p id="recordScramble"></p>
     </div>
     
@@ -215,6 +221,7 @@ Created by Dallas McNeil
                     <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
                     <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
+                    <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove All Formatting in Lists</p>
                 </form> 
             </div>
             <div id="tabs-2">
