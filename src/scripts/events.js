@@ -343,17 +343,20 @@ var events = function() {
 
     // Create record from the add time menu
     function addRecord() {
-        var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value).toFixed(3))
-        document.getElementById("addTimeInput").value = ""
-        if (isNaN(t) || t === undefined) {
+        var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value).toFixed(3));
+        if (isNaN(t) || t === undefined || t <= 0) {
+            $("#addTimeMessage")[0].innerHTML = "Invalid time";
             return;
         }
-        if (t <= 0) {
-            return;
-        }
+        $("#addTimeMessage")[0].innerHTML = "";
+        document.getElementById("addTimeInput").value = "";
+    
         createRecord(t, "OK");
-       
-        getLastRecord().scramble = document.getElementById("addScrambleInput").value;
+        if ($("#addTimeScramble")[0].checked) {
+            getLastRecord().scramble = document.getElementById("addScrambleInput").value;
+        } else {
+            getLastRecord().scramble = scramble.currentScramble();
+        }
         $("#timer")[0].innerHTML = formatTime(t);
         scramble.scramble();
         closeTimeDialog();
@@ -424,9 +427,7 @@ var events = function() {
         }
         selectElem.value = sessions.length - 1;
     }
-        
-    // RESUME HERE
-
+    
     // Update all records displayed on screen
     var calculatedTimes = {
         times:[],
@@ -821,14 +822,14 @@ var events = function() {
         autoOpen:false,
         modal:true,
         width:"307",
-        height:"265",
+        height:"311",
         show:"fade",
         hide:"fade"
     }).on('keydown', function(evt) {
         if (evt.keyCode === $.ui.keyCode.ESCAPE) {
             closeTimeDialog();
         } else if (evt.keyCode === 13) {
-            addTime();
+            addRecord();
             evt.preventDefault();
         }
         evt.stopPropagation();

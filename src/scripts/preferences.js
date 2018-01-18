@@ -41,7 +41,8 @@ var preferences = {
     extendedVideos:false,
     scramblesInList:true,
     metronomeBPM:90,
-    onlyList:false
+    onlyList:false,
+    videoResolution:720
 }
 
 // Preference management functions
@@ -99,6 +100,7 @@ var prefs = function() {
         preferencesGeneral.extendedVideos.checked = preferences.extendedVideos;
         preferencesGeneral.scramblesInList.checked = preferences.scramblesInList;
         preferencesGeneral.onlyList.checked = preferences.onlyList;
+        preferencesGeneral.videoResolution.value = preferences.videoResolution;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -214,6 +216,7 @@ var prefs = function() {
         preferences.extendedVideos = preferencesGeneral.extendedVideos.checked;
         preferences.scramblesInList = preferencesGeneral.scramblesInList.checked;
         preferences.onlyList = preferencesGeneral.onlyList.checked;
+        preferences.videoResolution = preferencesGeneral.videoResolution.value;
 
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;

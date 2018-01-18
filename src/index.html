@@ -161,8 +161,10 @@ Created by Dallas McNeil
     </div>
         
     <div id="dialogAddTime">
-        <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
-        <p>Scramble (optional) <textarea rows="3" id="addScrambleInput"></textarea></p>
+        <p>Add Time (in seconds)</p>
+        <p><input type="text" id="addTimeInput">   <span id="addTimeMessage"></span></p>
+        <p><input type="checkbox" id="addTimeScramble" class="checkbox">Use custom scramble</p>
+        <textarea rows="3" id="addScrambleInput"></textarea>
         <p><button onclick="events.addRecord()">Add</button> <button onclick="events.closeTimeDialog()">Cancel</button></p>
     </div>
     
@@ -171,8 +173,8 @@ Created by Dallas McNeil
         <button style="width:45px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
         <button style="width:62px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
         <button style="width:90px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
-        <p id="recordDate">4/11/18 12:40 PM</p>
-        <p id="recordTime">10:20.334</p>
+        <p id="recordDate"></p>
+        <p id="recordTime"></p>
         <p id="recordScramble"></p>
     </div>
     
@@ -218,7 +220,11 @@ Created by Dallas McNeil
                     </select></p>
                     <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
                     <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
-                    <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
+                    <p title="Resolution of recorded videos, quality may depend on camera">Video Resolution:  <select name="videoResolution" style="width:140px">
+                        <option value="480">640x480</option>
+                        <option value="720" selected>960x720</option>
+                        <option value="1080">1440x1080</option>
+                    </select></p><p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
                     <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
                     <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove All Formatting in Lists</p>

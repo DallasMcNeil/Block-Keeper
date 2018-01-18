@@ -55,13 +55,19 @@ const record = function() {
     function setupRecorder() {
         if (preferences.recordSolve) {
             if (mediaStream == null && recorder == null) {
+                var height = preferences.videoResolution;
+                if (height < 480) {
+                    height = 480;
+                }
+                var width = Math.ceil((height * 4) / 3);
+                
                 navigator.getUserMedia({video:true, audio:false}, function(stream) {
                     mediaStream = stream;
                     recorder = RecordRTC(mediaStream,{
-                        type: 'video',
-                        frameInterval: 25,
-                        width: 640,
-                        height: 480,
+                        type:'video',
+                        frameInterval:25,
+                        width:width,
+                        height:height,
                         recorderType: RecordRTC.WhammyRecorder
                     });
                     hasCamera = true;

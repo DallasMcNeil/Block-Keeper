@@ -367,6 +367,7 @@ input[type="text"],textarea {
     font-size: 18px;
     color:#F0F0F0;
     background-color: #303030;
+    resize: none;
 }
 
 #sessionSelectText {
@@ -377,7 +378,7 @@ input[type="text"],textarea {
 }
 
 #addTimeInput {
-    width:70px;
+    width:100px;
     margin-bottom:0px;
     margin-top:0px;
     margin-left: 0px;
@@ -387,7 +388,7 @@ input[type="text"],textarea {
     width:273px;
     height:90px;
     margin-bottom:0px;
-    margin-top:12px;
+    margin-top:0px;
     margin-left: 0px;
 }
 
