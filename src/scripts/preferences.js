@@ -426,7 +426,7 @@ var prefs = function() {
             if (fileName === undefined){
                 return;
             }  
-            var str = "Event, Session, SessionOrder, Order, Time, Result, Scramble, Date"
+            var str = "Event,Session,SessionOrder,Order,Time,Result,Scramble,Date,FormattedDate"
             var e = events.getAllEvents();
             for (var p = 0; p < e.length; p++) {
                 if (!e[p].sessions) {
@@ -442,7 +442,7 @@ var prefs = function() {
                         if (e[p].sessions[s].records[r].date != undefined) {
                             d = e[p].sessions[s].records[r].date;
                         }
-                        str += "\n\"" + e[p].name + "\", \"" + e[p].sessions[s].name + "\", " + (s + 1) + ", " + (r + 1) + ", " + e[p].sessions[s].records[r].time + ", " + e[p].sessions[s].records[r].result + ", \"" + e[p].sessions[s].records[r].scramble + "\", " + d;
+                        str += "\n\"" + e[p].name.replaceAll('"','""') + "\",\"" + e[p].sessions[s].name.replaceAll('"','""') + "\"," + (s + 1) + "," + (r + 1) + "," + e[p].sessions[s].records[r].time + "," + e[p].sessions[s].records[r].result + ",\"" + e[p].sessions[s].records[r].scramble.replaceAll('"','""') + "\"," + d + ",\"" + new Date(d).toUTCString() + "\"";
                     }
                 }   
             }     
