@@ -578,7 +578,7 @@ td p {
     cursor:default;
 }
 
-#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime {
+#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -966,6 +966,10 @@ ul {
 
 #dialogManageEvents {
     padding-top: 10px;
+}
+
+#dialogBlindResult {
+    padding-left:10px;
 }
 
 #eventsList {

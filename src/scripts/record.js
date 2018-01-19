@@ -163,7 +163,6 @@ const record = function() {
         globals.menuOpen = false;
     }
 
-    // TODO
     // Save the previewed video to a .webm file
     function saveVideo() {
         finishedRecorder.save(events.getCurrentEvent().name + " " + events.getCurrentSession().name);

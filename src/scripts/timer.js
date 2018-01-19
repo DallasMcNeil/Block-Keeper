@@ -397,21 +397,26 @@ var timer = function() {
         console.log("Timer start: "+startTime);
     }
 
+    $("#dialogBlindResult").dialog({
+        autoOpen:false,
+        modal:true,
+        hide:"fade",
+        show:"fade",
+        position: {
+            my:"center",
+            at:"center",
+            of:"#background"
+        },
+        width:"220",
+        height:"102" 
+    })
+    
     // Stop the timer
     function stopTimer() {
         currentTime = Date.now();
-        timerState = "normal";
         timerText.style.color = normalColor;
-        console.log("Timer Stop: "+currentTime);
         timerTime = ((currentTime - startTime) / 1000);
-        console.log("Time: "+timerTime);
         timerText.innerHTML = formatTime(timerTime);
-        submitTime();
-        fadeInUI();
-        inspectionTime = currentTime;
-        scramble.scramble();
-        cooldown = true;
-        timerResult = "OK";
         if (!preferences.extendedVideos) {
             record.stopRecorder();
         } else {
@@ -419,8 +424,29 @@ var timer = function() {
                 record.stopRecorder();
             }, 3000)
         }
+        inspectionTime = currentTime;
+        scramble.scramble();
+        cooldown = true;
+        timerState = "normal";
+        if (events.getCurrentEvent().blind) {
+            $("#dialogBlindResult").dialog("open")
+            timerText.innerHTML = "";
+            return;
+        } 
+        timerResult = "OK";
+        submitTime();
+        fadeInUI();
     }
-
+    
+    // Set result at the end of a blind solve
+    function blindResult(res) {
+        $("#dialogBlindResult").dialog("close")
+        timerResult = res;
+        timerText.innerHTML = formatTime(timerTime);
+        submitTime();
+        fadeInUI();
+    }
+    
     // Cancel the timer at anytime
     function cancelTimer() {
         timerState = "normal";
@@ -667,6 +693,7 @@ var timer = function() {
         cancelTimer:cancelTimer,
         SMCallback:SMCallback,
         s3voice:setS3Voice,
-        s7voice:setS7Voice
+        s7voice:setS7Voice,
+        blindResult:blindResult
     }
 }()
