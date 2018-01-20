@@ -125,7 +125,17 @@ body {
     font-family: digital;
     color:#E0E0E0;
     margin:0px;
-    margin-top:35vmin;
+}
+
+#timerSplit {
+    vertical-align: bottom;
+    text-align: center;
+    font-size: 10vmin;
+    font-family: digital;
+    color:#E0E0E0;
+    margin:0px;
+    margin-top:0vmin;
+    
 }
 
 #announcement {
@@ -135,6 +145,7 @@ body {
     font-family: workSansLight;
     color:#E0E0E0;
     margin:0px;
+    margin-top:27vmin;
     z-index: 0;
     opacity: 0;
 }
@@ -688,7 +699,7 @@ td p {
     margin: 0px;
     position: absolute;
     color:#FFFFFF;
-    width: 193px;
+    width: 213px;
     height: 30px;
     top:35px;
     left:5px;
@@ -713,7 +724,7 @@ td p {
     color:#FFFFFF;
     overflow-y: scroll;
     word-wrap:normal;
-    width: 244px;
+    width: 264px;
     max-height: 87px;
     cursor:text;
 }

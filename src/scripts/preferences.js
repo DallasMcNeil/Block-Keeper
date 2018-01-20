@@ -42,7 +42,8 @@ var preferences = {
     scramblesInList:true,
     metronomeBPM:90,
     onlyList:false,
-    videoResolution:720
+    videoResolution:720,
+    blindSplit:false
 }
 
 // Preference management functions
@@ -101,6 +102,7 @@ var prefs = function() {
         preferencesGeneral.scramblesInList.checked = preferences.scramblesInList;
         preferencesGeneral.onlyList.checked = preferences.onlyList;
         preferencesGeneral.videoResolution.value = preferences.videoResolution;
+        preferencesTimer.blindSplit.checked = preferences.blindSplit;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -182,8 +184,8 @@ var prefs = function() {
             stackmat.stop();
         }
 
-        $("#timer").innerHTML = (0).toFixed(preferences.timerDetail);
-
+        timer.clearTimer();
+        
         $("#dialogPreferences").dialog("close");
         
         record.setupRecorder();
@@ -217,7 +219,8 @@ var prefs = function() {
         preferences.scramblesInList = preferencesGeneral.scramblesInList.checked;
         preferences.onlyList = preferencesGeneral.onlyList.checked;
         preferences.videoResolution = preferencesGeneral.videoResolution.value;
-
+        preferences.blindSplit = preferencesTimer.blindSplit.checked;
+    
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
         }

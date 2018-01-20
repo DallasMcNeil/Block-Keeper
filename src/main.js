@@ -47,6 +47,9 @@ const template = [{
         {role:'minimize'},
         {role:'togglefullscreen'},
         {type:'separator'},
+        {label:"Zoom In", accelerator: "CmdOrCtrl+Plus", click() {win.webContents.send('shortcut', 'CommandOrControl+Plus')}},
+        {label:"Zoom Out", accelerator: "CmdOrCtrl+-", click() {win.webContents.send('shortcut', 'CommandOrControl+-')}},
+        {type:'separator'},
         {label:"Toggle Dev Tools", accelerator:"Shirt+CmdOrCtrl+I", click() {win.toggleDevTools()}},
         {label:"Reload", accelerator:"CmdOrCtrl+R", click() {win.webContents.send('shortcut', 'CommandOrControl+R')}}
     ]}, {
@@ -78,6 +81,9 @@ if (process.platform === 'darwin') {
         {role:'togglefullscreen'},
         {type:'separator'},
         {label:'Bring All to Front', role:'front'},
+        {type:'separator'},
+        {label:"Zoom In", accelerator: "CmdOrCtrl+Plus", click() {win.webContents.send('shortcut', 'CommandOrControl+Plus')}},
+        {label:"Zoom Out", accelerator: "CmdOrCtrl+-", click() {win.webContents.send('shortcut', 'CommandOrControl+-')}},
         {type:'separator'},
         {label:"Toggle Dev Tools", accelerator:"Shift+CmdOrCtrl+I", click() {win.toggleDevTools()}},
         {label:"Reload", accelerator:"CmdOrCtrl+R", click() {win.webContents.send('shortcut', 'CommandOrControl+R')}}

@@ -302,7 +302,7 @@ var events = function() {
     }
     
     // Create a record in the current session
-    function createRecord(time, result) {
+    function createRecord(time, result, split=[]) {
         // Find best time
         if (updateStats && preferences.showBestTime) {
             var btime = Number.MAX_SAFE_INTEGER;
@@ -316,7 +316,7 @@ var events = function() {
             }
         }
         
-        var record = {time:time, scramble:scramble.currentScramble(), result:result, date: new Date().getTime()};
+        var record = {time:time, scramble:scramble.currentScramble(), result:result, date: new Date().getTime(), split:split};
         getCurrentSession().records.push(record);
         if (updateStats) {
             updateRecords(true, getCurrentSession().records.length-1);
@@ -620,7 +620,7 @@ var events = function() {
                             autoOpen:false,
                             modal:true,
                             hide:"fade",
-                            width:"251",
+                            width:"271",
                             height:"172",
                             position: {
                                 my:"left top",
@@ -632,7 +632,11 @@ var events = function() {
                         $("#recordScramble").html(getCurrentRecord().scramble);
                         var detail = preferences.timerDetail;
                         preferences.timerDetail = 3;
-                        $("#recordTime").html(formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result);
+                        if (getCurrentRecord().split && getCurrentRecord().split.length > 0) {
+                            $("#recordTime").html("(" + formatTime(getCurrentRecord().split[0]) + " / " + formatTime(getCurrentRecord().time - formatTime(getCurrentRecord().split[0])) + ") " + getCurrentRecord().time + " " + getCurrentRecord().result);
+                        } else {
+                            $("#recordTime").html(formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result);
+                        }
                         preferences.timerDetail = detail;
                         if (getCurrentRecord().date !== undefined) {
                             // Doesn't include Daylight savings

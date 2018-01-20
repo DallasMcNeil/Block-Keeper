@@ -47,8 +47,9 @@ Created by Dallas McNeil
     <div id="background" onclick="events.resetUI()">
         <canvas id="confetti"></canvas>
         <div id="centreBackground">
-            <p id="timer">0.000</p>
             <p id="announcement">New Best Time!</p>
+            <p id="timer">0.000</p>
+            <p id="timerSplit"></p>
         </div>
         <div class="indicator" id="leftIndicator"></div>
         <div class="indicator" id="rightIndicator"></div>
@@ -169,10 +170,10 @@ Created by Dallas McNeil
     </div>
     
     <div id="dialogRecord">
-        <button style="width:50px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
-        <button style="width:45px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
-        <button style="width:62px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
-        <button style="width:90px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
+        <button style="width:55px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
+        <button style="width:50px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
+        <button style="width:67px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
+        <button style="width:95px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
         <p id="recordDate"></p>
         <p id="recordTime"></p>
         <p id="recordScramble"></p>
@@ -254,6 +255,7 @@ Created by Dallas McNeil
                     <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
                     <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
                     <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH Split Keys</p>
+                    <p title="For time split between memorisation and execution, initially stopping the timer will record the time split and the second will stop the timer"><input type="checkbox" name="blindSplit" class="checkbox">Blind Time Split</p>
                     <p title="Use external Stackmat timer to control timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
                 </form>
             </div>
