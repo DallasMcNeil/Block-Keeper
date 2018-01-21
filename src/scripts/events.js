@@ -615,13 +615,33 @@ var events = function() {
                     var column = parseInt($(this).index());
                     var row = parseInt($(this).parent().index());  
                     if (column == 1 && row > 0) {
+                        var detail = preferences.timerDetail;
+                        var str = "";
+                        var height = 172;
+                        preferences.timerDetail = 3;
+                        if (getCurrentRecord().split) {
+                            if (getCurrentRecord().split.length > 0) {
+                                height += 20;
+                                str += "(" + formatTime(getCurrentRecord().split[0]) + " / " + formatTime(getCurrentRecord().time - getCurrentRecord().split[0]) + ")<br>";
+                                $("#recordScramble").css("top", "83px");
+                            } else {
+                                $("#recordScramble").css("top", "63px");
+                            }
+                        } else {
+                            $("#recordScramble").css("top", "63px");
+                        }
+                        str += formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result;
+                        $("#recordTime").html(str);
+                        preferences.timerDetail = detail;
+                        
+                        
                         $("#dialogRecord").dialog("open");
                         $("#dialogRecord").dialog({
                             autoOpen:false,
                             modal:true,
                             hide:"fade",
                             width:"271",
-                            height:"172",
+                            height:height + "",
                             position: {
                                 my:"left top",
                                 at:"right top",
@@ -630,14 +650,6 @@ var events = function() {
                         });
                         currentRecord = row - 1;
                         $("#recordScramble").html(getCurrentRecord().scramble);
-                        var detail = preferences.timerDetail;
-                        preferences.timerDetail = 3;
-                        if (getCurrentRecord().split && getCurrentRecord().split.length > 0) {
-                            $("#recordTime").html("(" + formatTime(getCurrentRecord().split[0]) + " / " + formatTime(getCurrentRecord().time - formatTime(getCurrentRecord().split[0])) + ") " + getCurrentRecord().time + " " + getCurrentRecord().result);
-                        } else {
-                            $("#recordTime").html(formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result);
-                        }
-                        preferences.timerDetail = detail;
                         if (getCurrentRecord().date !== undefined) {
                             // Doesn't include Daylight savings
                             // Consider replacing with a library
