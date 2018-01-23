@@ -54,6 +54,9 @@ var events = function() {
     }
     
     function getCurrentRecord() {
+        if (currentRecord > internalEvents[currentEvent].sessions[currentSession].records .length) {
+            currentRecord = internalEvents[currentEvent].sessions[currentSession].records.length - 1;
+        }
         return internalEvents[currentEvent].sessions[currentSession].records[currentRecord];
     }
     
