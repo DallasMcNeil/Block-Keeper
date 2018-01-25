@@ -409,7 +409,7 @@ var timer = function() {
 
     // Start timer recording
     function startTimer() {
-        if (!preferences.extendedVideos || (!preferences.inspection && preferences.extendedVideos)) {
+        if (!preferences.extendedVideos || events.getCurrentEvent().blind || (!preferences.inspection && preferences.extendedVideos)) {
             record.startRecorder();
         }
         timerState = "timing";
