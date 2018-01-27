@@ -279,19 +279,24 @@ button:active {
 }
 
 #newSessionButton {
-    width:84px;
+    width:133px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
+#transferSessionButton {
+    width:133px;
+    margin-bottom: 10px;
+}
+
 #clearSessionButton {
-    width:84px;
+    width:133px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
 #deleteSessionButton {
-    width:84px;
+    width:133px;
     margin-bottom: 10px;
 }
 
@@ -589,7 +594,7 @@ td p {
     cursor:default;
 }
 
-#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult {
+#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult, #dialogTransferSession {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -608,7 +613,7 @@ td p {
     padding-top:0px;  
 }
 
-#dialogCSTimer,#dialogAddTime {
+#dialogCSTimer,#dialogAddTime, #dialogTransferSession {
     padding-left: 10px;
     padding-right: 10px;
 }

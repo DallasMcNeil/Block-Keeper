@@ -66,6 +66,7 @@ Created by Dallas McNeil
         </div>
         <div id="sessionButtons">
             <button title="Create a new session" id="newSessionButton" onclick="events.createSessionButton()">New</button>
+            <button title="Move a session to a different event" id="transferSessionButton" onclick="events.transferSessionButton()">Transfer</button>
             <button title="Remove all records from the session" id="clearSessionButton" onclick="events.clearSessionButton()">Clear</button>
             <button title="Delete this session" id="deleteSessionButton" onclick="events.deleteSessionButton()">Delete</button>
         </div>
@@ -204,8 +205,15 @@ Created by Dallas McNeil
         
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
+        <select id="eventSelectCSTimer" style="margin-bottom:10px;"></select>
         <button title="Import into selected session" id="importCSTimer" onclick="prefs.importCSTime(true)">Import</button>
         <button title="Stop importing sessions" id="cancelCSTimer" onclick="prefs.cancelCSTime()">Cancel</button>
+    </div>
+    
+    <div id="dialogTransferSession">
+        <p>Select the event to move the session to.</p><br>
+        <select id="eventSelectTransfer" style="margin-bottom:10px;"></select>
+        <button title="Move session to selected event" onclick="events.transferSession()">Transfer</button>
     </div>
         
     <div id="dialogPreferences">

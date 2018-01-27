@@ -333,6 +333,8 @@ var prefs = function() {
             if (fileNames === undefined) {
                 return;
             } else {
+                CSData = [];
+                currentCS = 0;
                 fs.readFile(fileNames[0], 'utf-8', function (err, data) {
                 if (err) {
                     alert("An error ocurred reading the file:" + err.message);
@@ -340,16 +342,18 @@ var prefs = function() {
                 }
                     
                 var first = JSON.parse(data);
-
                 for (var property in first) {
                     if (first.hasOwnProperty(property) && property != "properties") {
                         var session = JSON.parse(first[property]);
-                        CSData.push(session);
+                        if (session.length > 0) {
+                            CSData.push(session);
+                        }
                     }
                 }
 
                 globals.menuOpen = true;
-                disableAllElements("eventSelect");
+                disableAllElements();
+                events.setEventOptions($("#eventSelectCSTimer")[0]);
                 $("#dialogCSTimer").dialog("open");
                 importCSTime(false);
             });
@@ -368,7 +372,7 @@ var prefs = function() {
             of:"#background"
         },
         width:"380",
-        height:"300" 
+        height:"353" 
     })
 
     var currentCS = 0;
@@ -377,6 +381,7 @@ var prefs = function() {
     function importCSTime(doImport) {
         if (currentCS < CSData.length) {
             if (doImport) {
+                events.setCurrentEvent($("#eventSelectCSTimer")[0].value);
                 events.createSession();
                 events.getCurrentSession().name = "csTimer Import " + (currentCS + 1);
                 events.shouldUpdateStats(false);
@@ -402,7 +407,7 @@ var prefs = function() {
                 } else if ((CSData[currentCS][0][0][0] === -1)) {
                     str = "DNF (" + (CSData[currentCS][0][0][1] / 1000)+ ")";
                 }
-                $("#messageCSTimer").prop("innerHTML","Session " + (currentCS + 1) + " of " + CSData.length + "<br>Session begins with following record<br><br>" + str + "<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.");
+                $("#messageCSTimer").prop("innerHTML","Session " + (currentCS + 1) + " of " + CSData.length + "<br>Session begins with the following record.<br><br>" + str + "<br><br>Please select the event you would like this session to be placed into. Press 'Import' once you have made your choice.");
             } else {
                 currentCS++;
                 importCSTime(false);

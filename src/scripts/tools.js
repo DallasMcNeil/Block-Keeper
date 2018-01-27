@@ -541,9 +541,6 @@ var tools = function() {
                 split2.push(-1);
             }
         }
-        console.log(times)
-        console.log(split1)
-        console.log(split2)
         
         if (removeDNFs(split1).length < 2) {
             ctx.font = "20px workSans";

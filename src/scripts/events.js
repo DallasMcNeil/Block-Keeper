@@ -722,7 +722,7 @@ var events = function() {
             newElement.value = getCurrentSession().name;
             document.getElementById("sessionContainer").replaceChild(newElement, sessionSelect);
             sessionSelect = document.getElementById("sessionSelectText");
-            $("#sessionButtons").animate({height:'40px'}, 200);
+            $("#sessionButtons").animate({height:'80px'}, 200);
             sessionButtonsShowing = true;
             disableStats();
             globals.menuOpen = true;
@@ -763,6 +763,40 @@ var events = function() {
             getCurrentSession().records = [];
             updateRecords(true);
         }
+    }
+    
+    $("#dialogTransferSession").dialog({
+        autoOpen:false,
+        modal:true,
+        width:"306",
+        height:"185",
+        show:"fade",
+        hide:"fade"
+    }).on('keydown', function(evt) {
+        if (evt.keyCode === 13) {
+            transferSession();
+            evt.preventDefault();
+        }
+        evt.stopPropagation();
+    });
+    
+    // Open transfer session dialog
+    function transferSessionButton() {
+        $("#dialogTransferSession").dialog("open");
+        toggleSessionButtons();
+        setEventOptions($("#eventSelectTransfer")[0]);
+        disableAllElements();
+    }
+    
+    // Move a session to an event
+    function transferSession() {
+        $("#dialogTransferSession").dialog("close");
+        var sess = getCurrentEvent().sessions.splice(currentSession, 1);
+        currentEvent = $("#eventSelectTransfer")[0].value;
+        getCurrentEvent().sessions.push(sess[0]);
+        enableAllElements();
+        eventSelect.value = currentEvent;
+        setEvent();
     }
 
     // Hide the session stats
@@ -1387,6 +1421,10 @@ var events = function() {
         currentRecord = i;
     }
     
+    function setCurrentEvent(i) {
+        currentEvent = i;
+    }
+    
     function returnEvents() {
         return internalEvents;
     }
@@ -1425,6 +1463,7 @@ var events = function() {
         recordResult2:recordResult2,
         recordResultDNF:recordResultDNF,
         setSession:setSession,
+        setCurrentEvent:setCurrentEvent,
         resetUI:resetUI,
         setSessionOptions:setSessionOptions,
         currentSession:returnCurrentSession,
@@ -1434,6 +1473,8 @@ var events = function() {
         openEvents:openEvents,
         closeEvents:closeEvents,
         sessionButtonsShowing:returnSessionButtonsShowing,
-        createNewEvent:createNewEvent
+        createNewEvent:createNewEvent,
+        transferSessionButton:transferSessionButton,
+        transferSession:transferSession
     }
 }()
