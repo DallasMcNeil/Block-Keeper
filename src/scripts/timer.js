@@ -23,12 +23,12 @@ var timer = function() {
     var rightKey = preferences.rightKey;
 
     // If the keys are down
-    var mainDown = false
-    var leftDown = false
-    var rightDown = false
+    var mainDown = false;
+    var leftDown = false;
+    var rightDown = false;
 
     // Timer state information
-    var timerState = "normal"
+    var timerState = "normal";
     var timerRunning = false;
     
     // Time information
@@ -55,14 +55,24 @@ var timer = function() {
     var splitEnabled = false;
     var OHSplitEnabled = false;
     
+    // Prevent key repeats
+    var keysDown = {}
+    
     // Get keyboard down events
     window.onkeydown = function(e) {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
 
+        // Register key down
+        if (keysDown[e.key] === undefined || !keysDown[e.key]) {
+            keysDown[e.key] = true;
+        } else {
+            return;
+        }
+    
         if (!preferences.stackmat) {
             if (splitEnabled) {
-                console.log(cooldown);
+                
                 if (e.key === leftKey) {
                     leftDown = true;
                 } else if (e.key === rightKey) {
@@ -113,6 +123,8 @@ var timer = function() {
 
     // Get keyboard up events
     window.onkeyup = function(e) { 
+        keysDown[e.key] = false;
+    
         if (!preferences.stackmat) {
             if (splitEnabled) {
                 if (e.key === leftKey) {
@@ -329,6 +341,7 @@ var timer = function() {
                             timerText.style.color = prepareColor;
                         }
                     }
+                    currentTime = Date.now();
                     timerTime = ((currentTime - startTime) / 1000)
                     if (preferences.hideTiming) {
                         timerText.innerHTML = "Solve";
@@ -409,14 +422,14 @@ var timer = function() {
 
     // Start timer recording
     function startTimer() {
+        currentTime = Date.now();
+        startTime = currentTime;
         if (!preferences.extendedVideos || events.getCurrentEvent().blind || (!preferences.inspection && preferences.extendedVideos)) {
             record.startRecorder();
         }
         timerState = "timing";
         timerText.style.color = normalColor;
 
-        currentTime = Date.now();
-        startTime = currentTime;
         timerSplit.innerHTML = "";
     }
 
@@ -432,7 +445,17 @@ var timer = function() {
         },
         width:"220",
         height:"102" 
-    })
+    }).on('keydown',function(evt) {
+        if (evt.keyCode === 13) {
+            blindResult("OK");
+            evt.preventDefault();
+        } else if (evt.keyCode === $.ui.keyCode.ESCAPE) {
+            blindResult("DNF");
+            evt.preventDefault();
+        }     
+        evt.stopPropagation();
+        
+    });
     
     // Stop the timer
     function stopTimer(forced = false, SM = false) {
@@ -452,26 +475,29 @@ var timer = function() {
             timerTime = ((currentTime - startTime) / 1000);
             timerText.innerHTML = formatTime(timerTime);
         }
-        if (!preferences.extendedVideos) {
-            record.stopRecorder();
-        } else {
-            setTimeout(function() {
-                record.stopRecorder();
-            }, 3000)
-        }
-        inspectionTime = currentTime;
-        scramble.scramble();
-        cooldown = true;
         timerState = "normal";
-        if (events.getCurrentEvent().blind) {
-            $("#dialogBlindResult").dialog("open")
-            timerText.innerHTML = "";
-            timerSplit.innerHTML = "";
-            return;
-        } 
-        submitTime();
-        timerResult = "OK";
-        fadeInUI();
+        setTimeout(function () {
+            if (!preferences.extendedVideos) {
+                record.stopRecorder();
+            } else {
+                setTimeout(function() {
+                    record.stopRecorder();
+                }, 3000)
+            }
+            inspectionTime = currentTime;
+            scramble.scramble();
+            cooldown = true;
+            if (events.getCurrentEvent().blind) {
+                $("#dialogBlindResult").dialog("open")
+                globals.menuOpen = true;
+                timerText.innerHTML = "";
+                timerSplit.innerHTML = "";
+                return;
+            } 
+            submitTime();
+            timerResult = "OK";
+            fadeInUI();
+        },0);
     }
     
     // Set result at the end of a blind solve
@@ -486,6 +512,7 @@ var timer = function() {
         }
         submitTime();
         timerResult = "OK";
+        globals.menuOpen = false;
         fadeInUI();
     }
     

@@ -618,6 +618,7 @@ var events = function() {
                     var column = parseInt($(this).index());
                     var row = parseInt($(this).parent().index());  
                     if (column == 1 && row > 0) {
+                        currentRecord = row - 1;
                         var detail = preferences.timerDetail;
                         var str = "";
                         var height = 172;
@@ -651,7 +652,6 @@ var events = function() {
                                 of:sessionRecordsTable.rows[row].cells[column]
                             }
                         });
-                        currentRecord = row - 1;
                         $("#recordScramble").html(getCurrentRecord().scramble);
                         if (getCurrentRecord().date !== undefined) {
                             // Doesn't include Daylight savings
