@@ -72,7 +72,6 @@ var timer = function() {
     
         if (!preferences.stackmat) {
             if (splitEnabled) {
-                
                 if (e.key === leftKey) {
                     leftDown = true;
                 } else if (e.key === rightKey) {
@@ -93,6 +92,7 @@ var timer = function() {
                     timerResult = "DNF";
                     stopTimer(true);
                 } else if (!(preferences.endSplit || OHSplitEnabled)) {
+                    cooldown = true;
                     stopTimer();
                 }
             } else {
@@ -486,7 +486,6 @@ var timer = function() {
             }
             inspectionTime = currentTime;
             scramble.scramble();
-            cooldown = true;
             if (events.getCurrentEvent().blind) {
                 $("#dialogBlindResult").dialog("open")
                 globals.menuOpen = true;

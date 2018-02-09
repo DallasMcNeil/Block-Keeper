@@ -65,7 +65,6 @@ const record = function() {
                     mediaStream = stream;
                     recorder = RecordRTC(mediaStream,{
                         type:'video',
-                        frameInterval:25,
                         width:width,
                         height:height,
                         recorderType: RecordRTC.WhammyRecorder
