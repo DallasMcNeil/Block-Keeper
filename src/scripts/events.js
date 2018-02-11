@@ -290,7 +290,7 @@ var events = function() {
 
     // Deletes current session
     function deleteSession() {
-        if (confirm("Delete Session?")) {
+        if (confirm("Delete session?")) {
             var oldLength = getCurrentEvent().sessions.length;
             if (oldLength > 1) {
                 getCurrentEvent().sessions.splice(currentSession, 1);
@@ -703,7 +703,7 @@ var events = function() {
         if (sessionButtonsShowing) {
             var newElement = document.createElement("select");
             newElement.id = "sessionSelect";
-            newElement.title = "Session Select";
+            newElement.title = "Session select";
             newElement.onchange = setSession;
             getCurrentSession().name = sessionSelect.value;
             document.getElementById("sessionContainer").replaceChild(newElement, sessionSelect);
@@ -717,7 +717,7 @@ var events = function() {
         } else {
             var newElement = document.createElement("input");
             newElement.type = "text";
-            newElement.title = "Session Name";
+            newElement.title = "Session name";
             newElement.id = "sessionSelectText";
             newElement.value = getCurrentSession().name;
             document.getElementById("sessionContainer").replaceChild(newElement, sessionSelect);

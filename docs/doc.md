@@ -61,7 +61,7 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 1. Event Select: Used to select the current event
 2. Event Manager: Open event manager. See Sessions section
 3. Session Select: Used to select the current session
-4. Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session, delete the current session or remove all records from the session.
+4. Edit Session: Toggles session options, allowing you to change the name of the current session, create a new session, delete the current session, transfer the current session to a different event or remove all records from the session.
 5. Session Statistics
     * Solves: Number of valid solves (not including DNF solves) over number of solves.
     * Mean: Total time of all valid solves over the number of valid solves, a mean of all valid solves.
@@ -99,6 +99,8 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
 | `CTRL + M`         | Minimise/hide window   |
 | `CTRL + R`         | Refresh                |
 | `SHIFT + CTRL + I` | Toggle Developer Tools |
+| `CTRL + +`         | Zoom in                |
+| `CTRL + -`         | Zoom out               |
 
 ### MacOS Specific
 
@@ -130,6 +132,10 @@ If 15 seconds pass before the timer is started, a `+2` time penalty will be indi
 Upon completing your solve, pressing any key (excluding the Escape key) will stop the timer. Your time will be presented and be added to the records table. 
 
 Pressing Escape before the timer begins will cancel the timer. Pressing Escape while the timer is timing will stop the timer but set the result of the time to `DNF`.
+
+### Blind events
+ 
+If the current event is blindfolded, the timer will have a few notable differences. Inspection will be disabled and at the end of the solve, you will be prompted to input the result before seeing the time. If enabled, a memorisation and execution split can be recorded. Pressing the timer key(s) during the solve will not stop the timer but will store the time as a split. Pressing it again will stop the timer and display the overall time along with the memorisation and execution time.
 
 ## Sessions
 
@@ -164,6 +170,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * First Block Solver: Shows all left first block solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.
 * Metronome: Presents a metronome which can be started, stopped and adjusted to a set tempo. This can be used while timing or not.
 * Session Trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.
+* Split Trend: Shows a trend-line of the time and time splits within the currently selected session, if it a blind event.
 
 ## Preferences
 
@@ -172,6 +179,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * Time Detail: Number of decimal points to show for times throughout the application
 * Format Time: Times shown throughout the application will have a format of `mm:ss` rather than just seconds (e.g `1:34.23` instead of `94.23`)
 * Video Record Solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
+* Video Resolution: Sets the resolution of the recorded video. Final quality will depend on the camera
 * Record Inspection: Include inspections and just after a solve while video recording.
 * Video Autosave Location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.
 * Display Scrambles in Lists: Include the scramble for a solve in any exported times.
@@ -202,7 +210,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * Block Keeper Export: Exports all session data to a JSON file.
 * Block Keeper Import: Imports all session data from a compatible JSON file. This merges the data with pre-existing data.
 * csTimer Import: Imports session times, results and scrambles from a csTimer JSON file. After selecting the file, you will need to specify the event you would like to place each session under. The first time and result for each session will be shown to identify the session. Use the event select dropdown to choose the event to import the session into. Repeat this for all sessions.
-* CSV Export: Exports all session times into a flat CSV file, specifying the event, session, order, time, result and scramble for every record stored.
+* CSV Export: Exports all session times into a flat CSV file
 
 
 **Thanks for using Block Keeper!**

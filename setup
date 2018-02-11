@@ -1,7 +1,7 @@
 #!/bin/bash
 cd src
 echo "Downloading and installing packages..."
-npm install electron@1.7.4
+npm install electron@1.7.11
 npm install electron-json-storage
 npm install electron-shortcut
 npm install electron-window-state
