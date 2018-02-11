@@ -207,9 +207,28 @@ var scramble = function() {
     }
 
     function scrambleClock() {
-        scrambleStr = "clock";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        // Legacy scramble
+        //scrambleStr = "clock";
+        //scrambleState = scramblers[scrambleStr].getRandomScramble();
+        //currentScramble = scrambleState.scramble_string;
+        
+        scrambleStr = "other";
+        var str = "";
+        for (var i = 0; i < 14; i++) {
+            str += "(";
+            for (var j = 0; j < 4; j++) {
+                if (Math.random() < 0.5) {
+                    str += "d";
+                } else {
+                    str += "U";
+                }
+            }
+            var moves = [6,5,4,3,2,1,-1,-2,-3,-4,-5];
+            str += ", " + moves[Math.floor(Math.random() * 11)];
+            str += ", " + moves[Math.floor(Math.random() * 12)] + ") ";
+        }
+        scrambleState = {scramble_string:str};
+        currentScramble = str;
     }
 
     // Add roation to 3x3x3 scramble
