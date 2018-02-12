@@ -27,7 +27,6 @@ var windowBar = function() {
     
     function resizeWindowBar(factor) {
         if (hiddenWindowBar) {
-            console.log("Change");
             $("#windowBar").css("height", (22 / factor) + "px");
             $("#content").css("top", (22 / factor) + "px");
             $("#scramble").css("height", (5 + (22 / factor)) + "px");

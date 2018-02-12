@@ -63,10 +63,8 @@ var timer = function() {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
 
-        // Register key down
-        if (keysDown[e.key] === undefined || !keysDown[e.key]) {
-            keysDown[e.key] = true;
-        } else {
+        if ((leftDown && e.key === leftKey) || (rightDown && e.key === rightKey) || (mainDown && e.key === mainKey)){
+            e.preventDefault();
             return;
         }
     
@@ -123,8 +121,6 @@ var timer = function() {
 
     // Get keyboard up events
     window.onkeyup = function(e) { 
-        keysDown[e.key] = false;
-    
         if (!preferences.stackmat) {
             if (splitEnabled) {
                 if (e.key === leftKey) {
