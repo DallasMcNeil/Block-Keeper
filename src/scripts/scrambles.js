@@ -214,18 +214,24 @@ var scramble = function() {
         
         scrambleStr = "other";
         var str = "";
-        for (var i = 0; i < 14; i++) {
-            str += "(";
-            for (var j = 0; j < 4; j++) {
-                if (Math.random() < 0.5) {
-                    str += "d";
-                } else {
-                    str += "U";
-                }
+        var moves = ["UR", "DR", "DL", "UL", "U", "R", "D", "L", "ALL", "y2", "U", "R", "D", "L", "ALL"];
+        var pins = ["UR", "DR", "DL", "UL"];
+        for (var i = 0; i < 15; i++) {
+            if (i === 9) {
+                str += moves[i] + " ";
+                continue;
             }
-            var moves = [6,5,4,3,2,1,-1,-2,-3,-4,-5];
-            str += ", " + moves[Math.floor(Math.random() * 11)];
-            str += ", " + moves[Math.floor(Math.random() * 12)] + ") ";
+            var hour = Math.floor(Math.random() * 12) - 5;
+            if (hour < 0) {
+                str += moves[i] + Math.abs(hour) + "- ";
+            } else {
+                str += moves[i] + hour + "+ ";
+            }
+        }
+        for (var i = 0; i < 4; i++) {
+            if (Math.random() < 0.5) {
+                str += pins[i] + " ";
+            }
         }
         scrambleState = {scramble_string:str};
         currentScramble = str;
