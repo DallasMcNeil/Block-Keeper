@@ -4,11 +4,22 @@
 // Created by Dallas McNeil
 
 (function() {
+    const {webFrame} = require('electron');
 
     // Recieve shortcuts and perform the acording actions
     require('electron').ipcRenderer.on('shortcut', function(event, message) { 
         if (message === "CommandOrControl+R") {
             events.reloadApp();
+        } else if (message === "CommandOrControl+Plus") {
+            if (webFrame.getZoomFactor() < 2) {
+                webFrame.setZoomFactor(webFrame.getZoomFactor() * 1.2);
+                windowBar.resizeWindowBar(webFrame.getZoomFactor());
+            }
+        } else if (message === "CommandOrControl+-") {
+            if (webFrame.getZoomFactor() > 0.5) {
+                webFrame.setZoomFactor(webFrame.getZoomFactor() / 1.2);
+                windowBar.resizeWindowBar(webFrame.getZoomFactor());
+            }
         } else if ((events.sessionButtonsShowing() || !globals.menuOpen) && !timer.timerRunning() && message === "CommandOrControl+E") {
             events.toggleSessionButtons();
         } else if (!timer.timerRunning() && !globals.menuOpen) {

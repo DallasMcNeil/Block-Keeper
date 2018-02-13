@@ -8,6 +8,8 @@ var timer = function() {
     var leftIndicator = document.getElementById("leftIndicator");
     var rightIndicator = document.getElementById("rightIndicator");
     var timerText = document.getElementById("timer");
+    var timerSplit = document.getElementById("timerSplit");
+
     // Various timer and indicator colors
     var prepareColor = globals.prepareColor;
     var inspectColor = globals.inspectColor;
@@ -21,19 +23,21 @@ var timer = function() {
     var rightKey = preferences.rightKey;
 
     // If the keys are down
-    var mainDown = false
-    var leftDown = false
-    var rightDown = false
+    var mainDown = false;
+    var leftDown = false;
+    var rightDown = false;
 
     // Timer state information
-    var timerState = "normal"
+    var timerState = "normal";
     var timerRunning = false;
     
     // Time information
     var currentTime = Date.now();
-    var startTime = currentTime
-    var inspectionTime = currentTime
-
+    var startTime = currentTime;
+    var inspectionTime = currentTime;
+    var splitTime = currentTime;
+    var splitRecorded = false;
+    
     // Current record information
     var timerTime = 0;
     var timerResult = "OK"; //OK, +2, DNF
@@ -46,23 +50,35 @@ var timer = function() {
     var s3voice = new Audio("sounds/male8s.mp3");
     var s7voice = new Audio("sounds/male12s.mp3");
 
-
     // Diffent timer properties based on event and preferences
     var inspectionEnabled = false;
     var splitEnabled = false;
     var OHSplitEnabled = false;
-
+    
+    // Prevent key repeats
+    var keysDown = {}
+    
     // Get keyboard down events
     window.onkeydown = function(e) {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
 
+        if ((leftDown && e.key === leftKey) || (rightDown && e.key === rightKey) || (mainDown && e.key === mainKey)){
+            e.preventDefault();
+            return;
+        }
+    
         if (!preferences.stackmat) {
             if (splitEnabled) {
                 if (e.key === leftKey) {
                     leftDown = true;
                 } else if (e.key === rightKey) {
                     rightDown = true;
+                }
+                
+                if (!cooldown && (OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && timerState === "timing") {
+                    cooldown = true;
+                    stopTimer();
                 }
             } else {
                 if (e.key === mainKey) {
@@ -72,8 +88,9 @@ var timer = function() {
             if (timerState === "timing") {
                 if (e.key === "Escape") {
                     timerResult = "DNF";
-                    stopTimer();
+                    stopTimer(true);
                 } else if (!(preferences.endSplit || OHSplitEnabled)) {
+                    cooldown = true;
                     stopTimer();
                 }
             } else {
@@ -86,6 +103,9 @@ var timer = function() {
         } else {
             if (e.key === mainKey) {
                 mainDown = true;
+                if (!splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind && timerState === "timing") {
+                    stopTimer();
+                }
             } else if (e.key === "Escape") {
                 if (timerState === "inspecting" || timerState === "readyInspection") {
                     cancelTimer();
@@ -107,6 +127,9 @@ var timer = function() {
                     leftDown = false;
                 } else if (e.key === rightKey) {
                     rightDown = false;
+                }
+                if ((OHSplitEnabled || preferences.endSplit) && !leftDown && !rightDown) {
+                    cooldown = false;
                 }
             } else {
                 if (e.key === mainKey) {
@@ -288,7 +311,16 @@ var timer = function() {
                     }
                     break;
                 case "timing":
-                    if (preferences.endSplit&&splitEnabled) {
+                    if (cooldown && preferences.endSplit && splitEnabled) {
+                        if (leftDown) {
+                            leftIndicator.style.backgroundColor = inspectColor;
+                            leftIndicator.style.opacity = 1;
+                        } 
+                        if (rightDown) {
+                            rightIndicator.style.backgroundColor = inspectColor;
+                            rightIndicator.style.opacity = 1;
+                        }     
+                    } else if (preferences.endSplit && splitEnabled) {
                         if (leftDown) {
                             leftIndicator.style.backgroundColor = readyColor;
                             leftIndicator.style.opacity = 1;
@@ -297,7 +329,7 @@ var timer = function() {
                             rightIndicator.style.backgroundColor = readyColor;
                             rightIndicator.style.opacity = 1;
                         }        
-                    }
+                    } 
 
                     if (splitEnabled && OHSplitEnabled) {
                         if (!leftDown && !rightDown) {
@@ -305,15 +337,14 @@ var timer = function() {
                             timerText.style.color = prepareColor;
                         }
                     }
+                    currentTime = Date.now();
                     timerTime = ((currentTime - startTime) / 1000)
                     if (preferences.hideTiming) {
                         timerText.innerHTML = "Solve";
                     } else {
                         timerText.innerHTML = formatTime(timerTime);
                     } 
-                    if ((OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && splitEnabled) {
-                        stopTimer();
-                    }
+                    
                     break;
             }
         }
@@ -353,6 +384,7 @@ var timer = function() {
     function startInspection() {
         timerState = "inspecting";
         timerText.style.color = inspectColor; 
+        timerSplit.innerHTML = "";
         timerText.innerHTML = "15";
         inspectionTime = currentTime;
         timerResult = "OK";
@@ -386,41 +418,99 @@ var timer = function() {
 
     // Start timer recording
     function startTimer() {
-        if (!preferences.extendedVideos || (!preferences.inspection && preferences.extendedVideos)) {
+        currentTime = Date.now();
+        startTime = currentTime;
+        if (!preferences.extendedVideos || events.getCurrentEvent().blind || (!preferences.inspection && preferences.extendedVideos)) {
             record.startRecorder();
         }
         timerState = "timing";
         timerText.style.color = normalColor;
 
-        currentTime = Date.now();
-        startTime = currentTime;
-        console.log("Timer start: "+startTime);
+        timerSplit.innerHTML = "";
     }
 
+    $("#dialogBlindResult").dialog({
+        autoOpen:false,
+        modal:true,
+        hide:"fade",
+        show:"fade",
+        position: {
+            my:"center",
+            at:"center",
+            of:"#background"
+        },
+        width:"220",
+        height:"102" 
+    }).on('keydown',function(evt) {
+        if (evt.keyCode === 13) {
+            blindResult("OK");
+            evt.preventDefault();
+        } else if (evt.keyCode === $.ui.keyCode.ESCAPE) {
+            blindResult("DNF");
+            evt.preventDefault();
+        }     
+        evt.stopPropagation();
+        
+    });
+    
     // Stop the timer
-    function stopTimer() {
+    function stopTimer(forced = false, SM = false) {
         currentTime = Date.now();
-        timerState = "normal";
-        timerText.style.color = normalColor;
-        console.log("Timer Stop: "+currentTime);
-        timerTime = ((currentTime - startTime) / 1000);
-        console.log("Time: "+timerTime);
-        timerText.innerHTML = formatTime(timerTime);
-        submitTime();
-        fadeInUI();
-        inspectionTime = currentTime;
-        scramble.scramble();
-        cooldown = true;
-        timerResult = "OK";
-        if (!preferences.extendedVideos) {
-            record.stopRecorder();
-        } else {
-            setTimeout(function() {
-                record.stopRecorder();
-            }, 3000)
+        if (!forced && !splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
+            splitTime = ((currentTime - startTime) / 1000);
+            splitRecorded = true;
+            if (preferences.hideTiming) {
+                timerSplit.innerHTML = "Split";
+            } else {
+                timerSplit.innerHTML = formatTime(splitTime);
+            }
+            return;
         }
+        if (!SM) {
+            timerText.style.color = normalColor;
+            timerTime = ((currentTime - startTime) / 1000);
+            timerText.innerHTML = formatTime(timerTime);
+        }
+        timerState = "normal";
+        setTimeout(function () {
+            if (!preferences.extendedVideos) {
+                record.stopRecorder();
+            } else {
+                setTimeout(function() {
+                    record.stopRecorder();
+                }, 3000)
+            }
+            inspectionTime = currentTime;
+            scramble.scramble();
+            if (events.getCurrentEvent().blind) {
+                $("#dialogBlindResult").dialog("open")
+                globals.menuOpen = true;
+                timerText.innerHTML = "";
+                timerSplit.innerHTML = "";
+                return;
+            } 
+            submitTime();
+            timerResult = "OK";
+            fadeInUI();
+        },0);
     }
-
+    
+    // Set result at the end of a blind solve
+    function blindResult(res) {
+        $("#dialogBlindResult").dialog("close")
+        timerResult = res;
+        timerText.innerHTML = formatTime(timerTime);
+        if (splitRecorded && preferences.blindSplit) {
+            timerSplit.innerHTML = formatTime(splitTime) + " / " + formatTime(timerTime - splitTime);
+        } else {
+            timerSplit.innerHTML = "";
+        }
+        submitTime();
+        timerResult = "OK";
+        globals.menuOpen = false;
+        fadeInUI();
+    }
+    
     // Cancel the timer at anytime
     function cancelTimer() {
         timerState = "normal";
@@ -438,12 +528,17 @@ var timer = function() {
 
     // Submit a time to be created
     function submitTime() {
-        events.createRecord(timerTime, timerResult);
+        if (splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
+            events.createRecord(timerTime, timerResult, [splitTime])
+            splitRecorded = false;
+        } else {
+            events.createRecord(timerTime, timerResult);
+        }
     }
 
     // Get stackmat information is used and display it
     function SMCallback(state) {
-        if (preferences.stackmat) {
+        if (preferences.stackmat && !globals.menuOpen) {
             currentTime = Date.now();
             // Boolean will guarantee the variable is not undefined
             leftDown = Boolean(state.leftHand);
@@ -462,24 +557,26 @@ var timer = function() {
                         if (mainDown && inspectionEnabled) {
                             readyInspection();
                         }
-                        if (!globals.menuOpen) {
-                            leftIndicator.style.opacity = 1;
-                            if (leftDown) {
-                                leftIndicator.style.backgroundColor = prepareColor;
-                            } else {
-                                leftIndicator.style.backgroundColor = normalColor;
-                            }
-
-                            rightIndicator.style.opacity = 1;
-                            if (rightDown) {
-                                rightIndicator.style.backgroundColor = prepareColor;
-                            } else {
-                                rightIndicator.style.backgroundColor = normalColor;
-                            }    
+                        leftIndicator.style.opacity = 1;
+                        if (leftDown) {
+                            leftIndicator.style.backgroundColor = prepareColor;
+                        } else {
+                            leftIndicator.style.backgroundColor = normalColor;
                         }
+
+                        rightIndicator.style.opacity = 1;
+                        if (rightDown) {
+                            rightIndicator.style.backgroundColor = prepareColor;
+                        } else {
+                            rightIndicator.style.backgroundColor = normalColor;
+                        }    
 
                         if (leftDown && rightDown && (state.time_milli === 0)) {
                             timerText.style.color = prepareColor;
+                            leftIndicator.style.backgroundColor = prepareTimer;
+                            rightIndicator.style.backgroundColor = prepareTimer;
+                            leftIndicator.style.opacity = 1;
+                            rightIndicator.style.opacity = 1;
                         } else {
                             timerText.style.color = normalColor;
                         }
@@ -492,10 +589,14 @@ var timer = function() {
                             rightIndicator.style.opacity = 1;
                         }
 
-                        timerText.innerHTML = formatTime(state.time_milli / 1000);
+                        if (!($("#dialogBlindResult").dialog("isOpen"))) {
+                            timerText.innerHTML = formatTime(state.time_milli / 1000);
+                        }
 
                         if (state.running) {
                             timerState = "timing";
+                            timerSplit.innerHTML = "";
+                            startTime = Date.now();
                             fadeOutUI();
                             record.startRecorder();
                             timerText.style.color = normalColor;
@@ -597,18 +698,7 @@ var timer = function() {
                         timerTime = state.time_milli / 1000;
 
                         if (!state.running) {
-                            timerState = "normal";
-                            timerText.style.color = normalColor;
-                            submitTime();
-                            scramble.scramble();
-                            fadeInUI();
-                            if (!preferences.extendedVideos) {
-                                record.stopRecorder();
-                            } else {
-                                setTimeout(function() {
-                                    record.stopRecorder();
-                                }, 3000);
-                            }
+                            stopTimer(true, true);
                         }   
                         break;
                 }
@@ -661,12 +751,30 @@ var timer = function() {
         s7voice = v;
     }
     
+    function clearTimer() {
+        if (preferences.stackmat) {
+            var s = "--";
+            if (preferences.timerDetail > 0) {
+                s += ".";
+            }
+            for (var i = 0; i < preferences.timerDetail; i++) {
+                s += "-";
+            }
+        } else {
+            timerText.innerHTML = formatTime(0);
+        }
+        timerSplit.innerHTML = "";
+        timerTime = 0;
+    }
+    
     return {
         timerRunning:returnTimerRunning,
         timerState:returnTimerState,
         cancelTimer:cancelTimer,
         SMCallback:SMCallback,
         s3voice:setS3Voice,
-        s7voice:setS7Voice
+        s7voice:setS7Voice,
+        blindResult:blindResult,
+        clearTimer:clearTimer
     }
 }()

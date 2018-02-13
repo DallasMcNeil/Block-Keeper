@@ -47,24 +47,26 @@ Created by Dallas McNeil
     <div id="background" onclick="events.resetUI()">
         <canvas id="confetti"></canvas>
         <div id="centreBackground">
+            <p id="announcement">New best time!</p>
             <p id="timer">0.000</p>
-            <p id="announcement">New Best Time!</p>
+            <p id="timerSplit"></p>
         </div>
         <div class="indicator" id="leftIndicator"></div>
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id="scramble" onclick="scramble.openScramble()"></p>
+    <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler"></p>
         
     <div id="stats">
-        <select title="Event Select" id="eventSelect" onchange="events.setEvent()"></select>
-        <button title="Edit Events" id="eventButton" onclick="events.openEvents()"></button>
+        <select title="Event select" id="eventSelect" onchange="events.setEvent()"></select>
+        <button title="Edit events" id="eventButton" onclick="events.openEvents()"></button>
         <div id="sessionContainer">
-            <select title="Session Select" id="sessionSelect" onchange="events.setSession()"></select>
-            <button title="Edit Session" id="sessionButton" onclick="events.toggleSessionButtons()"></button>
+            <select title="Session select" id="sessionSelect" onchange="events.setSession()"></select>
+            <button title="Edit session" id="sessionButton" onclick="events.toggleSessionButtons()"></button>
         </div>
         <div id="sessionButtons">
             <button title="Create a new session" id="newSessionButton" onclick="events.createSessionButton()">New</button>
+            <button title="Move a session to a different event" id="transferSessionButton" onclick="events.transferSessionButton()">Transfer</button>
             <button title="Remove all records from the session" id="clearSessionButton" onclick="events.clearSessionButton()">Clear</button>
             <button title="Delete this session" id="deleteSessionButton" onclick="events.deleteSessionButton()">Delete</button>
         </div>
@@ -116,7 +118,7 @@ Created by Dallas McNeil
             <thead>
                 <tr>
                     <td>
-                        <button title="Add Time" id="addTimeButton" onclick="events.openTimeDialog()">+</button>
+                        <button title="Add time" id="addTimeButton" onclick="events.openTimeDialog()">+</button>
                     </td>
                     <td>
                         <p>Time</p>
@@ -135,51 +137,56 @@ Created by Dallas McNeil
         </div>
     </div>
 
-    <button title="Video Preview" id="previewButton" onclick="record.openPreview()"></button>
+    <button title="Video preview" id="previewButton" onclick="record.openPreview()"></button>
     <button title="Preferences" id="preferencesButton" onclick="prefs.openPreferences()"></button>
-    <select title="Tool Select" id="toolSelect" onchange="tools.updateTools()">
-        <option value="crossSolver">Cross Solver</option>
+    <select title="Tool select" id="toolSelect" onchange="tools.updateTools()">
+        <option value="crossSolver">Cross solver</option>
         <option value="distribution">Distribution</option>
-        <option value="scramble">Drawn Scramble</option>
-        <option value="EOLineSolver">EOLine Solver</option>
-        <option value="eventStats">Event Statistics</option>
-        <option value="eventTrend">Event Trend</option>
-        <option value="firstBlockSolver">First Block Solver</option>
-        <option value="sessionTrend">Session Trend</option>
+        <option value="scramble">Drawn scramble</option>
+        <option value="EOLineSolver">EOLine solver</option>
+        <option value="eventStats">Event statistics</option>
+        <option value="eventTrend">Event trend</option>
+        <option value="firstBlockSolver">First block solver</option>
         <option value="metronome">Metronome</option>
+        <option value="sessionTrend">Session trend</option>
+        <option value="splitTrend">Split trend</option>
     </select>
 
     <div id="tools">
     </div>
-    <button title="Add Tool" id="addToolButton" onclick="tools.addTool()"></button> 
+    <button title="Add tool" id="addToolButton" onclick="tools.addTool()"></button> 
     </div>
+    
+    <!-- Dialogs -->
     
     <div id="dialogManageEvents">
         <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:75px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:120px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:50px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
         <ul id="eventsList"></ul>
-        <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add Event</button>   <button onclick="events.closeEvents()">Done</button></p>
+        <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add event</button>   <button onclick="events.closeEvents()">Done</button></p>
     </div>
         
     <div id="dialogAddTime">
-        <p>Add Time (in seconds)   <input type="text" id="addTimeInput"></p>
-        <p>Scramble (optional) <textarea rows="3" id="addScrambleInput"></textarea></p>
+        <p>Add time (in seconds)</p>
+        <p><input type="text" id="addTimeInput">   <span id="addTimeMessage"></span></p>
+        <p><input type="checkbox" id="addTimeScramble" class="checkbox">Use custom scramble</p>
+        <textarea rows="3" id="addScrambleInput"></textarea>
         <p><button onclick="events.addRecord()">Add</button> <button onclick="events.closeTimeDialog()">Cancel</button></p>
     </div>
     
     <div id="dialogRecord">
-        <button style="width:50px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
-        <button style="width:45px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
-        <button style="width:62px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
-        <button style="width:90px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
-        <p id="recordDate">4/11/18 12:40 PM</p>
-        <p id="recordTime">10:20.334</p>
+        <button style="width:55px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
+        <button style="width:50px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
+        <button style="width:67px;" title="Set result to DNF penalty" onclick="events.recordResultDNF()">DNF</button>
+        <button style="width:95px;" title="Delete this time" style="margin-right:0px;" onclick="events.deleteRecord()">Delete</button>
+        <p id="recordDate"></p>
+        <p id="recordTime"></p>
         <p id="recordScramble"></p>
     </div>
     
     <div id="dialogPreview">
         <button id="closePreview" class="cross" onclick="record.closePreview()"></button><br>
         <video id="previewVideo" controls></video>
-        <button title="Save video as file" id="savePreview" onclick="record.saveVideo()">Save Video</button>
+        <button title="Save video as file" id="savePreview" onclick="record.saveVideo()">Save video</button>
     </div>
         
     <div id="dialogScramble">
@@ -192,11 +199,23 @@ Created by Dallas McNeil
         <button id="closeShowInfo" class="cross" onclick="events.closeShowInfo()"></button><br>
         <p id="messageShowInfo"></p>
     </div>
+    
+    <div id="dialogBlindResult">
+        <p>What was the result?</p>
+        <p><button onclick="timer.blindResult('OK')">OK</button>   <button onclick="timer.blindResult('+2')">+2</button>   <button onclick="timer.blindResult('DNF')">DNF</button></p>
+    </div>
         
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
+        <select id="eventSelectCSTimer" style="margin-bottom:10px;"></select>
         <button title="Import into selected session" id="importCSTimer" onclick="prefs.importCSTime(true)">Import</button>
         <button title="Stop importing sessions" id="cancelCSTimer" onclick="prefs.cancelCSTime()">Cancel</button>
+    </div>
+    
+    <div id="dialogTransferSession">
+        <p>Select the event to move the session to.</p><br>
+        <select id="eventSelectTransfer" style="margin-bottom:10px;"></select>
+        <button title="Move session to selected event" onclick="events.transferSession()">Transfer</button>
     </div>
         
     <div id="dialogPreferences">
@@ -210,46 +229,51 @@ Created by Dallas McNeil
             </ul>
             <div id="tabs-1">
                 <form name="preferencesGeneral">
-                    <p title="Decimal places after times">Time Detail:  <select name="timerDetail" style="width:52px">
+                    <p title="Decimal places after times">Time detail:  <select name="timerDetail" style="width:52px">
                         <option value="0">0</option>
                         <option value="1">1</option>
                         <option value="2" selected>2</option>
                         <option value="3">3</option>
                     </select></p>
-                    <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format Times (mm:ss)</p>
-                    <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video Record Solves</p>
-                    <p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record Inspection</p>
-                    <p title="Automatically save recorded video to folder">Video Autosave Location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
-                    <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display Scrambles in Lists</p>
-                    <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove All Formatting in Lists</p>
+                    <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format times (mm:ss)</p>
+                    <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video record solves</p>
+                    <p title="Resolution of recorded videos, quality may depend on camera">Video resolution:  <select name="videoResolution" style="width:140px">
+                        <option value="480">640x480</option>
+                        <option value="720" selected>960x720</option>
+                        <option value="1080">1440x1080</option>
+                    </select></p><p title="Video records inspection and 3 seconds after solve"><input type="checkbox" name="extendedVideos" class="checkbox">Record inspection</p>
+                    <p title="Automatically save recorded video to folder">Video autosave location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
+                    <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display scrambles in lists</p>
+                    <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove all formatting in lists</p>
                 </form> 
             </div>
             <div id="tabs-2">
                 <form name="preferencesTimer">
-                    <p title="'8 Seconds' and '12 Seconds' announcements during inspection">Inspection Announcements: <select name="voice">
+                    <p title="'8 Seconds' and '12 Seconds' audio announcements during inspection">Inspection announcements: <select name="voice">
                         <option value="none" selected>None</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select></p>
-                    <p title="Time between timer keys being pressed and timer starting">Timer Start Delay:  <select name="timerDelay" style="width:100px">
+                    <p title="Time between timer keys being pressed and timer starting">Timer start delay:  <select name="timerDelay" style="width:100px">
                         <option value="0">None</option>
                         <option value="0.3">0.3</option>
                         <option value="0.55" selected>0.55</option>
                         <option value="1">1</option>
                     </select></p>
-                    <p title="Time replaced with 'Solve' while solving"><input type="checkbox" name="hideTiming" class="checkbox">Hide Timer While Solving</p>
-                    <p title="15s of inspection before solving"><input type="checkbox" name="inspection" class="checkbox">WCA Inspection</p>
-                    <p title="Use primary mouse button to use timer, like spacebar, with cursor over background"><input type="checkbox" name="useMouse" class="checkbox">Use Mouse For Timer</p>
-                    <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split Timer Controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
-                    <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop Timer With Split Keys</p>
-                    <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH Split Keys</p>
-                    <p title="Use external Stackmat timer to control timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat Timer</p>
+                    <p title="Time replaced with 'Solve' while solving"><input type="checkbox" name="hideTiming" class="checkbox">Hide timer while solving</p>
+                    <p title="15s of inspection before solving"><input type="checkbox" name="inspection" class="checkbox">WCA inspection</p>
+                    <p title="Use primary mouse button to use timer, like spacebar, with cursor over background"><input type="checkbox" name="useMouse" class="checkbox">Use mouse for timer</p>
+                    <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split timer controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
+                    <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop timer with split keys</p>
+                    <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH split keys</p>
+                    <p title="For time split between memorisation and execution, initially stopping the timer will record the time split and the second will stop the timer"><input type="checkbox" name="blindSplit" class="checkbox">Blind time split</p>
+                    <p title="Use an external Stackmat timer to control the timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat timer</p>
                 </form>
             </div>
             <div id="tabs-3">
                 <form name="preferencesInterface" onsubmit="return false">
-                    <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce Best Time</p>
-                    <p title="Font size of displayed scramble">Scramble Font Size:   <select name="scrambleSize" style="width:70px">
+                    <p title="Announce that best time for event has been beaten and show confetti"><input type="checkbox" name="showBestTime" class="checkbox">Announce best time</p>
+                    <p title="Font size of displayed scramble">Scramble font size:   <select name="scrambleSize" style="width:70px">
                         <option value="2">2</option>
                         <option value="2.5">2.5</option>
                         <option value="3">3</option>
@@ -261,31 +285,31 @@ Created by Dallas McNeil
                         <option value="10">10</option>
                         <option value="12">12</option>
                     </select></p>
-                    <p title="Alignment of scramble text, left, right or centered">Scramble Text Alignment:   <select name="scrambleAlign" style="width:120px">
+                    <p title="Alignment of scramble text, left, right or centered">Scramble text alignment:   <select name="scrambleAlign" style="width:120px">
                         <option value="left">Left</option>
                         <option value="center">Center</option>
                         <option value="right" selected>Right</option>
                     </select></p>
-                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background Image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="prefs.selectImage(); return false;">Select</button></p>
+                    <p title="Image displayed in background. Select 'Custom...' to use custom theme colors">Background image:   <input name="backgroundImage" type="text" style="width:150px">  <button onclick="prefs.selectImage(); return false;">Select</button></p>
                     <p title="Theme colors of Block Keeper">Theme:  <select name="theme" onchange="prefs.previewStylesheet();return false" style="width:200px;">
                         <option value=0>Dark</option>
                         <option value=1>Light</option>
                         <option value=2>Black</option>
-                        <option value=3>Deep Blue</option>
-                        <option value=4>Deep Green</option>
-                        <option value=5>Deep Red</option>
-                        <option value=6>Light Magenta</option>
-                        <option value=7>Light Yellow</option>
-                        <option value=8>Light Cyan</option>
-                        <option value=9>Neon Green</option>
-                        <option value=10>Neon Pink</option>
-                        <option value=11>Neon Yellow</option>
-                        <option value=12>Neon Blue</option>
+                        <option value=3>Deep blue</option>
+                        <option value=4>Deep green</option>
+                        <option value=5>Deep red</option>
+                        <option value=6>Light magenta</option>
+                        <option value=7>Light yellow</option>
+                        <option value=8>Light cyan</option>
+                        <option value=9>Neon green</option>
+                        <option value=10>Neon pink</option>
+                        <option value=11>Neon yellow</option>
+                        <option value=12>Neon blue</option>
                         <option value="custom">Custom...</option>
                     </select></p>
-                    <p title="Colors used in the custom theme">Custom Theme Colors   <button title="Refresh custom theme" onclick="prefs.previewStylesheet();return false;">Refresh Theme</button></p>
-                    <p>Background:   <input name="theme0" type=text style="width:100px">     Timer Text: <input name="theme1" type=text style="width:100px"></p>
-                    <p>Scramble Text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
+                    <p title="Colors used in the custom theme">Custom theme colors   <button title="Refresh custom theme" onclick="prefs.previewStylesheet();return false;">Refresh theme</button></p>
+                    <p>Background:   <input name="theme0" type=text style="width:100px">     Timer text: <input name="theme1" type=text style="width:100px"></p>
+                    <p>Scramble text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
                     <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
                 </form>
             </div>

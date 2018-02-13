@@ -41,7 +41,9 @@ var preferences = {
     extendedVideos:false,
     scramblesInList:true,
     metronomeBPM:90,
-    onlyList:false
+    onlyList:false,
+    videoResolution:720,
+    blindSplit:false
 }
 
 // Preference management functions
@@ -99,6 +101,8 @@ var prefs = function() {
         preferencesGeneral.extendedVideos.checked = preferences.extendedVideos;
         preferencesGeneral.scramblesInList.checked = preferences.scramblesInList;
         preferencesGeneral.onlyList.checked = preferences.onlyList;
+        preferencesGeneral.videoResolution.value = preferences.videoResolution;
+        preferencesTimer.blindSplit.checked = preferences.blindSplit;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -180,8 +184,8 @@ var prefs = function() {
             stackmat.stop();
         }
 
-        $("#timer").innerHTML = (0).toFixed(preferences.timerDetail);
-
+        timer.clearTimer();
+        
         $("#dialogPreferences").dialog("close");
         
         record.setupRecorder();
@@ -214,7 +218,9 @@ var prefs = function() {
         preferences.extendedVideos = preferencesGeneral.extendedVideos.checked;
         preferences.scramblesInList = preferencesGeneral.scramblesInList.checked;
         preferences.onlyList = preferencesGeneral.onlyList.checked;
-
+        preferences.videoResolution = preferencesGeneral.videoResolution.value;
+        preferences.blindSplit = preferencesTimer.blindSplit.checked;
+    
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
         }
@@ -327,6 +333,8 @@ var prefs = function() {
             if (fileNames === undefined) {
                 return;
             } else {
+                CSData = [];
+                currentCS = 0;
                 fs.readFile(fileNames[0], 'utf-8', function (err, data) {
                 if (err) {
                     alert("An error ocurred reading the file:" + err.message);
@@ -334,16 +342,18 @@ var prefs = function() {
                 }
                     
                 var first = JSON.parse(data);
-
                 for (var property in first) {
                     if (first.hasOwnProperty(property) && property != "properties") {
                         var session = JSON.parse(first[property]);
-                        CSData.push(session);
+                        if (session.length > 0) {
+                            CSData.push(session);
+                        }
                     }
                 }
 
                 globals.menuOpen = true;
-                disableAllElements("eventSelect");
+                disableAllElements();
+                events.setEventOptions($("#eventSelectCSTimer")[0]);
                 $("#dialogCSTimer").dialog("open");
                 importCSTime(false);
             });
@@ -362,7 +372,7 @@ var prefs = function() {
             of:"#background"
         },
         width:"380",
-        height:"300" 
+        height:"353" 
     })
 
     var currentCS = 0;
@@ -371,6 +381,7 @@ var prefs = function() {
     function importCSTime(doImport) {
         if (currentCS < CSData.length) {
             if (doImport) {
+                events.setCurrentEvent($("#eventSelectCSTimer")[0].value);
                 events.createSession();
                 events.getCurrentSession().name = "csTimer Import " + (currentCS + 1);
                 events.shouldUpdateStats(false);
@@ -396,7 +407,7 @@ var prefs = function() {
                 } else if ((CSData[currentCS][0][0][0] === -1)) {
                     str = "DNF (" + (CSData[currentCS][0][0][1] / 1000)+ ")";
                 }
-                $("#messageCSTimer").prop("innerHTML","Session " + (currentCS + 1) + " of " + CSData.length + "<br>Session begins with following record<br><br>" + str + "<br><br>Please select the event you would like this session to be placed in using the event select dropdown. Press 'Import' once you have made your choice.");
+                $("#messageCSTimer").prop("innerHTML","Session " + (currentCS + 1) + " of " + CSData.length + "<br>Session begins with the following record.<br><br>" + str + "<br><br>Please select the event you would like this session to be placed into. Press 'Import' once you have made your choice.");
             } else {
                 currentCS++;
                 importCSTime(false);
@@ -423,7 +434,7 @@ var prefs = function() {
             if (fileName === undefined){
                 return;
             }  
-            var str = "Event, Session, SessionOrder, Order, Time, Result, Scramble, Date"
+            var str = "Event,Session,SessionOrder,Order,Time,Result,Scramble,Split,Date,FormattedDate"
             var e = events.getAllEvents();
             for (var p = 0; p < e.length; p++) {
                 if (!e[p].sessions) {
@@ -439,7 +450,13 @@ var prefs = function() {
                         if (e[p].sessions[s].records[r].date != undefined) {
                             d = e[p].sessions[s].records[r].date;
                         }
-                        str += "\n\"" + e[p].name + "\", \"" + e[p].sessions[s].name + "\", " + (s + 1) + ", " + (r + 1) + ", " + e[p].sessions[s].records[r].time + ", " + e[p].sessions[s].records[r].result + ", \"" + e[p].sessions[s].records[r].scramble + "\", " + d;
+                        var sp = 0;
+                        if (e[p].sessions[s].records[r].split != undefined) {
+                            if (e[p].sessions[s].records[r].split.length > 0) {
+                                sp = e[p].sessions[s].records[r].split[0];
+                            }
+                        }
+                        str += "\n\"" + e[p].name.replaceAll('"','""') + "\",\"" + e[p].sessions[s].name.replaceAll('"','""') + "\"," + (s + 1) + "," + (r + 1) + "," + e[p].sessions[s].records[r].time + "," + e[p].sessions[s].records[r].result + ",\"" + e[p].sessions[s].records[r].scramble.replaceAll('"','""') + "\"," + sp + "," + d + ",\"" + new Date(d).toUTCString() + "\"";
                     }
                 }   
             }     

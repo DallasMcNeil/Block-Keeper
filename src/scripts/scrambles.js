@@ -18,7 +18,8 @@ var scramble = function() {
     var scrambleOptions = {
         "Recommended":scrambleRecommended,
         "Custom...":scrambleCustom,
-        "3x3x3":scramble3x3x3,
+        "3x3x3":scramble3x3x3,   
+        "3x3x3 BLD":scramble3x3x3BLD,
         "2x2x2":scramble2x2x2,
         "4x4x4":scramble4x4x4,
         "5x5x5":scramble5x5x5,
@@ -28,12 +29,14 @@ var scramble = function() {
         "Square-1":scrambleSquare1,
         "Clock":scrambleClock,
         "6x6x6":scramble6x6x6,
-        "7x7x7":scramble7x7x7,   
-        "3x3x3 BLD":scramble3x3x3BLD,
+        "7x7x7":scramble7x7x7,
         "8x8x8":function(){scrambleNxNxN(8,100)},
         "9x9x9":function(){scrambleNxNxN(9,120)},
         "10x10x10":function(){scrambleNxNxN(10,140)},
         "11x11x11":function(){scrambleNxNxN(11,160)},
+        "13x13x13":function(){scrambleNxNxN(13,180)},
+        "15x15x15":function(){scrambleNxNxN(15,200)},
+        "17x17x17":function(){scrambleNxNxN(17,220)},
         "2x2x2 - 5x5x5":scramble2to5Relay,
         "2x2x2 - 7x7x7":scramble2to7Relay,
         "None":scrambleNone
@@ -204,9 +207,34 @@ var scramble = function() {
     }
 
     function scrambleClock() {
-        scrambleStr = "clock";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        // Legacy scramble
+        //scrambleStr = "clock";
+        //scrambleState = scramblers[scrambleStr].getRandomScramble();
+        //currentScramble = scrambleState.scramble_string;
+        
+        scrambleStr = "other";
+        var str = "";
+        var moves = ["UR", "DR", "DL", "UL", "U", "R", "D", "L", "ALL", "y2", "U", "R", "D", "L", "ALL"];
+        var pins = ["UR", "DR", "DL", "UL"];
+        for (var i = 0; i < 15; i++) {
+            if (i === 9) {
+                str += moves[i] + " ";
+                continue;
+            }
+            var hour = Math.floor(Math.random() * 12) - 5;
+            if (hour < 0) {
+                str += moves[i] + Math.abs(hour) + "- ";
+            } else {
+                str += moves[i] + hour + "+ ";
+            }
+        }
+        for (var i = 0; i < 4; i++) {
+            if (Math.random() < 0.5) {
+                str += pins[i] + " ";
+            }
+        }
+        scrambleState = {scramble_string:str};
+        currentScramble = str;
     }
 
     // Add roation to 3x3x3 scramble

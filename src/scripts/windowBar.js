@@ -3,7 +3,7 @@
 // Block Keeper
 // Created by Dallas McNeil
 
-(function() {
+var windowBar = function() {
     
     // If the windowbar is hidden
     var hiddenWindowBar = false;
@@ -16,7 +16,7 @@
 
     // Make large windowbar when not fullscreen 
     require('electron').ipcRenderer.on('fullscreen', function(event, message) { 
-        if (hiddenWindowBar) {
+        if (!hiddenWindowBar) {
             if (message === "enter") {
                 $('#titleBarStyle')[0].href = "styles/standardWindowBar.css";
             } else if (message === "leave") {
@@ -24,5 +24,18 @@
             }
         }
     })
-}())
+    
+    function resizeWindowBar(factor) {
+        if (hiddenWindowBar) {
+            $("#windowBar").css("height", (22 / factor) + "px");
+            $("#content").css("top", (22 / factor) + "px");
+            $("#scramble").css("height", (5 + (22 / factor)) + "px");
+            $("#stats").css("height", (5 + (22 / factor)) + "px");
+        }
+    }
+    
+    return {
+        resizeWindowBar:resizeWindowBar
+    }
+}()
 

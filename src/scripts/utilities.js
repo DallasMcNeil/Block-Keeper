@@ -82,14 +82,16 @@ function formatTime(time) {
     } else if (time === -1) {
         return "DNF";
     }
-    if (preferences.formatTime && time >= 60) {
-        if (time % 60 <= 10) {
-            return Math.floor(time / 60) + ":0" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
+    var d = Math.pow(10, preferences.timerDetail);
+    var t = (Math.floor(time * d) / d)
+    if (preferences.formatTime && t >= 60) {
+        if (t % 60 < 10) {
+            return Math.floor(t / 60) + ":0" + (t % 60).toFixed(preferences.timerDetail);
         } else {
-            return Math.floor(time / 60) + ":" + (time % 60).toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
+            return Math.floor(t / 60) + ":" + (t % 60).toFixed(preferences.timerDetail);
         }
     } else { 
-        return time.toFixed(parseInt(preferences.timerDetail) + 1).slice(0, -1);
+        return t.toFixed(preferences.timerDetail);
     }
 }
 

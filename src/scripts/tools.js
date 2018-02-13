@@ -142,6 +142,9 @@ var tools = function() {
             } else if (toolTypes[i] === "firstBlockSolver") {
                 var ctx = canvases[i].getContext("2d");
                 firstBlockSolver(ctx);
+            } else if (toolTypes[i] === "splitTrend") {
+                var ctx = canvases[i].getContext("2d");
+                splitTrend(ctx);
             }
         }
     }
@@ -510,6 +513,77 @@ var tools = function() {
         ctx.fillStyle = colors[2]
         ctx.fillText("Best Time", 250, 190); 
 
+        ctx.strokeStyle = mainColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(width / 6, margin);
+        ctx.lineTo(width / 6, height * 0.85);
+        ctx.lineTo(width - margin, height * 0.85);
+        ctx.stroke();
+    }
+    
+    // Draw a trendline with time splits
+    function splitTrend(ctx) {
+        var width = 300;
+        var height = 200;
+        ctx.clearRect(0, 0, width, height);
+
+        var times = extractTimes(events.getCurrentSession().records);
+        var split1 = [];
+        var split2 = [];
+        for (var i = 0; i < times.length; i++) {
+            if (events.getCurrentSession().records[i].split && events.getCurrentSession().records[i].split.length > 0) {
+                var s = events.getCurrentSession().records[i].split[0];
+                split1.push(s);
+                split2.push(events.getCurrentSession().records[i].time - s);
+            } else {
+                split1.push(-1);
+                split2.push(-1);
+            }
+        }
+        
+        if (removeDNFs(split1).length < 2) {
+            ctx.font = "20px workSans";
+            ctx.fillStyle = mainColor
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("No Data", width / 2, height / 2);
+            return;
+        }
+        
+        times.push(0);
+        var dis = rangeForTimes(removeDNFs(times));
+        times.pop();
+        
+        ctx.strokeStyle = secondColor;
+        ctx.fillStyle = mainColor;
+        ctx.lineWidth = 1;
+        ctx.font = "12px workSans";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        var graphHeight = height * 0.8;
+        var margin = width * (1/30);
+        for (var i = 0; i < dis.segments + 1; i++) {
+            ctx.beginPath();
+            ctx.moveTo(width / 6, i * (graphHeight / dis.segments) + margin);
+            ctx.lineTo(width - margin, i * (graphHeight / dis.segments) + margin);
+            ctx.stroke();
+            ctx.fillText(formatTime((dis.max - (dis.divide * i))), width / 12, i * (graphHeight / dis.segments) + margin);   
+        }
+        ctx.lineWidth = 2;
+        
+        drawTrendline(ctx, dis, times, times.length, 1, mainColor, width, height);
+        drawTrendline(ctx, dis, split1, split1.length, 1, colors[0], width, height);
+        drawTrendline(ctx, dis, split2, split2.length, 1, colors[1], width, height);
+
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = mainColor;
+        ctx.fillText("Time", width / 3, height * 0.95); 
+        ctx.fillStyle = colors[0];
+        ctx.fillText("Split 1", width / 2, height * 0.95);
+        ctx.fillStyle = colors[1];
+        ctx.fillText("Split 2", width * (2 / 3), height * 0.95);
+        
         ctx.strokeStyle = mainColor;
         ctx.lineWidth = 2;
         ctx.beginPath();
