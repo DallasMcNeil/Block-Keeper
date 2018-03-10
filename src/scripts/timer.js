@@ -481,7 +481,6 @@ var timer = function() {
                 }, 3000)
             }
             inspectionTime = currentTime;
-            scramble.scramble();
             if (events.getCurrentEvent().blind) {
                 $("#dialogBlindResult").dialog("open")
                 globals.menuOpen = true;
@@ -534,6 +533,7 @@ var timer = function() {
         } else {
             events.createRecord(timerTime, timerResult);
         }
+        scramble.scramble();
     }
 
     // Get stackmat information is used and display it
@@ -707,7 +707,6 @@ var timer = function() {
                     timerState = "normal";
                     timerText.style.color = normalColor;
                     submitTime();
-                    scramble.scramble();
                     fadeInUI();
                     if (!preferences.extendedVideos) {
                         record.stopRecorder();
