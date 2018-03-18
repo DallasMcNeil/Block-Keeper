@@ -534,6 +534,7 @@ var timer = function() {
             events.createRecord(timerTime, timerResult);
         }
         scramble.scramble();
+        
     }
 
     // Get stackmat information is used and display it

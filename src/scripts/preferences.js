@@ -43,7 +43,9 @@ var preferences = {
     metronomeBPM:90,
     onlyList:false,
     videoResolution:720,
-    blindSplit:false
+    blindSplit:false,
+    timerSize:40,
+    timerSecondSize:20
 }
 
 // Preference management functions
@@ -103,6 +105,8 @@ var prefs = function() {
         preferencesGeneral.onlyList.checked = preferences.onlyList;
         preferencesGeneral.videoResolution.value = preferences.videoResolution;
         preferencesTimer.blindSplit.checked = preferences.blindSplit;
+        preferencesInterface.timerSecondSize.value = preferences.timerSecondSize;
+        preferencesInterface.timerSize.value = preferences.timerSize;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -220,6 +224,8 @@ var prefs = function() {
         preferences.onlyList = preferencesGeneral.onlyList.checked;
         preferences.videoResolution = preferencesGeneral.videoResolution.value;
         preferences.blindSplit = preferencesTimer.blindSplit.checked;
+        preferences.timerSecondSize = preferencesInterface.timerSecondSize.value;
+        preferences.timerSize = preferencesInterface.timerSize.value;
     
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;

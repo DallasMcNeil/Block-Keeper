@@ -141,8 +141,9 @@ body {
 #announcement {
     vertical-align:middle;
     text-align: center;
-    font-size: 8vmin;
+    font-size:10vmin;
     font-family: workSansLight;
+    white-space: nowrap;
     color:#E0E0E0;
     margin:0px;
     margin-top:27vmin;
