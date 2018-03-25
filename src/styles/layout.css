@@ -722,8 +722,8 @@ td p {
     position: absolute;
     display: block;
     font-size: 18px;
-    border-top: solid 2px #FFFFFF;
-    top:63px;
+    border-top: solid 2px #606060;
+    top:10px;
     left:0px;
     padding-left:5px;
     position: absolute;
@@ -731,8 +731,28 @@ td p {
     overflow-y: scroll;
     word-wrap:normal;
     width: 264px;
-    max-height: 87px;
+    max-height: 77px;
     cursor:text;
+}
+
+#recordComment {
+    -webkit-user-select: text;
+    user-select: text;
+    position: absolute;
+    display: block;
+    font-size: 18px;
+    border-top: solid 2px #606060;
+    top:160px;
+    left:0px;
+    padding-left:5px;
+    position: absolute;
+    color:#FFFFFF;
+    overflow-y: scroll;
+    word-wrap:normal;
+    width: 260px;
+    height: 60px;
+    cursor:text;
+    vertical-align: top;
 }
 
 input[type="checkbox"] {
