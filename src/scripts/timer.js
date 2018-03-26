@@ -62,6 +62,10 @@ var timer = function() {
     window.onkeydown = function(e) {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
+        
+        if (e.keyCode === $.ui.keyCode.ESCAPE && $("#dialogRecord").dialog("isOpen")) {
+            events.closeDialogRecord();
+        }
 
         if ((leftDown && e.key === leftKey) || (rightDown && e.key === rightKey) || (mainDown && e.key === mainKey)){
             e.preventDefault();

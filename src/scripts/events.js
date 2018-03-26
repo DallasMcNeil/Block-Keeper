@@ -675,11 +675,8 @@ var events = function() {
                                 at:"right top",
                                 of:sessionRecordsTable.rows[row].cells[column]
                             }
-                        }).unbind().on('keydown', function(evt) {
-                            if (evt.keyCode === $.ui.keyCode.ESCAPE) {
-                                closeDialogRecord();
-                            }
                         })
+                        
                         $("#dialogRecord").dialog("open");
                         disableAllElements("sessionRecordsContainer");
                         $(".selectable").prop("disabled", false);
@@ -1503,6 +1500,7 @@ var events = function() {
         sessionButtonsShowing:returnSessionButtonsShowing,
         createNewEvent:createNewEvent,
         transferSessionButton:transferSessionButton,
-        transferSession:transferSession
+        transferSession:transferSession,
+        closeDialogRecord:closeDialogRecord
     }
 }()
