@@ -1,4 +1,4 @@
-@background: #181818; @timer: #F0F0F0; @scramble: #B0B0B0; @base: #303030; @border: #606060; @text: #E0E0E0;
+@background: #181818; @timer: #F0F0F0; @scramble: #B0B0B0; @base: #303030; @border: #606060; @text: #E0E0E0; @timerSize:30vmin; @timerSecondSize:8vmin;
 @darken: 40%;
 
 p {
@@ -31,6 +31,19 @@ body {
 
 #timer,#announcement, #timerSplit {
     color:@timer;
+}
+
+#announcement {
+    margin-top:calc(50vmin - (@timerSecondSize + (@timerSize / 2)));
+    font-size:@timerSecondSize;
+}
+
+#timer {
+    font-size: @timerSize;
+}
+
+#timerSplit {
+    font-size: @timerSecondSize;  
 }
 
 #scramble {
@@ -121,7 +134,7 @@ select:hover {
     border-color: darken(@border,@darken,relative);
 }
 
-#sessionSolvesTable, #sessionDetails ,#sessionRecords,#sessionRecordsHeader,#recordScramble {
+#sessionSolvesTable, #sessionDetails ,#sessionRecords,#sessionRecordsHeader,#recordScramble,#recordComment {
     border-color:@border;
 }
 

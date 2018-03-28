@@ -68,7 +68,7 @@ Block Keeper can be launched through the `Block Keeper` executable file. Save da
     * Median: Middle time of all valid solves in order.
     * Standard Deviation: Rough measure of average distance from mean time any  
     * Table of best and current solves in session. Expands to present best and current time, Mo3, Ao5, Ao12 and Ao100. Clicking any results will present the list of times and scrambles used to generate the result. Clicking the label will present a list of all results, e.g click Ao5 to see list of all Ao5's.
-6. Records table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Hovering over a time will present the scramble used, date created, full time and result for the solve with options to change the penalty or delete the solve completely. Clicking any average results will present the list of times and scrambles used to generate the average.
+6. Records table: Ordered table of records presenting times of solves. A `+` on the end of a time indicates a `+2` time penalty which is already added to the time and a `DNF` indicates a `DNF` penalty. Ao5 and Ao12 times are composed of the solve adjacent including the previous 4 and 11 solves respectively. A `-` indicates that there are not enough solves to calculate a Ao5 or Ao12. Clicking a time will present the scramble used, date created, full time, result and an editable comment for the solve with options to change the penalty or delete the solve completely. Clicking any average results will present the list of times and scrambles used to generate the average.
 7. Add time: Shows dialog with option to add custom time and scramble to session
 
 
@@ -200,6 +200,8 @@ Tools offer additional visual information and functionality. After selecting a t
 
 * Announce best time: When best time for event is beaten, displays `New Best Time!` under timer and causes confetti to fall.
 * Scramble font size: Set the arbitrary font size of scrambles presented
+* Timer font size: Set the arbitrary font size of the main timer
+* Announcement font size: Set the arbitrary font size of announcements
 * Scramble text alignment: Set text alignment of scramble text to left, right of center.
 * Background image: Specify a path to an image file which will be shown in the background. Image can be a .png and include transparency to the standard background. Optionally the Select Image button will present a dialog to find an image using a file browser.
 * Theme: Set color scheme of the application to predefined options or set to custom to use defined color scheme

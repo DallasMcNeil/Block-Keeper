@@ -62,6 +62,10 @@ var timer = function() {
     window.onkeydown = function(e) {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
+        
+        if (e.keyCode === $.ui.keyCode.ESCAPE && $("#dialogRecord").dialog("isOpen")) {
+            events.closeDialogRecord();
+        }
 
         if ((leftDown && e.key === leftKey) || (rightDown && e.key === rightKey) || (mainDown && e.key === mainKey)){
             e.preventDefault();
@@ -481,7 +485,6 @@ var timer = function() {
                 }, 3000)
             }
             inspectionTime = currentTime;
-            scramble.scramble();
             if (events.getCurrentEvent().blind) {
                 $("#dialogBlindResult").dialog("open")
                 globals.menuOpen = true;
@@ -534,6 +537,8 @@ var timer = function() {
         } else {
             events.createRecord(timerTime, timerResult);
         }
+        scramble.scramble();
+        
     }
 
     // Get stackmat information is used and display it
@@ -707,7 +712,6 @@ var timer = function() {
                     timerState = "normal";
                     timerText.style.color = normalColor;
                     submitTime();
-                    scramble.scramble();
                     fadeInUI();
                     if (!preferences.extendedVideos) {
                         record.stopRecorder();

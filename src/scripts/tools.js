@@ -202,8 +202,12 @@ var tools = function() {
             divide = 20;
         } else if (range <= 240) {
             divide = 30;
-        } else {
+        } else if (range <= 480) {
             divide = 60;
+        } else if (range <= 960){
+            divide = 120;
+        } else {
+            divide = 240;
         }
         var fmin = Math.floor(min / divide) * divide;
         var fmax = Math.ceil(max / divide) * divide;
@@ -670,7 +674,7 @@ var tools = function() {
         ctx.lineTo(285,140);
         ctx.stroke();
     }
-
+    
     // Shows first stage solutions for 3x3x3 scrambles
     var crossSolverID = 0;
     function crossSolver(ctx) {

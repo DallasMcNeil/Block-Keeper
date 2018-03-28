@@ -613,15 +613,19 @@ var events = function() {
             createRow("Ao1000",1000,calculatedTimes.ao1000s);
 
             // On hover record details
-            $("#sessionRecords td").hover(function(e) {
-                if (!globals.menuOpen) {
-                    var column = parseInt($(this).index());
-                    var row = parseInt($(this).parent().index());  
+            $("#sessionRecords td").unbind().click(function(e) {
+                var column = parseInt($(this).index());
+                var row = parseInt($(this).parent().index());  
+                if (!globals.menuOpen || ($("#dialogRecord").dialog("isOpen") && row != currentRecord + 1)) {
                     if (column == 1 && row > 0) {
+                        globals.menuOpen = true;
+                        if ($("#dialogRecord").dialog("isOpen")) {
+                            getCurrentRecord().comment = $("#recordComment").val();
+                        }
                         currentRecord = row - 1;
                         var detail = preferences.timerDetail;
                         var str = "";
-                        var height = 172;
+                        var height = 228;
                         preferences.timerDetail = 3;
                         if (getCurrentRecord().split) {
                             if (getCurrentRecord().split.length > 0) {
@@ -637,21 +641,11 @@ var events = function() {
                         str += formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result;
                         $("#recordTime").html(str);
                         preferences.timerDetail = detail;
-                        
-                        
-                        $("#dialogRecord").dialog("open");
-                        $("#dialogRecord").dialog({
-                            autoOpen:false,
-                            modal:true,
-                            hide:"fade",
-                            width:"271",
-                            height:height + "",
-                            position: {
-                                my:"left top",
-                                at:"right top",
-                                of:sessionRecordsTable.rows[row].cells[column]
-                            }
-                        });
+                        if (getCurrentRecord().comment != undefined) {
+                            $("#recordComment").val(getCurrentRecord().comment);
+                        } else {
+                            $("#recordComment").val("");
+                        }
                         $("#recordScramble").html(getCurrentRecord().scramble);
                         if (getCurrentRecord().date !== undefined) {
                             // Doesn't include Daylight savings
@@ -668,11 +662,28 @@ var events = function() {
                         } else {
                             $("#recordDate").html("-");
                         }
-                    } else {
-                        if ($("#dialogRecord").dialog('isOpen')) {
-                            $("#dialogRecord").dialog("close");
-                        }
+                        
+                        $("#dialogRecord").dialog({
+                            autoOpen:false,
+                            modal:true,
+                            hide:"fade",
+                            width:"271",
+                            height:height + "",
+                            closeOnEscape:false,
+                            position: {
+                                my:"left top",
+                                at:"right top",
+                                of:sessionRecordsTable.rows[row].cells[column]
+                            }
+                        })
+                        
+                        $("#dialogRecord").dialog("open");
+                        disableAllElements("sessionRecordsContainer");
+                        $(".selectable").prop("disabled", false);
+                        $(".selectable").removeClass("disabled");
                     }
+                } else {
+                    closeDialogRecord(true);
                 }
             })    
             setTimeout(function() {
@@ -689,6 +700,20 @@ var events = function() {
             console.log("Done: " + (new Date().getTime() - debugTime))
             
         }, 0)
+    }
+    
+    //var ignoreClickout = true;
+    
+    function closeDialogRecord(save=false) {
+        if ($("#dialogRecord").dialog("isOpen")) {
+            enableAllElements();
+            globals.menuOpen = false;
+            getCurrentRecord().comment = $("#recordComment").val();
+            $("#dialogRecord").dialog("close");
+            if (save) {
+                saveSessions();
+            }
+        }
     }
 
     var sessionButtonsShowing = false;
@@ -825,7 +850,7 @@ var events = function() {
     function recordResultOK() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "OK";
-            $("#dialogRecord").dialog("close");
+            closeDialogRecord();
             updateRecords(false,currentRecord);
         }
     }
@@ -834,7 +859,7 @@ var events = function() {
     function recordResult2() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "+2";
-            $("#dialogRecord").dialog("close");
+            closeDialogRecord();
             updateRecords(false,currentRecord);
         }
     }
@@ -843,7 +868,7 @@ var events = function() {
     function recordResultDNF() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "DNF";
-            $("#dialogRecord").dialog("close");
+            closeDialogRecord();
             updateRecords(false,currentRecord);
         }
     }
@@ -852,22 +877,22 @@ var events = function() {
     function deleteRecord() {
         if (getCurrentSession().records.length > 0) {
             getCurrentSession().records.splice(currentRecord, 1);
-            $("#dialogRecord").dialog("close");
+            closeDialogRecord();
             updateRecords(false);
         }
     }
-
+    /*
     // Close record dialog on background hover
     $("#background").hover(function() {
-        $("#dialogRecord").dialog("close");
+        closeDialogRecord(true);
     })
-
+*/
     // Create dialog record to view record details
     $("#dialogRecord").dialog({
         autoOpen:false,
         modal:true,
         width:"199",
-        height:"92" 
+        height:"152" 
     });
 
     // Create add time dialog
@@ -1475,6 +1500,7 @@ var events = function() {
         sessionButtonsShowing:returnSessionButtonsShowing,
         createNewEvent:createNewEvent,
         transferSessionButton:transferSessionButton,
-        transferSession:transferSession
+        transferSession:transferSession,
+        closeDialogRecord:closeDialogRecord
     }
 }()

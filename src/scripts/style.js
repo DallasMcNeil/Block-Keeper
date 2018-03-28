@@ -25,7 +25,7 @@ const style = function() {
 
     // Use Less to generate style sheet with theme colors to color UI
     function setStyle(colors) {
-        less.render("@background:" + colors[0] + ";@timer:" + colors[1] + ";@scramble:" + colors[2] + ";@base:" + colors[3] + ";@border:" + colors[4] + ";@text:" + colors[5] + ";@scrambleSize:" + preferences.scrambleSize + "vh;" + styleSheet, function(error, output) {
+        less.render("@background:" + colors[0] + ";@timer:" + colors[1] + ";@scramble:" + colors[2] + ";@base:" + colors[3] + ";@border:" + colors[4] + ";@text:" + colors[5] + ";@scrambleSize:" + preferences.scrambleSize + "vh;@timerSize:" + preferences.timerSize + "vmin;@timerSecondSize:" + preferences.timerSecondSize + "vmin;\n" + styleSheet, function(error, output) {
             if (error) {
                 throw error;
             } else {
