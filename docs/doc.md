@@ -201,6 +201,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * Announce best time: When best time for event is beaten, displays `New Best Time!` under timer and causes confetti to fall.
 * Scramble font size: Set the arbitrary font size of scrambles presented
 * Scramble font size: Set the arbitrary font size of the main timer
+* Announcement font size: Set the arbitrary font size of announcements
 * Scramble text alignment: Set text alignment of scramble text to left, right of center.
 * Background image: Specify a path to an image file which will be shown in the background. Image can be a .png and include transparency to the standard background. Optionally the Select Image button will present a dialog to find an image using a file browser.
 * Theme: Set color scheme of the application to predefined options or set to custom to use defined color scheme

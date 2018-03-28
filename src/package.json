@@ -2,7 +2,7 @@
   "name": "blockKeeper",
   "productName": "Block Keeper",
   "main": "main.js",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "author": "Dallas McNeil",
   "dependencies": {
     "electron": "1.7.13",
