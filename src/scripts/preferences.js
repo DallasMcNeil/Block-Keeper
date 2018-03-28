@@ -400,6 +400,7 @@ var prefs = function() {
                         events.createRecord(CSData[currentCS][i][0][1] / 1000, "OK");
                     }
                     events.getCurrentSession().records[i].scramble = CSData[currentCS][i][1];
+                    events.getCurrentSession().records[i].comment = CSData[currentCS][i][2];
                 }
                 events.shouldUpdateStats(true);
                 events.setSessionOptions($("#sessionSelect")[0]);
@@ -440,7 +441,7 @@ var prefs = function() {
             if (fileName === undefined){
                 return;
             }  
-            var str = "Event,Session,SessionOrder,Order,Time,Result,Scramble,Split,Date,FormattedDate"
+            var str = "Event,Session,SessionOrder,Order,Time,Result,Scramble,Split,Date,FormattedDate,Comment"
             var e = events.getAllEvents();
             for (var p = 0; p < e.length; p++) {
                 if (!e[p].sessions) {
@@ -456,13 +457,17 @@ var prefs = function() {
                         if (e[p].sessions[s].records[r].date != undefined) {
                             d = e[p].sessions[s].records[r].date;
                         }
+                        var com = "";
+                        if (e[p].sessions[s].records[r].comment != undefined) {
+                            com = e[p].sessions[s].records[r].comment;
+                        }
                         var sp = 0;
                         if (e[p].sessions[s].records[r].split != undefined) {
                             if (e[p].sessions[s].records[r].split.length > 0) {
                                 sp = e[p].sessions[s].records[r].split[0];
                             }
                         }
-                        str += "\n\"" + e[p].name.replaceAll('"','""') + "\",\"" + e[p].sessions[s].name.replaceAll('"','""') + "\"," + (s + 1) + "," + (r + 1) + "," + e[p].sessions[s].records[r].time + "," + e[p].sessions[s].records[r].result + ",\"" + e[p].sessions[s].records[r].scramble.replaceAll('"','""') + "\"," + sp + "," + d + ",\"" + new Date(d).toUTCString() + "\"";
+                        str += "\n\"" + e[p].name.replaceAll('"','""') + "\",\"" + e[p].sessions[s].name.replaceAll('"','""') + "\"," + (s + 1) + "," + (r + 1) + "," + e[p].sessions[s].records[r].time + "," + e[p].sessions[s].records[r].result + ",\"" + e[p].sessions[s].records[r].scramble.replaceAll('"','""') + "\"," + sp + "," + d + ",\"" + new Date(d).toUTCString() + "\",\"" + com + "\"";
                     }
                 }   
             }     
