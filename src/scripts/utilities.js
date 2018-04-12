@@ -134,11 +134,7 @@ function averageTimes(times) {
                 return a - b;
             }
         })
-        if (t.length < 40) {
-            t = t.slice(1, -1);
-        } else {
-            t = t.slice(Math.floor(t.length * 0.05), -Math.floor(t.length * 0.05));
-        }
+        t = t.slice(Math.ceil(t.length * 0.05), -Math.ceil(t.length * 0.05));
         if (t[0] == -1) {
             return -1;
         }
