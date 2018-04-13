@@ -1,3 +1,0 @@
-#!/bin/bash
-echo "Running Block Keeper..."
-src/node_modules/.bin/electron src

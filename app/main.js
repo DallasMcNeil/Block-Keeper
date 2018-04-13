@@ -2,10 +2,13 @@
 // Main proccess of Block Keeper app 
 // Block Keeper
 // Created by Dallas McNeil
+'use strict';
+
+const updater = require("electron-simple-updater");
+updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
 
 var devToolsOpen = false;
 
-'use strict';
 const {app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
 const windowStateKeeper = require('electron-window-state');
@@ -144,7 +147,7 @@ app.on('ready', function() {
         var titleBar = "hidden";
     }
     
-    global.appDetails = {version:require('./package.json').version, titleBar:titleBar};
+    global.appDetails = {version:require('../package.json').version, titleBar:titleBar};
 
     let mainWindowState = windowStateKeeper({
         defaultWidth:960,
