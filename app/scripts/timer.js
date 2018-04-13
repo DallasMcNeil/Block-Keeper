@@ -64,7 +64,7 @@ var timer = function() {
         rightKey = preferences.rightKey;
         
         if (e.keyCode === $.ui.keyCode.ESCAPE && $("#dialogRecord").dialog("isOpen")) {
-            events.closeDialogRecord();
+            events.closeDialogRecord(false);
         }
 
         if ((leftDown && e.key === leftKey) || (rightDown && e.key === rightKey) || (mainDown && e.key === mainKey)){
