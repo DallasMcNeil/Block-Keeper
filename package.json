@@ -14,7 +14,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "dist": "electron-builder -mwl",
+    "dist": "electron-builder --win --x64 --ia32 squirrel;electron-builder --mac zip;electron-builder --linux --ia32 --x64 --armv7l appimage",
     "publish": "publish",
     "release": "npm run dist && npm run publish"
   },
@@ -36,8 +36,7 @@
     "url": "git+https://github.com/DallasMcNeil/Block-Keeper"
   },
   "updater": {
-    "channel": "",
-    "url": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json"
+    "url": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/updates.json"
   },
   "build": {
     "appId": "com.dallasmcneil.blockkeeper",
@@ -65,7 +64,7 @@
       "target": "squirrel"
     },
     "squirrelWindows": {
-      "iconUrl": "https://raw.githubusercontent.com/megahertz/electron-simple-updater/master/example/build/icon.ico"
+      "iconUrl": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/build/icon.ico"
     },
     "appImage": {
       "synopsis": "Cubing timer",

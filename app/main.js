@@ -5,9 +5,10 @@
 'use strict';
 
 const updater = require("electron-simple-updater");
-updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
+updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/updates.json");
 
 var devToolsOpen = false;
+
 
 const {app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
