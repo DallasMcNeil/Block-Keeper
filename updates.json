@@ -13,8 +13,8 @@
     },
     "darwin-x64-prod": {
       "readme": "Test Release",
-      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/Block.Keeper-2.0.0-mac.zip",
-      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/Block.Keeper-2.0.0.dmg",
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/Block-Keeper-2.0.0-mac.zip",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/Block-Keeper-2.0.0.dmg",
       "version": "2.0.0"
     },
     "linux-ia32-prod": {
