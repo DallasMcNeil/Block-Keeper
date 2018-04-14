@@ -1,8 +1,8 @@
 {
-  "darwin-x64-prod": {
+  "linux-x64-prod": {
     "readme": "README",
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/darwin-x64-prod-v1.3.3/release.json",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/darwin-x64-prod-v1.3.3/Block.Keeper-1.3.3.dmg",
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/linux-x64-prod-v1.3.3/blockkeeper-1.3.3-x86_64.AppImage",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/linux-x64-prod-v1.3.3/blockkeeper-1.3.3-x86_64.AppImage",
     "version": "1.3.3"
   }
 }
