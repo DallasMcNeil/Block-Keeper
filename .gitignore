@@ -1,3 +1,5 @@
 dist/*
 node_modules/
 publisher.json
+docs/doc.html
+docs/docRaw.html

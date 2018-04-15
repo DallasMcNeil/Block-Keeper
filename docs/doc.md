@@ -2,7 +2,7 @@
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
-![alt text](images/blockkeeper.gif)
+![](images/blockkeeper.gif)
 
 Main Features:
 
