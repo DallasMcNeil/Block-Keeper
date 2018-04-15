@@ -67,7 +67,8 @@ const template = [{
         {label:'Block Keeper Guide', click() { require('electron').shell.openExternal(path.join("file://",path.join(__dirname, '../docs/doc.html')))}}
     ]
 }]
-console.log(path.join(__dirname, '../docs/doc.html'));
+
+console.log(process)
 
 if (process.platform === 'darwin') {
     template.unshift({

@@ -14,7 +14,7 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "dist": "electron-builder --win --x64 --ia32 squirrel;electron-builder --mac zip dmg;electron-builder --linux --ia32 --x64 --armv7l appimage",
+    "dist": "electron-builder --win --ia32 squirrel;electron-builder --mac zip dmg;electron-builder --linux --ia32 --x64 --armv7l appimage",
     "publish": "publish publish linux",
     "release": "npm run dist && npm run publish"
   },
