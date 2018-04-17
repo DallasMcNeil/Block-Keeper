@@ -21,7 +21,7 @@
       "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/blockkeeper-2.0.0-x86_64.AppImage",
       "version": "2.0.0"
     },
-    "linux-armv7l-prod": {
+    "linux-arm-prod": {
       "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/blockkeeper-2.0.0-armv7l.AppImage",
       "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/blockkeeper-2.0.0-armv7l.AppImage",
       "version": "2.0.0"

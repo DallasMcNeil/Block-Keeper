@@ -68,8 +68,6 @@ const template = [{
     ]
 }]
 
-console.log(process)
-
 if (process.platform === 'darwin') {
     template.unshift({
         label:app.getName(),
