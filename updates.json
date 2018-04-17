@@ -1,5 +1,5 @@
 {
-    "windows-ia32-prod": {
+    "win32-ia32-prod": {
       "readme": "Test Release",
       "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0",
       "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.0/Block-Keeper-Setup -2.0.0.exe",
