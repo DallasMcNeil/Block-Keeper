@@ -10,7 +10,7 @@ updater.on("update-downloading", function() {
     dialog.showMessageBox({
         type:"info",
         title:"Block Keeper Update",
-        message:"A new update is available and downloading in the background. It will be installed automatically."
+        message:"A new update is available and downloading in the background. It will be installed automatically once the program is closed."
     });
 });
 
