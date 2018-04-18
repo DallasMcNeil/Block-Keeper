@@ -1,0 +1,65 @@
+#!/bin/bash
+
+VER=$1
+
+cd Block\ Keeper
+
+jq '.version = "'$VER'"' package.json > tmp.json
+cat tmp.json > package.json
+rm tmp.json
+
+npm run dist
+
+cd dist
+rm -rf upload
+mkdir upload
+
+cp Block\ Keeper-$VER-mac.zip upload/Block-Keeper-$VER-mac.zip
+cp Block\ Keeper-$VER.dmg upload/Block-Keeper-$VER.dmg
+cp github/latest-mac.json upload/release.json
+
+jq '.url = "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/Block-Keeper-'$VER'-mac.zip"' < upload/release.json > tmp.json
+cat tmp.json > upload/release.json
+rm tmp.json
+
+cp blockkeeper-$VER-armv7l.AppImage upload/blockkeeper-$VER-armv7l.AppImage
+cp blockkeeper-$VER-i386.AppImage upload/blockkeeper-$VER-i386.AppImage
+cp blockkeeper-$VER-x86_64.AppImage upload/blockkeeper-$VER-x86_64.AppImage
+
+cp squirrel-windows-ia32/Block\ Keeper\ Setup\ $VER.exe upload/Block-Keeper-Setup-$VER.exe
+cp squirrel-windows-ia32/blockkeeper-$VER-full.nupkg upload/blockkeeper-$VER-full.nupkg
+cp squirrel-windows-ia32/RELEASES upload/RELEASES
+
+cd ..
+
+echo '{
+    "win32-ia32-prod": {
+      "readme": "Test Release",
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/Block-Keeper-Setup -'$VER'.exe",
+      "version": "'$VER'"
+    },
+    "darwin-x64-prod": {
+      "readme": "Test Release",
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/release.json",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/Block-Keeper-'$VER'.dmg",
+      "version": "'$VER'"
+    },
+    "linux-ia32-prod": {
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-i386.AppImage",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-i386.AppImage",
+      "version": "'$VER'"
+    },
+    "linux-x64-prod": {
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-x86_64.AppImage",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-x86_64.AppImage",
+      "version": "'$VER'"
+    },
+    "linux-arm-prod": {
+      "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-armv7l.AppImage",
+      "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/blockkeeper-'$VER'-armv7l.AppImage",
+      "version": "'$VER'"
+    }
+  }' > updates.json
+
+cd ..
