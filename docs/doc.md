@@ -33,7 +33,7 @@ Block Keeper uses [Electron](http://electron.atom.io) and should run on all [sup
 
 ### Windows
 
-Block Keeper can be launched through `Block Keeper.exe`. It is recommended you place the `Block Keeper` folder in a permanent location and create a shortcut to `Block Keeper.exe` and place it wherever you would like. Save data and preferences are stored in `Users/YourName/AppData/Roaming/Block Keeper` or `%APPDATA%`. You may need to enable hidden folders to access them.
+Run `Block-Keeper-Setup.exe` to install Block Keeper. Save data and preferences are stored in `Users/YourName/AppData/Roaming/Block Keeper` or `%APPDATA%`. You may need to enable hidden folders to access them.
 
 ### MacOS
 
@@ -41,7 +41,11 @@ Block Keeper is a standalone application and can be run from anywhere. You can p
 
 ### Linux
 
-Block Keeper can be launched through the `Block Keeper` executable file. Save data and preferences are stored in `$HOME/.config` or `$XDG_CONFIG_HOME`.
+Block Keeper can be launched through the `blockkeeper` AppImage executable file. Save data and preferences are stored in `$HOME/.config` or `$XDG_CONFIG_HOME`.
+
+## Updates
+
+Block Keeper will check for updates automatically at startup and will download any new versions. When Block Keeper is closed the update will be installed.
 
 ## Interface
 
