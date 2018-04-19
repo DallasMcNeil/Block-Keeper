@@ -5,7 +5,7 @@
 'use strict';
 
 const updater = require("electron-simple-updater");
-updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/updates.json");
+updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
 updater.on("update-downloading", function() {
     dialog.showMessageBox({
         type:"info",

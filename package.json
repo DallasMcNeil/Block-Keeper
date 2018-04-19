@@ -34,7 +34,7 @@
     "url": "git+https://github.com/DallasMcNeil/Block-Keeper"
   },
   "updater": {
-    "url": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/updates.json"
+    "url": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json"
   },
   "build": {
     "appId": "com.dallasmcneil.blockkeeper",
@@ -63,7 +63,7 @@
       "target": "squirrel"
     },
     "squirrelWindows": {
-      "iconUrl": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/newrelease/build/icon.ico"
+      "iconUrl": "https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/build/icon.ico"
     },
     "appImage": {
       "synopsis": "Cubing timer",
