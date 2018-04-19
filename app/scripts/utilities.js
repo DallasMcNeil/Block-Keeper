@@ -111,11 +111,20 @@ function standardDeviation(times) {
 }
 
 function medianTimes(t) {
-    var times = t.slice();
+    var times = t.splice();
     if (times.length == 0) {
         return 0;
     }
-    var sortedTimes = times.sort();
+    
+    var sortedTimes = times.sort(function(a,b) {
+        if (a >b) {
+            return 1;
+        } else if (a < b) {
+            return -1;
+        }
+        return 0;
+    });
+
     var a = sortedTimes[Math.ceil((sortedTimes.length - 1) / 2)];
     var b = sortedTimes[Math.floor((sortedTimes.length - 1) / 2)];
     return (a + b) / 2;

@@ -1,1 +1,3 @@
-pandoc doc.md -o doc.html
+#!/bin/bash
+pandoc doc.md -o docRaw.html
+pandoc doc.md -o doc.html --css style.css

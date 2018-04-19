@@ -10,6 +10,9 @@ var fs = require('fs');
 const {clipboard} = require('electron');
 const app = remote.app;
 
+var current = require('electron').remote.getGlobal('appDetails').version;
+$("#versionLabel").prop("innerHTML", "Version " + current);
+
 // Default preferences overrided by loaded preferences
 var preferences = {
     theme:0,

@@ -1,4 +1,4 @@
-# Block Keeper 1.3.3
+# Block Keeper 2.0.0
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -26,37 +26,23 @@ An extensive guide for using Block Keeper is available [here](https://dallasmcne
   
 ## Download
 
-A precompiled version of Block Keeper for Windows, MacOS and Linux is available [here](http://dallasmcneil.com/projects/blockkeeper).
+A precompiled version of Block Keeper for Windows, MacOS and Linux is available [here](http://dallasmcneil.com/projects/blockkeeper), or in the [releases](https://github.com/DallasMcNeil/Block-Keeper/releases) section.
 
 ## Development
 
-You can edit Block Keeper's source in a couple of ways.
+Once you download the source from Github. Navigate to the downloaded folder using the command line and run the following command. You will need [npm](https://www.npmjs.com/get-npm) installed. All scripts use bash.
 
-### In Precompiled
-
-Block Keeper uses Github's [Electron](https://electron.atom.io) and the source is available to view or change in every copy. 
-
-On Windows and Linux, the source is available in the `resources` folder. On MacOS you will need to view the package contents to find the `resources` folder.
-
-To test your code, just run the application.
-
-However, I don't recommend this method past making very small changes as it doesn't provide much flexibility.
-
-### From Source
-
-Once you download the source from Github. Navigate to the downloaded folder using the command line and run the setup script. You will need [npm](https://www.npmjs.com/get-npm) installed. All scripts use bash.
-
-`./setup`
+`npm install`
 
 This will download and install the required packages, it may take some time to install everything. 
 
-Once that has finished use the start script to run and test the current source.
+Once that has finished use the following command to run and test the current source.
 
-`./start`
+`npm start`
 
-Use the export script to create a standalone application. You can edit the script to add or change options. For more options for exporting see [here](https://github.com/electron-userland/electron-packager/blob/master/docs/api.md). By default, the script will create an application for your current platform.
+Use the setupVersion script to create standalone applications for all platforms in a `dist` folder. This will also format `package.json`, `updates.json` and the created applications for release.
 
-`./export`
+`./formatVersion 'versionNumber'`
 
 ## Debuging
 

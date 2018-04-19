@@ -102,6 +102,7 @@ const record = function() {
     function stopRecorder() {  
         if (hasCamera && preferences.recordSolve) {
             hasVideo = false;
+            delete finishedRecorder;
             finishedRecorder = recorder;
             recorder = RecordRTC(mediaStream,{
                 type: 'video',
@@ -126,6 +127,7 @@ const record = function() {
     // Stop the recorder and discard the video
     function cancelRecorder() {
         if (hasCamera && preferences.recordSolve) {
+            delete finishedRecorder;
             finishedRecorder = recorder;
             recorder = RecordRTC(mediaStream,{
                 type: 'video',

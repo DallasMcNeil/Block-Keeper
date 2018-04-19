@@ -699,16 +699,18 @@ var events = function() {
             
             console.log("Done: " + (new Date().getTime() - debugTime))
             
-        }, 0)
+        }, 0);
     }
     
     //var ignoreClickout = true;
     
-    function closeDialogRecord(save=false) {
+    function closeDialogRecord(save,didDelete=false) {
         if ($("#dialogRecord").dialog("isOpen")) {
             enableAllElements();
             globals.menuOpen = false;
-            getCurrentRecord().comment = $("#recordComment").val();
+            if (!didDelete && getCurrentRecord() != undefined) {
+                getCurrentRecord().comment = $("#recordComment").val();
+            }
             $("#dialogRecord").dialog("close");
             if (save) {
                 saveSessions();
@@ -850,7 +852,7 @@ var events = function() {
     function recordResultOK() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "OK";
-            closeDialogRecord();
+            closeDialogRecord(false);
             updateRecords(false,currentRecord);
         }
     }
@@ -859,7 +861,7 @@ var events = function() {
     function recordResult2() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "+2";
-            closeDialogRecord();
+            closeDialogRecord(false);
             updateRecords(false,currentRecord);
         }
     }
@@ -868,7 +870,7 @@ var events = function() {
     function recordResultDNF() {
         if (getCurrentSession().records.length > 0) {
             getCurrentRecord().result = "DNF";
-            closeDialogRecord();
+            closeDialogRecord(false);
             updateRecords(false,currentRecord);
         }
     }
@@ -877,7 +879,7 @@ var events = function() {
     function deleteRecord() {
         if (getCurrentSession().records.length > 0) {
             getCurrentSession().records.splice(currentRecord, 1);
-            closeDialogRecord();
+            closeDialogRecord(true,true);
             updateRecords(false);
         }
     }

@@ -1,3 +1,5 @@
-release/
-src/node_modules/
-!src/node_modules/cube-solver/*
+dist
+node_modules/
+publisher.json
+docs/doc.html
+docs/docRaw.html

@@ -2,11 +2,20 @@
 // Main proccess of Block Keeper app 
 // Block Keeper
 // Created by Dallas McNeil
-
-var devToolsOpen = false;
-
 'use strict';
-const {app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
+
+const updater = require("electron-simple-updater");
+updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
+updater.on("update-downloading", function() {
+    dialog.showMessageBox({
+        type:"info",
+        title:"Block Keeper Update",
+        message:"A new update is available and downloading in the background. It will be installed automatically once the program is closed."
+    });
+});
+
+
+const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
 const windowStateKeeper = require('electron-window-state');
 
@@ -55,7 +64,7 @@ const template = [{
     ]}, {
     role:'help',
     submenu: [
-        {label:'Block Keeper Guide', click() { require('electron').shell.openExternal('https://dallasmcneil.com/projects/blockkeeper/guide')}}
+        {label:'Block Keeper Guide', click() { require('electron').shell.openExternal(path.join("file://",path.join(__dirname, '../docs/doc.html')))}}
     ]
 }]
 
@@ -144,7 +153,7 @@ app.on('ready', function() {
         var titleBar = "hidden";
     }
     
-    global.appDetails = {version:require('./package.json').version, titleBar:titleBar};
+    global.appDetails = {version:require('../package.json').version, titleBar:titleBar};
 
     let mainWindowState = windowStateKeeper({
         defaultWidth:960,
@@ -171,10 +180,6 @@ app.on('ready', function() {
     mainWindowState.manage(win);
        
     Menu.setApplicationMenu(menu);
-    
-    if (devToolsOpen) {
-        win.toggleDevTools();
-    }
     
     win.on('enter-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "enter");
