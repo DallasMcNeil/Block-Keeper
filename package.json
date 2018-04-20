@@ -14,7 +14,8 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "electron .",
-    "dist": "electron-builder --win --ia32 squirrel;electron-builder --mac zip dmg;electron-builder --linux --ia32 --x64 --armv7l appimage"
+    "dist": "electron-builder --win --ia32 squirrel;electron-builder --mac zip dmg;electron-builder --linux --ia32 --x64 --armv7l appimage",
+    "build": "electron-builder"
   },
   "devDependencies": {
     "electron": "1.8.3",

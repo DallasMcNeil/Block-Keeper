@@ -1,4 +1,4 @@
-# Block Keeper 2.0.0
+# Block Keeper
 
 Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
 
@@ -40,9 +40,15 @@ Once that has finished use the following command to run and test the current sou
 
 `npm start`
 
-Use the setupVersion script to create standalone applications for all platforms in a `dist` folder. This will also format `package.json`, `updates.json` and the created applications for release.
+Use the following command to build a standalone application for the current platform.
+
+`npm run build`
+
+Use the setupVersion script to create standalone applications for all platforms in a `dist` folder. This will also format `package.json`, `updates.json` and the created applications for release. [jq](https://stedolan.github.io/jq/) is required.
 
 `./formatVersion 'versionNumber'`
+
+To generate documentation from `docs/doc.md`, use the `make` script. This requires [pandoc](https://pandoc.org).
 
 ## Debuging
 
