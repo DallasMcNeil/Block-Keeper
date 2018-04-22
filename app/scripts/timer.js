@@ -703,7 +703,11 @@ var timer = function() {
                         timerTime = state.time_milli / 1000;
 
                         if (!state.running) {
-                            stopTimer(true, true);
+                            if (state.time_milli == 0) {
+                                cancelTimer();
+                            } else {
+                                stopTimer(true, true);
+                            }
                         }   
                         break;
                 }
