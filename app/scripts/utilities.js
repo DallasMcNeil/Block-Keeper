@@ -111,13 +111,14 @@ function standardDeviation(times) {
 }
 
 function medianTimes(t) {
-    var times = t.splice();
+    var times = t.slice();
+
     if (times.length == 0) {
         return 0;
     }
     
     var sortedTimes = times.sort(function(a,b) {
-        if (a >b) {
+        if (a > b) {
             return 1;
         } else if (a < b) {
             return -1;
