@@ -446,7 +446,7 @@ var events = function() {
     function updateRecords(scrollDown = false, updateFrom = 0) {
         setTimeout(function() { 
             var debugTime = new Date();
-            console.log("Benchmark Start")
+            console.log("Benchmark Start");
             
             var records = getCurrentSession().records;
             // Set records table up for adding records
@@ -484,7 +484,7 @@ var events = function() {
                     }())
                 }
             }
-            
+
             // Calculate all times, means, averages
             calculatedTimes.times = [];
             if (updateFrom === 0 || calculatedTimes.length === 0) {
@@ -498,6 +498,9 @@ var events = function() {
             }
             var DNFsolves = 0;
 
+            console.log("Calculation Benchmark Start: " + (new Date().getTime() - debugTime));
+            
+            // Main calculations, possible to optmise?
             for (var i = 0; i < records.length; i++) {
                 if (records[i].result === "DNF") {
                     DNFsolves++;
@@ -537,6 +540,8 @@ var events = function() {
                     sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);   
                 }
             }
+
+            console.log("Calculation Benchmark Done: " + (new Date().getTime() - debugTime));
 
             // Create session stats
             var mean = meanTimes(removeDNFs(calculatedTimes.times));
@@ -696,7 +701,7 @@ var events = function() {
             
             tools.updateTools();
             saveSessions();
-            
+ 
             console.log("Done: " + (new Date().getTime() - debugTime))
             
         }, 0);
