@@ -639,15 +639,13 @@ var events = function() {
                             if (getCurrentRecord().split.length > 0) {
                                 height += 20;
                                 str += formatSplits(getCurrentRecord().split.concat(getCurrentRecord().time)) + "<br>";
-                                $("#recordScramble").css("top", "83px");
-                            } else {
-                                $("#recordScramble").css("top", "63px");
                             }
-                        } else {
-                            $("#recordScramble").css("top", "63px");
                         }
+                        
                         str += formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result;
                         $("#recordTime").html(str);
+
+                        //$("#recordComment").css("top", ($("#recordTime").height() +  $("#recordDate").height()) + "px");
                         preferences.timerDetail = detail;
                         if (getCurrentRecord().comment != undefined) {
                             $("#recordComment").val(getCurrentRecord().comment);
@@ -689,6 +687,15 @@ var events = function() {
                         disableAllElements("sessionRecordsContainer");
                         $(".selectable").prop("disabled", false);
                         $(".selectable").removeClass("disabled");
+
+                        setTimeout(function() {
+                            var height = 20;
+                            height += $("#recordTime").height() +  $("#recordDate").height();
+                            $("#recordScramble").css("top", height + "px");
+                            height += 100;
+                            $("#recordComment").css("top", height + "px");
+                            
+                        }, 0);
                     }
                 } else {
                     closeDialogRecord(true);
