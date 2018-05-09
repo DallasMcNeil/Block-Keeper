@@ -638,7 +638,7 @@ var events = function() {
                         if (getCurrentRecord().split) {
                             if (getCurrentRecord().split.length > 0) {
                                 height += 20;
-                                str += "(" + formatTime(getCurrentRecord().split[0]) + " / " + formatTime(getCurrentRecord().time - getCurrentRecord().split[0]) + ")<br>";
+                                str += formatSplits(getCurrentRecord().split.concat(getCurrentRecord().time)) + "<br>";
                                 $("#recordScramble").css("top", "83px");
                             } else {
                                 $("#recordScramble").css("top", "63px");

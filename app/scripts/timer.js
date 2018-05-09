@@ -36,7 +36,6 @@ var timer = function() {
     var startTime = currentTime;
     var inspectionTime = currentTime;
     var splitTimes = [];
-    var splitRecorded = false;
     
     // Current record information
     var timerTime = 0;
@@ -107,7 +106,7 @@ var timer = function() {
         } else {
             if (e.key === mainKey) {
                 mainDown = true;
-                if (!splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind && timerState === "timing") {
+                if (splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits && timerState === "timing") {
                     stopTimer();
                 }
             } else if (e.key === "Escape") {
@@ -536,12 +535,7 @@ var timer = function() {
 
     // Submit a time to be created
     function submitTime() {
-        if (splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
-            events.createRecord(timerTime, timerResult, splitTimes)
-            splitRecorded = false;
-        } else {
-            events.createRecord(timerTime, timerResult);
-        }
+        events.createRecord(timerTime, timerResult, splitTimes)
         scramble.scramble();
         
     }
