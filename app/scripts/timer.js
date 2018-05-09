@@ -35,7 +35,7 @@ var timer = function() {
     var currentTime = Date.now();
     var startTime = currentTime;
     var inspectionTime = currentTime;
-    var splitTime = currentTime;
+    var splitTimes = [];
     var splitRecorded = false;
     
     // Current record information
@@ -56,7 +56,7 @@ var timer = function() {
     var OHSplitEnabled = false;
     
     // Prevent key repeats
-    var keysDown = {}
+    var keysDown = {};
     
     // Get keyboard down events
     window.onkeydown = function(e) {
@@ -424,6 +424,7 @@ var timer = function() {
     function startTimer() {
         currentTime = Date.now();
         startTime = currentTime;
+        splitTimes = [];
         if (!preferences.extendedVideos || events.getCurrentEvent().blind || (!preferences.inspection && preferences.extendedVideos)) {
             record.startRecorder();
         }
@@ -460,13 +461,12 @@ var timer = function() {
     // Stop the timer
     function stopTimer(forced = false, SM = false) {
         currentTime = Date.now();
-        if (!forced && !splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
-            splitTime = ((currentTime - startTime) / 1000);
-            splitRecorded = true;
+        if (!forced && splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits) {
+            splitTimes.push((currentTime - startTime) / 1000);
             if (preferences.hideTiming) {
-                timerSplit.innerHTML = "Split";
+                timerSplit.innerHTML = ("Split " + splitTimes.length);
             } else {
-                timerSplit.innerHTML = formatTime(splitTime);
+                timerSplit.innerHTML = formatSplits(splitTimes);
             }
             return;
         }
@@ -474,6 +474,11 @@ var timer = function() {
             timerText.style.color = normalColor;
             timerTime = ((currentTime - startTime) / 1000);
             timerText.innerHTML = formatTime(timerTime);
+        }
+        if (splitTimes.length > 0) {
+            timerSplit.innerHTML = formatSplits(splitTimes.concat([timerTime]));
+        } else {
+            timerSplit.innerHTML = "";
         }
         timerState = "normal";
         setTimeout(function () {
@@ -500,11 +505,11 @@ var timer = function() {
     
     // Set result at the end of a blind solve
     function blindResult(res) {
-        $("#dialogBlindResult").dialog("close")
+        $("#dialogBlindResult").dialog("close");
         timerResult = res;
         timerText.innerHTML = formatTime(timerTime);
-        if (splitRecorded && preferences.blindSplit) {
-            timerSplit.innerHTML = formatTime(splitTime) + " / " + formatTime(timerTime - splitTime);
+        if (splitTimes.length > 0) {
+            timerSplit.innerHTML = formatSplits(splitTimes.concat([timerTime]));
         } else {
             timerSplit.innerHTML = "";
         }
@@ -532,7 +537,7 @@ var timer = function() {
     // Submit a time to be created
     function submitTime() {
         if (splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
-            events.createRecord(timerTime, timerResult, [splitTime])
+            events.createRecord(timerTime, timerResult, splitTimes)
             splitRecorded = false;
         } else {
             events.createRecord(timerTime, timerResult);

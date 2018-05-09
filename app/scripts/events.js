@@ -19,26 +19,26 @@ var events = function() {
     // All events, holding all session and record data
     // These are the default events and settings
     var internalEvents = [
-        {name:"3x3x3",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true},
-        {name:"2x2x2",sessions:[],scrambler:"2x2x2",enabled:true,OH:false,blind:false,default:true},
-        {name:"4x4x4",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:false,default:true},
-        {name:"5x5x5",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:false,default:true},
+        {name:"3x3x3",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"2x2x2",sessions:[],scrambler:"2x2x2",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"4x4x4",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"5x5x5",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:false,default:true,splits:1},
 
-        {name:"Pyraminx",sessions:[],scrambler:"Pyraminx",enabled:true,OH:false,blind:false,default:true},
-        {name:"Skewb",sessions:[],scrambler:"Skewb",enabled:true,OH:false,blind:false,default:true},
-        {name:"Megaminx",sessions:[],scrambler:"Megaminx",enabled:true,OH:false,blind:false,default:true},
-        {name:"Square-1",sessions:[],scrambler:"Square-1",enabled:true,OH:false,blind:false,default:true},
-        {name:"Clock",sessions:[],scrambler:"Clock",enabled:true,OH:false,blind:false,default:true},
-        {name:"6x6x6",sessions:[],scrambler:"6x6x6",enabled:true,OH:false,blind:false,default:true},
-        {name:"7x7x7",sessions:[],scrambler:"7x7x7",enabled:true,OH:false,blind:false,default:true},
+        {name:"Pyraminx",sessions:[],scrambler:"Pyraminx",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"Skewb",sessions:[],scrambler:"Skewb",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"Megaminx",sessions:[],scrambler:"Megaminx",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"Square-1",sessions:[],scrambler:"Square-1",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"Clock",sessions:[],scrambler:"Clock",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"6x6x6",sessions:[],scrambler:"6x6x6",enabled:true,OH:false,blind:false,default:true,splits:1},
+        {name:"7x7x7",sessions:[],scrambler:"7x7x7",enabled:true,OH:false,blind:false,default:true,splits:1},
 
-        {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false,default:true},
-        {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true,default:true},
-        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true,default:true},
-        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true,default:true},
-        {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true},
+        {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false,default:true,splits:1},
+        {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true,default:true,splits:2},
+        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true,default:true,splits:2},
+        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true,default:true,splits:2},
+        {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true,splits:1},
 
-        {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false,default:true}
+        {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false,default:true,splits:1}
     ]
 
     var currentEvent = 0;
@@ -152,6 +152,9 @@ var events = function() {
                 }
                 if (y[i].OH === undefined) {
                     y[i].OH = false;
+                }
+                if (y[i].splits === undefined) {
+                    y[i].splits = 1;
                 }
                 if (y[i].blind === undefined) {
                     y[i].blind = false;
@@ -990,7 +993,7 @@ var events = function() {
 
             if (internalEvents[index].default) {
                 var name = document.createElement("p");
-                name.style.width = "200px"; 
+                name.style.width = "175px"; 
                 name.style.display = "inline-block";
                 name.style.lineHeight = "30px";
                 name.style.margin = "0px";
@@ -1002,7 +1005,7 @@ var events = function() {
             } else {
                 var name = document.createElement("input");
                 name.type = "text";
-                name.style.width = "200px"; 
+                name.style.width = "175px"; 
                 name.style.position = "absolute";
                 name.style.top = "0px";
                 name.style.left = "65px";
@@ -1043,10 +1046,10 @@ var events = function() {
             var scrambler = document.createElement("select");
             scramble.setScramblerOptions(scrambler);
             scrambler.options.remove(0);
-            scrambler.style.width = "200px"; 
+            scrambler.style.width = "175px"; 
             scrambler.style.position = "absolute";
             scrambler.style.top = "0px";
-            scrambler.style.left = "275px";
+            scrambler.style.left = "250px";
             scrambler.value = event.scrambler;
             li.appendChild(scrambler);
             scrambler.onchange = function() {
@@ -1059,7 +1062,7 @@ var events = function() {
             blind.checked = event.blind;
             blind.style.position = "absolute";
             blind.style.top = "3px";
-            blind.style.left = "485px";
+            blind.style.left = "435px";
             
             var OH = document.createElement("input");
             OH.type = "checkbox";
@@ -1067,7 +1070,28 @@ var events = function() {
             OH.checked = event.OH;
             OH.style.position = "absolute";
             OH.style.top = "3px";
-            OH.style.left = "520px";
+            OH.style.left = "470px";
+
+            var splits = document.createElement("input");
+            splits.type = "text";
+            splits.maxLength = 2;
+            splits.style.width = "25px"; 
+            splits.style.position = "absolute";
+            splits.style.top = "0px";
+            splits.style.left = "520px";
+            splits.value = event.splits;
+            li.appendChild(splits);
+            splits.onchange = function() {
+                var n = parseInt(splits.value);
+                if (n == undefined || isNaN(n)) {
+                    n = internalEvents[index].splits;
+                }
+                if (n < 1) {
+                    n = 1;
+                }
+                internalEvents[index].splits = n;
+                splits.value = n;
+            }
             
             li.appendChild(OH);
             OH.onchange = function() {
@@ -1087,13 +1111,13 @@ var events = function() {
                 blind.className += " disabled";
                 blind.disabled = true;
             }
-            
+        
             if (!internalEvents[index].default) {
                 var remove = document.createElement("button");
                 remove.className = "delete";
                 remove.style.position = "absolute";
                 remove.style.top = "0px";
-                remove.style.left = "570px";
+                remove.style.left = "580px";
             
                 
                 remove.onclick = function() {

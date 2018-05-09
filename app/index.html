@@ -160,7 +160,7 @@ Created by Dallas McNeil
     <!-- Dialogs -->
     
     <div id="dialogManageEvents">
-        <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:75px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:120px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:50px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
+        <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:60px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:95px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:30px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Splits</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
         <ul id="eventsList"></ul>
         <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add event</button>   <button onclick="events.closeEvents()">Done</button></p>
     </div>
@@ -267,7 +267,7 @@ Created by Dallas McNeil
                     <p title="Use 2 keys instead of spacebar"><input type="checkbox" name="splitMode" class="checkbox">Split timer controls (<input name="leftKey" maxlength="1" type=text style="width:15px;text-align: center;"> and <input maxlength="1" name="rightKey" type=text style="width:15px;text-align: center;"> Keys)</p>
                     <p title="Use split keys to stop timer"><input type="checkbox" name="endSplit" class="checkbox">Stop timer with split keys</p>
                     <p title="Use split keys for OH and require one split key to be held down during solves or cause a DNF penalty"><input type="checkbox" name="OHSplit" class="checkbox">OH split keys</p>
-                    <p title="For time split between memorisation and execution, initially stopping the timer will record the time split and the second will stop the timer"><input type="checkbox" name="blindSplit" class="checkbox">Blind time split</p>
+                    <p title="Record a number of time splits, depending on the event, rather than stopping the timer immediately"><input type="checkbox" name="timeSplits" class="checkbox">Time splits</p>
                     <p title="Use an external Stackmat timer to control the timer"><input type="checkbox" name="stackmat" class="checkbox">Use Stackmat timer</p>
                 </form>
             </div>
