@@ -126,7 +126,7 @@ const globals = function() {
         "#FFFFFF"
     ]];
     
-    var toolColors = ["#F20","#5F0","#0060FF"];
+    var toolColors = ["#F20","#5F0","#06F","#FF0","#0EF","#F0B","#F80","#90F","#0F8"];
     
     return {
         cubeColors:colorScheme,

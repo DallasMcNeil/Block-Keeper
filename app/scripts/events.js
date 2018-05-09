@@ -1081,8 +1081,8 @@ var events = function() {
 
             var splits = document.createElement("input");
             splits.type = "text";
-            splits.maxLength = 2;
-            splits.style.width = "25px"; 
+            splits.maxLength = 1;
+            splits.style.width = "20px"; 
             splits.style.position = "absolute";
             splits.style.top = "0px";
             splits.style.left = "520px";
