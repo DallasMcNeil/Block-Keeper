@@ -633,11 +633,9 @@ var events = function() {
                         currentRecord = row - 1;
                         var detail = preferences.timerDetail;
                         var str = "";
-                        var height = 228;
                         preferences.timerDetail = 3;
                         if (getCurrentRecord().split) {
                             if (getCurrentRecord().split.length > 0) {
-                                height += 20;
                                 str += formatSplits(getCurrentRecord().split.concat(getCurrentRecord().time)) + "<br>";
                             }
                         }
@@ -674,7 +672,7 @@ var events = function() {
                             modal:true,
                             hide:"fade",
                             width:"271",
-                            height:height + "",
+                            height:"0",
                             closeOnEscape:false,
                             position: {
                                 my:"left top",
@@ -694,7 +692,7 @@ var events = function() {
                             $("#recordScramble").css("top", height + "px");
                             height += 100;
                             $("#recordComment").css("top", height + "px");
-                            
+                            $("#dialogRecord").dialog({"height":height + 2});
                         }, 0);
                     }
                 } else {
