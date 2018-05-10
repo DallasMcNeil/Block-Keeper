@@ -33,7 +33,7 @@ Block Keeper uses [Electron](http://electron.atom.io) and should run on all [sup
 
 ### Windows
 
-Run `Block-Keeper-Setup.exe` to install Block Keeper. Save data and preferences are stored in `Users/YourName/AppData/Roaming/Block Keeper` or `%APPDATA%`. You may need to enable hidden folders to access them.
+Run `Block-Keeper-Setup.exe` to install Block Keeper. Block Keeper is installed in `Users/YourName/AppData/Local`. Save data and preferences are stored in `Users/YourName/AppData/Roaming`. You may need to enable hidden folders to access these folders.
 
 ### MacOS
 
@@ -139,7 +139,11 @@ Pressing Escape before the timer begins will cancel the timer. Pressing Escape w
 
 ### Blind Events
  
-If the current event is blindfolded, the timer will have a few notable differences. Inspection will be disabled and at the end of the solve, you will be prompted to input the result before seeing the time. If enabled, a memorisation and execution split can be recorded. Pressing the timer key(s) during the solve will not stop the timer but will store the time as a split. Pressing it again will stop the timer and display the overall time along with the memorisation and execution time.
+If the current event is blindfolded, the timer will have a few notable differences. Inspection will be disabled and at the end of the solve, you will be prompted to input the result before seeing the time. Default blind events have 2 splits.
+
+### Time Splits
+
+If enabled, time splits can be recorded. Pressing any key during the solve will not stop the timer but will store the time as a split. Multiple splits can be stored before the timer is stopped. For example, 4 time splits could be used in a 3x3x3 event to record the stages of CFOP.
 
 ## Sessions
 
@@ -174,7 +178,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * First block solver: Shows all left first block solutions for the current 3x3x3 scramble. The color of the solution indicates the cross color and the colors of (UF) indicate which faces are the top and front in the solution.
 * Metronome: Presents a metronome which can be started, stopped and adjusted to a set tempo. This can be used while timing or not.
 * Session trend: Shows a trend-line of record stats within the currently selected session for time, Mo3, Ao5 and Ao12. This shows your progress through a session.
-* Split trend: Shows a trend-line of the time and time splits within the currently selected session, if it a blind event.
+* Split trend: Shows a trend-line of time splits within the currently selected session, if time splits are used.
 
 ## Preferences
 
@@ -198,6 +202,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * Split timer controls: Use 2 specific keys rather than the `spacebar` to operate the timer. See the Timer Operation section
 * Stop timer with split keys: Require both split keys to be pressed to stop the timer rather than any key
 * OH split keys: Enable split keys for the 3x3x3 OH event and require one key to be held down during a solve or receive a `DNF` penalty
+* Time splits: Record a series of time splits. When pressing a key, the time split will be recorded instead of stopping the timer. Multiple splits can be recorded during solves and setup in event management.
 * Use Stackmat timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognise your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see [here](https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/)
 
 ### Interface
