@@ -561,9 +561,6 @@ var tools = function() {
             i++;
         }
 
-        console.log(splits);
-        console.log(allTimes);
-        
         if (i < 2 || records.length < 2) {
             ctx.font = "20px workSans";
             ctx.fillStyle = mainColor;

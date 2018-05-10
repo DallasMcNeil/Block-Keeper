@@ -78,8 +78,11 @@ var timer = function() {
                 } else if (e.key === rightKey) {
                     rightDown = true;
                 }
-                
-                if (!cooldown && (OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && timerState === "timing") {
+
+                if (preferences.timeSplits && splitTimes.length < events.getCurrentEvent().splits - 1 && timerState === "timing") {
+                    stopTimer();
+                    return;
+                } else if (!cooldown && (OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && timerState === "timing") {
                     cooldown = true;
                     stopTimer();
                 }
@@ -104,14 +107,13 @@ var timer = function() {
                 }
             }
         } else {
-            if (e.key === mainKey) {
-                mainDown = true;
-                if (splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits && timerState === "timing") {
-                    stopTimer();
-                }
-            } else if (e.key === "Escape") {
+            if (e.key === "Escape") {
                 if (timerState === "inspecting" || timerState === "readyInspection") {
                     cancelTimer();
+                }
+            } else {
+                if (splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits && timerState === "timing") {
+                    stopTimer();
                 }
             }
         }
@@ -156,7 +158,7 @@ var timer = function() {
             if (e.button === 0) {
                 mainDown = true;
             }
-            if (timerState === "timing") {
+            if (timerState === "timing" && !preferences.stackmat) {
                 stopTimer();
             }
         }
@@ -599,6 +601,7 @@ var timer = function() {
 
                         if (state.running) {
                             timerState = "timing";
+                            splitTimes = [];
                             timerSplit.innerHTML = "";
                             startTime = Date.now();
                             fadeOutUI();
