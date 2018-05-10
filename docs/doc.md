@@ -1,6 +1,6 @@
 # Introduction
 
-Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
+Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegant interface to provide relevant statistics and tools for speedcubing.
 
 ![](images/blockkeeper.gif)
 
@@ -8,11 +8,11 @@ Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
 - Completely offline and no Java required
-- Customizable event based session organisation
+- Customizable event based session organization
 - Simple and stylish interface with multiple themes
 - Scrambler for all WCA events and more
 - WCA inspection support with voice announcements
-- Blind and one handed event accomidations
+- Blind and one handed event specializations
 - Event and session results graphs
 - Video recorder to view and save last solve
 - Stackmat support
@@ -99,8 +99,8 @@ Block Keeper will check for updates automatically at startup and will download a
 | Keys               | Description            |
 |--------------------|------------------------|
 | `CTRL + W`         | Close Block Keeper     |
-| `SHIFT + CTRL + F` | Toggle fullscreen      |
-| `CTRL + M`         | Minimise/hide window   |
+| `SHIFT + CTRL + F` | Toggle full-screen     |
+| `CTRL + M`         | Minimize/hide window   |
 | `CTRL + R`         | Refresh                |
 | `SHIFT + CTRL + I` | Toggle developer tools |
 | `CTRL + +`         | Zoom in                |
@@ -121,7 +121,7 @@ The timer is inactive between solves and will present the time of your previous 
 
 ### Timer Key(s)
 
-By default, the `spacebar` is the timer key. By pressing and holding the `spacebar` down the timer will turn red. Releasing the key before it has turned green will cancel the timer. When the timer is green, it is ready. Releasing the `spacebar` will begin the timer and your solve.
+By default, the `space-bar` is the timer key. By pressing and holding the `space-bar` down the timer will turn red. Releasing the key before it has turned green will cancel the timer. When the timer is green, it is ready. Releasing the `space-bar` will begin the timer and your solve.
 
 An alternative is to use split keys to operate the timer. By default they are `Z` and `/` but can be changed in preferences. Pressing and holding each key will show an indicator on the left and right side of the window. Once both keys are down, the timer will turn red. If one or both keys are released before the timer turns green, the timer will cancel. Once it turns green, releasing one or both of the keys will begin the timer and your solve.
 
@@ -149,7 +149,7 @@ If enabled, time splits can be recorded. Pressing any key during the solve will 
 
 Block Keeper divides sessions into event categories. Selecting an event from the event dropdown will show a list of it's sessions below in a separate dropdown. All sessions created will be added to the current event. A scramble for the current event will also be shown. 
 
-In this system, every session belongs to a specific event, keeping them organised and providing the correct scramble for every solve. 
+In this system, every session belongs to a specific event, keeping them organized and providing the correct scramble for every solve. 
 
 Everyone chooses to use sessions differently, however, with this system it allows for many more sessions to be created and used effectively. As an example, you could create a session each day to record your times. You're free to use sessions however you choose.
 
@@ -189,7 +189,7 @@ Tools offer additional visual information and functionality. After selecting a t
 * Video record solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
 * Video resolution: Sets the resolution of the recorded video. Final quality will depend on the camera
 * Record inspection: Include inspections and just after a solve while video recording.
-* Video autosave location: Automatically saves recorded videos to the specified folder. Leave empty to not autosave.
+* Video auto-save location: Automatically saves recorded videos to the specified folder. Leave empty to not auto-save.
 * Display scrambles in lists: Include the scramble for a solve in any exported times.
 
 ### Timer
@@ -198,12 +198,12 @@ Tools offer additional visual information and functionality. After selecting a t
 * Timer start delay: Delay in seconds between keys being pressed and timer turning green and becoming ready.
 * Hide timer while solving: Current time during solve is replaced with `solve`, hiding the time
 * WCA inspection: Enable WCA inspection before solve. See the Timer Operation section
-* Use mouse for timer: Use primary mouse button like `spacebar` to control the timer by clicking on timer
-* Split timer controls: Use 2 specific keys rather than the `spacebar` to operate the timer. See the Timer Operation section
+* Use mouse for timer: Use primary mouse button like `space-bar` to control the timer by clicking on timer
+* Split timer controls: Use 2 specific keys rather than the `space-bar` to operate the timer. See the Timer Operation section
 * Stop timer with split keys: Require both split keys to be pressed to stop the timer rather than any key
 * OH split keys: Enable split keys for the 3x3x3 OH event and require one key to be held down during a solve or receive a `DNF` penalty
 * Time splits: Record a series of time splits. When pressing a key, the time split will be recorded instead of stopping the timer. Multiple splits can be recorded during solves and setup in event management.
-* Use Stackmat timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognise your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see [here](https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/)
+* Use Stackmat timer: Use an external Stackmat Timer as input. May not connect if the timer is not plugged in before Block Keeper is opened. Try restarting if Block Keeper does not recognize your timer. For a guide on connecting Stackmat Timers to computers (specifically Macs) see [here](https://www.speedsolving.com/forum/threads/connecting-stackmat-timers-with-macs.64052/)
 
 ### Interface
 
