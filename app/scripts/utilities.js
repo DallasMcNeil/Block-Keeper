@@ -111,13 +111,14 @@ function standardDeviation(times) {
 }
 
 function medianTimes(t) {
-    var times = t.splice();
+    var times = t.slice();
+
     if (times.length == 0) {
         return 0;
     }
     
     var sortedTimes = times.sort(function(a,b) {
-        if (a >b) {
+        if (a > b) {
             return 1;
         } else if (a < b) {
             return -1;
@@ -234,4 +235,19 @@ function getMinsAndMaxs(times) {
     } else {
         return t.slice(0, Math.floor(t.length * 0.05)).concat(t.slice(-Math.floor(t.length * 0.05), t.length));
     }
+}
+
+// Return a formatted string of splits for an array
+function formatSplits(splits) {
+    var str = "(";
+    var lastSplit = 0;
+    for (var i = 0; i < splits.length; i++) {
+        str += formatTime(splits[i] - lastSplit);
+        lastSplit = splits[i];
+        if (i != splits.length - 1) {
+            str += " / ";
+        }
+    }
+    str += ")";
+    return str;
 }

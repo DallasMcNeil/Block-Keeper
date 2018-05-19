@@ -68,7 +68,8 @@
     },
     "appImage": {
       "synopsis": "Cubing timer",
-      "category": "Utilites"
+      "category": "Utilities",
+      "systemIntegration": "doNotAsk"
     }
   }
 }

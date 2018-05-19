@@ -35,8 +35,7 @@ var timer = function() {
     var currentTime = Date.now();
     var startTime = currentTime;
     var inspectionTime = currentTime;
-    var splitTime = currentTime;
-    var splitRecorded = false;
+    var splitTimes = [];
     
     // Current record information
     var timerTime = 0;
@@ -56,7 +55,7 @@ var timer = function() {
     var OHSplitEnabled = false;
     
     // Prevent key repeats
-    var keysDown = {}
+    var keysDown = {};
     
     // Get keyboard down events
     window.onkeydown = function(e) {
@@ -79,8 +78,11 @@ var timer = function() {
                 } else if (e.key === rightKey) {
                     rightDown = true;
                 }
-                
-                if (!cooldown && (OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && timerState === "timing") {
+
+                if (preferences.timeSplits && splitTimes.length < events.getCurrentEvent().splits - 1 && timerState === "timing") {
+                    stopTimer();
+                    return;
+                } else if (!cooldown && (OHSplitEnabled || preferences.endSplit) && leftDown && rightDown && timerState === "timing") {
                     cooldown = true;
                     stopTimer();
                 }
@@ -105,14 +107,13 @@ var timer = function() {
                 }
             }
         } else {
-            if (e.key === mainKey) {
-                mainDown = true;
-                if (!splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind && timerState === "timing") {
-                    stopTimer();
-                }
-            } else if (e.key === "Escape") {
+            if (e.key === "Escape") {
                 if (timerState === "inspecting" || timerState === "readyInspection") {
                     cancelTimer();
+                }
+            } else {
+                if (splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits && timerState === "timing") {
+                    stopTimer();
                 }
             }
         }
@@ -157,7 +158,7 @@ var timer = function() {
             if (e.button === 0) {
                 mainDown = true;
             }
-            if (timerState === "timing") {
+            if (timerState === "timing" && !preferences.stackmat) {
                 stopTimer();
             }
         }
@@ -424,6 +425,7 @@ var timer = function() {
     function startTimer() {
         currentTime = Date.now();
         startTime = currentTime;
+        splitTimes = [];
         if (!preferences.extendedVideos || events.getCurrentEvent().blind || (!preferences.inspection && preferences.extendedVideos)) {
             record.startRecorder();
         }
@@ -460,13 +462,12 @@ var timer = function() {
     // Stop the timer
     function stopTimer(forced = false, SM = false) {
         currentTime = Date.now();
-        if (!forced && !splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
-            splitTime = ((currentTime - startTime) / 1000);
-            splitRecorded = true;
+        if (!forced && splitTimes.length < events.getCurrentEvent().splits - 1 && preferences.timeSplits) {
+            splitTimes.push((currentTime - startTime) / 1000);
             if (preferences.hideTiming) {
-                timerSplit.innerHTML = "Split";
+                timerSplit.innerHTML = ("Split " + splitTimes.length);
             } else {
-                timerSplit.innerHTML = formatTime(splitTime);
+                timerSplit.innerHTML = formatSplits(splitTimes);
             }
             return;
         }
@@ -474,6 +475,11 @@ var timer = function() {
             timerText.style.color = normalColor;
             timerTime = ((currentTime - startTime) / 1000);
             timerText.innerHTML = formatTime(timerTime);
+        }
+        if (splitTimes.length > 0) {
+            timerSplit.innerHTML = formatSplits(splitTimes.concat([timerTime]));
+        } else {
+            timerSplit.innerHTML = "";
         }
         timerState = "normal";
         setTimeout(function () {
@@ -500,11 +506,11 @@ var timer = function() {
     
     // Set result at the end of a blind solve
     function blindResult(res) {
-        $("#dialogBlindResult").dialog("close")
+        $("#dialogBlindResult").dialog("close");
         timerResult = res;
         timerText.innerHTML = formatTime(timerTime);
-        if (splitRecorded && preferences.blindSplit) {
-            timerSplit.innerHTML = formatTime(splitTime) + " / " + formatTime(timerTime - splitTime);
+        if (splitTimes.length > 0) {
+            timerSplit.innerHTML = formatSplits(splitTimes.concat([timerTime]));
         } else {
             timerSplit.innerHTML = "";
         }
@@ -531,12 +537,7 @@ var timer = function() {
 
     // Submit a time to be created
     function submitTime() {
-        if (splitRecorded && preferences.blindSplit && events.getCurrentEvent().blind) {
-            events.createRecord(timerTime, timerResult, [splitTime])
-            splitRecorded = false;
-        } else {
-            events.createRecord(timerTime, timerResult);
-        }
+        events.createRecord(timerTime, timerResult, splitTimes)
         scramble.scramble();
         
     }
@@ -600,6 +601,7 @@ var timer = function() {
 
                         if (state.running) {
                             timerState = "timing";
+                            splitTimes = [];
                             timerSplit.innerHTML = "";
                             startTime = Date.now();
                             fadeOutUI();
@@ -703,7 +705,11 @@ var timer = function() {
                         timerTime = state.time_milli / 1000;
 
                         if (!state.running) {
-                            stopTimer(true, true);
+                            if (state.time_milli == 0) {
+                                cancelTimer();
+                            } else {
+                                stopTimer(true, true);
+                            }
                         }   
                         break;
                 }

@@ -1,6 +1,6 @@
 # Block Keeper
 
-Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegent interface to provide relevant statistics and tools for speedcubing.
+Block Keeper is a cross platform desktop cubing timer. Block Keeper provides an event based session system with an elegant interface to provide relevant statistics and tools for speedcubing.
 
 ![alt text](https://github.com/DallasMcNeil/Block-Keeper/blob/master/docs/images/blockkeeper.gif)
 
@@ -8,11 +8,11 @@ Main Features:
 
 - Cross platform support, Windows, MacOS and Linux
 - Completely offline and no Java required
-- Customizable event based session organisation
+- Customizable event based session organization
 - Simple and stylish interface with multiple themes
 - Scrambler for all WCA events and more
 - WCA inspection support with voice announcements
-- Blind and one handed event accomidations
+- Blind and one handed event accommodations
 - Event and session results graphs
 - Video recorder to view and save last solve
 - Stackmat support
@@ -26,7 +26,7 @@ An extensive guide for using Block Keeper is available [here](https://dallasmcne
   
 ## Download
 
-A precompiled version of Block Keeper for Windows, MacOS and Linux is available [here](http://dallasmcneil.com/projects/blockkeeper), or in the [releases](https://github.com/DallasMcNeil/Block-Keeper/releases) section.
+A pre-compiled version of Block Keeper for Windows, MacOS and Linux is available [here](http://dallasmcneil.com/projects/blockkeeper), or in the [releases](https://github.com/DallasMcNeil/Block-Keeper/releases) section.
 
 ## Development
 
@@ -52,7 +52,7 @@ To generate documentation from `docs/doc.md`, use the `make` script. This requir
 
 ## Debuging
 
-A debug console is available to use for debugging and other purposes. In the titlebar select `Window > Toggle Dev Tools`.
+A debug console is available to use for debugging and other purposes. In the title-bar select `Window > Toggle Dev Tools`.
 
 ## Contributors
 

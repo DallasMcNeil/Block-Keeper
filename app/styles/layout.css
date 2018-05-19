@@ -134,6 +134,8 @@ body {
     font-family: digital;
     color:#E0E0E0;
     margin:0px;
+    margin-left:25vw;
+    width: 50vw;
     margin-top:0vmin;
     
 }
@@ -706,7 +708,6 @@ td p {
     position: absolute;
     color:#FFFFFF;
     width: 263px;
-    height: 30px;
     top:35px;
     left:5px;
     cursor:text;
@@ -731,7 +732,7 @@ td p {
     overflow-y: scroll;
     word-wrap:normal;
     width: 264px;
-    max-height: 77px;
+    height: 80px;
     cursor:text;
 }
 
