@@ -1171,7 +1171,7 @@ var events = function() {
     
     // Create a new event and add it to the events list
     function createNewEvent() {
-        var newEvent = {name:"New Event",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:false};
+        var newEvent = {name:"New Event",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:false,splits:1};
         internalEvents.push(newEvent);
         addEventItem($("#eventsList")[0], internalEvents.length - 1);
         $("#eventsList").sortable();
