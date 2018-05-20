@@ -107,6 +107,9 @@ var timer = function() {
                 }
             }
         } else {
+            if (e.key === mainKey) {
+                mainDown = true;
+            } 
             if (e.key === "Escape") {
                 if (timerState === "inspecting" || timerState === "readyInspection") {
                     cancelTimer();
