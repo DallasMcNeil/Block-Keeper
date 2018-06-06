@@ -39,7 +39,7 @@
                 events.createSession();
                 events.setSessionOptions($("#sessionSelect")[0]);
             } else if (message === "CommandOrControl+S") {
-                scramble.scramble();
+                scramble.nextScramble();
             } else if (message === "CommandOrControl+T") {
                 events.openTimeDialog();
             } else if (message === "CommandOrControl+,") {

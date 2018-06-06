@@ -541,8 +541,7 @@ var timer = function() {
     // Submit a time to be created
     function submitTime() {
         events.createRecord(timerTime, timerResult, splitTimes)
-        scramble.scramble();
-        
+        scramble.nextScramble();
     }
 
     // Get stackmat information is used and display it

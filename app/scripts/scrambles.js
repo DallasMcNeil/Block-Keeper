@@ -17,7 +17,6 @@ var scramble = function() {
     var currentScrambler = "Recommended";
     var scrambleOptions = {
         "Recommended":scrambleRecommended,
-        "Custom...":scrambleCustom,
         "3x3x3":scramble3x3x3,   
         "3x3x3 BLD":scramble3x3x3BLD,
         "2x2x2":scramble2x2x2,
@@ -30,25 +29,25 @@ var scramble = function() {
         "Clock":scrambleClock,
         "6x6x6":scramble6x6x6,
         "7x7x7":scramble7x7x7,
-        "8x8x8":function(){scrambleNxNxN(8,100)},
-        "9x9x9":function(){scrambleNxNxN(9,120)},
-        "10x10x10":function(){scrambleNxNxN(10,140)},
-        "11x11x11":function(){scrambleNxNxN(11,160)},
-        "13x13x13":function(){scrambleNxNxN(13,180)},
-        "15x15x15":function(){scrambleNxNxN(15,200)},
-        "17x17x17":function(){scrambleNxNxN(17,220)},
+        "8x8x8":function(){return scrambleNxNxN(8,100);},
+        "9x9x9":function(){return scrambleNxNxN(9,120);},
+        "10x10x10":function(){return scrambleNxNxN(10,140);},
+        "11x11x11":function(){return scrambleNxNxN(11,160);},
+        "13x13x13":function(){return scrambleNxNxN(13,180);},
+        "15x15x15":function(){return scrambleNxNxN(15,200);},
+        "17x17x17":function(){return scrambleNxNxN(17,220);},
         "2x2x2 - 5x5x5":scramble2to5Relay,
         "2x2x2 - 7x7x7":scramble2to7Relay,
         "None":scrambleNone
-    }
+    };
     
     // Internal scrambler being used for tool drawing
     var scrambleStr = "";
-    // The current scramble being used
-    var currentScramble = "";
-    // Hold state information about the scramble (if applicable)
-    var scrambleState = {scramble_string:""};
-    
+    // Scramble history
+    var scrambleList = [];
+    // The current scramble being used from the list
+    var currentScramble = 0; 
+
     var scrambleText = document.getElementById("scramble");
     var scrambleImage = document.getElementById("scrambleImage");
     var scrambleSelect = document.getElementById("scramblerSelect");
@@ -72,7 +71,7 @@ var scramble = function() {
         evt.stopPropagation();
     });
 
-    // Open the scramble menu when the scramble is cicked
+    // Open the scramble menu when the scramble is clicked
     function openScramble() {
         if ($("#dialogScramble").dialog("isOpen")) {
             closeScramble();
@@ -88,7 +87,6 @@ var scramble = function() {
         $("#dialogScramble").dialog("close");
         enableAllElements();
         globals.menuOpen = false;
-        scramble();
     }
 
     // Sets up a select element with all the scrambler options
@@ -106,104 +104,125 @@ var scramble = function() {
         }
     }
     
-    // Setup main scramble select
-    setScramblerOptions(scrambleSelect);
+    function setupList(type="None") {
+        scrambleList = [];
+        currentScramble = -1;
+        scrambleSelect.value = type;
+        nextScramble();
+    }
 
-    // Generate a new scramble and display it
-    function scramble() {
-        currentScrambler = scrambleSelect.value;
-        if (scrambleOptions[currentScrambler] != undefined) {
-            scrambleOptions[currentScrambler]();
-            scrambleText.innerHTML = currentScramble;
-        } else {
-            scrambleOptions["None"]();
+    // Move to next scramble in list
+    function nextScramble() {
+        currentScramble++;
+        if (currentScramble >= scrambleList.length) {
+            var scrambler = scrambleSelect.value;
+            var newObject;
+            if (scrambleOptions[scrambler] != undefined) {
+                newObject = scrambleOptions[scrambler]();
+            } else {
+                newObject = scrambleOptions["None"]();
+            }
+            scrambleList.push(newObject);
         }
-        scrambleText.innerHTML = currentScramble;      
-        tools.updateTools();
+
+        updateScramble();
+    }
+    
+    // Move to previous scramble in list
+    function previousScramble() {
+        currentScramble--;
+        updateScramble();
+    }
+
+    // Add custom scrambles to list
+    function appendCustomScrambles() {
+        
+    }
+
+    // Show current scramble
+    function updateScramble() {
+        console.log(scrambleList);
+        scrambleText.innerHTML = scrambleList[currentScramble].scramble;      
+        if (tools != undefined && tools.updateTools != undefined) {
+            tools.updateTools();
+        }
     }
     
     // Draw the current scramble in the canvas, if possible
     function drawScramble(ctx) {
-        ctx.innerHTML = ""
-        if (!(scramblers[scrambleStr] == undefined || (scrambleStr == "333mbf"))) {
-            scramblers[scrambleStr].drawScramble(ctx, scrambleState.state, 300, 200);
+        ctx.innerHTML = "";
+        if (!(scramblers[scrambleList[currentScramble].type] == undefined || (scrambleStr == "333mbf"))) {
+            scramblers[scrambleList[currentScramble].type].drawScramble(ctx, scrambleList[currentScramble].state, 300, 200);
         }
     }
 
     // Use the recommended scrambler for the event
     function scrambleRecommended() {
         if (scrambleOptions[events.getCurrentEvent().scrambler] != undefined) {
-            scrambleOptions[events.getCurrentEvent().scrambler]()
+            scrambleOptions[events.getCurrentEvent().scrambler]();
         } else {
-            scrambleNone()
+            scrambleNone();
         }
     }
 
-    // Use the custom scramble 
-    function scrambleCustom() {
-        scrambleStr = "none";
-        currentScramble = document.getElementById("customScramble").value;
+    // Uses library scramblers to create scramble object
+    function scrambleObjectFromType(type) {
+        var scrambleObject = {};
+        scrambleObject.type = type;
+        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
+        scrambleObject.state = scramblerResult.state.slice();
+        scrambleObject.scramble = scramblerResult.scramble_string;
+        return scrambleObject;
     }
 
     // Get a scramble for each puzzle available, including it's state if possible
     function scramble2x2x2() {
-        scrambleStr = "222";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("222");
     }
 
     function scramble3x3x3() {
-        scrambleStr = "333";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("333");
     }
 
     function scramble4x4x4() {
-        scrambleStr = "444";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("444");
     }
 
     function scramble5x5x5() {
-        scrambleStr = "555";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("555");
     }
 
     function scramble6x6x6() {
-        scrambleStr = "666";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("666");
     }
 
     function scramble7x7x7() {
-        scrambleStr = "777";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("777");
     }
 
     function scramblePyraminx() {
-        scrambleStr = "pyram";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("pyram");
     }
 
     function scrambleSkewb() {
-        scrambleStr = "skewb";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        var scrambleObject = {};
+        scrambleObject.type = "skewb";
+        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
+        scrambleObject.scramble = scramblerResult.scramble_string;
+        return scrambleObject;
     }
 
     function scrambleMegaminx() {
-        scrambleStr = "minx";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        return scrambleObjectFromType("minx");
     }
 
     function scrambleSquare1() {
-        scrambleStr = "sq1";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        currentScramble = scrambleState.scramble_string;
+        var scrambleObject = {};
+        scrambleObject.type = "sq1";
+        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
+        scrambleObject.state = scramblerResult.state;
+        scrambleObject.scramble = scramblerResult.scramble_string;
+        return scrambleObject;
     }
 
     function scrambleClock() {
@@ -212,7 +231,9 @@ var scramble = function() {
         //scrambleState = scramblers[scrambleStr].getRandomScramble();
         //currentScramble = scrambleState.scramble_string;
         
-        scrambleStr = "other";
+        var scrambleObject = {};
+        scrambleObject.type = "other"; // No state information for drawing
+
         var str = "";
         var moves = ["UR", "DR", "DL", "UL", "U", "R", "D", "L", "ALL", "y2", "U", "R", "D", "L", "ALL"];
         var pins = ["UR", "DR", "DL", "UL"];
@@ -233,29 +254,34 @@ var scramble = function() {
                 str += pins[i] + " ";
             }
         }
-        scrambleState = {scramble_string:str};
-        currentScramble = str;
+
+        scrambleObject.scramble = str;
+        return scrambleObject;
     }
 
-    // Add roation to 3x3x3 scramble
+    // Add rotation to 3x3x3 scramble
     function scramble3x3x3BLD() {
-        scrambleStr = "333bf";
-        scrambleState = scramblers[scrambleStr].getRandomScramble();
-        
+        var obj = scrambleObjectFromType("333");
+        obj.type = "333bf";
+
         // Orientate up face and then orient front face
-        scrambleState.scramble_string += [" "," z"," z2"," z'"," x"," x'"][Math.floor(Math.random() * 6)];
-        scrambleState.scramble_string += [" y", " y'", " y2", ""][Math.floor(Math.random() * 4)];
-        currentScramble = scrambleState.scramble_string;
+        obj.scramble += [" "," z"," z2"," z'"," x"," x'"][Math.floor(Math.random() * 6)];
+        obj.scramble += [" y", " y'", " y2", ""][Math.floor(Math.random() * 4)];
+
+        return obj;
     }
 
     function scrambleNone() {
-        scrambleStr = "none";
-        scrambleState = {scramble_string:""};
-        currentScramble = "";
+        var scrambleObject = {};
+        scrambleObject.type = "none";
+        scrambleObject.scramble = "";
+        return scrambleObject;
     }
     
     // Use random move to create a scramble for NxNxN puzzles
     function scrambleNxNxN(n,length) {
+        var scrambleObject = {};
+
         var moves = [];
         if (n > 1) {
             moves.push("R");
@@ -299,26 +325,30 @@ var scramble = function() {
             var mod = ["","'","2"][Math.floor(Math.random() * 3)];
             str += move + mod + " ";
         }
-        
-        scrambleStr = "" + n + n + n;
-        scrambleState = {scramble_string:str};
-        currentScramble = str;    
+ 
+        scrambleObject.type = "" + n + n + n;
+        scrambleObject.scramble = str;
+        return scrambleObject;
     }
     
     // Scramble for 2x2x2 to 5x5x5 relay
     function scramble2to5Relay() {
+        var scrambleObject = {};
+        
         var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
         str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
         str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
         str += "(5x5x5) " + scramblers["555"].getRandomScramble().scramble_string;
         
-        scrambleStr = "relay";
-        scrambleState.scramble_string = str;
-        currentScramble = str;
+        scrambleObject.type = "relay";
+        scrambleObject.scramble = str;
+        return scrambleObject;
     }
     
     // Scramble for 2x2x2 to 7x7x7 relay
     function scramble2to7Relay() {
+        var scrambleObject = {};
+        
         var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
         str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
         str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
@@ -326,9 +356,9 @@ var scramble = function() {
         str += "(6x6x6) " + scramblers["666"].getRandomScramble().scramble_string + "<br>";
         str += "(7x7x7) " + scramblers["777"].getRandomScramble().scramble_string;
         
-        scrambleStr = "relay";
-        scrambleState.scramble_string = str;
-        currentScramble = str;
+        scrambleObject.type = "relay";
+        scrambleObject.scramble = str;
+        return scrambleObject;
     }
 
     // Find cross solution to scramble for side
@@ -405,7 +435,7 @@ var scramble = function() {
     }
     
     function returnCurrentScramble() {
-        return currentScramble;
+        return scrambleList[currentScramble].scramble;
     }
     
     function getCurrentScrambler() {
@@ -421,9 +451,17 @@ var scramble = function() {
         return scrambleStr;
     }
 
+    // Setup main scramble select
+    setScramblerOptions(scrambleSelect);
+
+    // Setup scramble list
+    setupList();
+
     return {
         currentScramble:returnCurrentScramble,
-        scramble:scramble,
+        resetList:setupList,
+        nextScramble:nextScramble,
+        previousScramble:previousScramble,
         scrambleType:returnScrambleType,
         drawScramble:drawScramble,
         openScramble:openScramble,
