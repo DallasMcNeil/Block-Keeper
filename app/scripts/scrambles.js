@@ -48,6 +48,8 @@ var scramble = function() {
     // The current scramble being used from the list
     var currentScramble = 0; 
 
+    const saveHistory = 3;
+
     var scrambleText = document.getElementById("scramble");
     var scrambleImage = document.getElementById("scrambleImage");
     var scrambleSelect = document.getElementById("scramblerSelect");
@@ -78,6 +80,7 @@ var scramble = function() {
         } else if (!globals.menuOpen) {
             $("#dialogScramble").dialog("open");
             disableAllElements("scramble");
+            document.getElementById("customScramble").value = "";
             globals.menuOpen = true;
         }
     }
@@ -86,6 +89,15 @@ var scramble = function() {
     function closeScramble() {
         $("#dialogScramble").dialog("close");
         enableAllElements();
+        scrambleList = [];
+        appendCustomScrambles();
+        if (scrambleList.length == 0) {
+            currentScramble = -1;
+            nextScramble();
+        } else {
+            currentScramble = 0;
+            updateScramble();
+        }
         globals.menuOpen = false;
     }
 
@@ -104,10 +116,16 @@ var scramble = function() {
         }
     }
     
-    function setupList(type="None") {
+    function setupList() {
         scrambleList = [];
         currentScramble = -1;
-        scrambleSelect.value = type;
+        scrambleSelect.value = "None";
+        nextScramble();
+    }
+
+    function resetList() {
+        scrambleList = [];
+        currentScramble = -1;
         nextScramble();
     }
 
@@ -123,20 +141,35 @@ var scramble = function() {
                 newObject = scrambleOptions["None"]();
             }
             scrambleList.push(newObject);
+        } 
+        if (currentScramble > saveHistory) {
+            scrambleList.splice(0,1);
+            currentScramble--;
         }
-
+        
         updateScramble();
     }
     
     // Move to previous scramble in list
     function previousScramble() {
-        currentScramble--;
-        updateScramble();
+        if (currentScramble > 0) {
+            currentScramble--;
+            updateScramble();
+        } 
     }
 
     // Add custom scrambles to list
     function appendCustomScrambles() {
-        
+        var customScramble = document.getElementById("customScramble").value;
+        var scrambles = customScramble.split("\n");
+        for (var i=0; i<scrambles.length; i++) {
+            if (scrambles[i] != "") {
+                var scrambleObject = {};
+                scrambleObject.type = "other";
+                scrambleObject.scramble = scrambles[i];
+                scrambleList.push(scrambleObject);
+            }
+        }
     }
 
     // Show current scramble
@@ -145,6 +178,12 @@ var scramble = function() {
         scrambleText.innerHTML = scrambleList[currentScramble].scramble;      
         if (tools != undefined && tools.updateTools != undefined) {
             tools.updateTools();
+
+            if (currentScramble == 0) {
+                disableElement("#scramblePrevious");
+            } else {
+                enableElement("#scramblePrevious");
+            }
         }
     }
     
@@ -159,9 +198,9 @@ var scramble = function() {
     // Use the recommended scrambler for the event
     function scrambleRecommended() {
         if (scrambleOptions[events.getCurrentEvent().scrambler] != undefined) {
-            scrambleOptions[events.getCurrentEvent().scrambler]();
+            return scrambleOptions[events.getCurrentEvent().scrambler]();
         } else {
-            scrambleNone();
+            return scrambleNone();
         }
     }
 
@@ -443,6 +482,7 @@ var scramble = function() {
     }
     
     function setCurrentScrambler(s) {
+        console.log("Set");
         currentScrambler = s;
         scrambleSelect.value = s;
     }
@@ -459,7 +499,7 @@ var scramble = function() {
 
     return {
         currentScramble:returnCurrentScramble,
-        resetList:setupList,
+        resetList:resetList,
         nextScramble:nextScramble,
         previousScramble:previousScramble,
         scrambleType:returnScrambleType,

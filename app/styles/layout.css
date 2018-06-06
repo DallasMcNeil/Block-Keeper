@@ -153,26 +153,54 @@ body {
     opacity: 0;
 }
 
-#scramble {
-    -webkit-user-select: text;
-    user-select: text;
+#scrambleContainer {
     position: fixed;
     top:32px;
     left:300px;
-    vertical-align:top;
+    width:calc(100vw - 320px);
+    height:20vh;
+    margin: 0px;
+    padding: 0px;
+}
+
+#scramblePrevious {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 30px;
+    height: 100%;
+    display: block;
+    background: #F00;
+}
+
+#scrambleNext {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 30px;
+    height: 100%;
+    display: block;
+    background: #0F0;
+}
+
+#scramble {
+    -webkit-user-select: text;
+    user-select: text;
+    vertical-align: top;
     text-align: right;
+    position: absolute;
+    left: 30px;
+    top: 0px;
     font-size:4vh;
     line-height:4vh;
-    width:calc(100vw - 320px);
-    min-height:15vh;
-    max-height:30vh;
+    width:calc(100% - 60px);
+    height:100%;
     color:#C0C0C0;
     font-family: workSansLight;
     overflow-y: scroll;
     word-wrap:normal;
     margin: 0px;
     display: block;
-    background-color:rgba(208,208,208,0.1);
 }
 
 #scramble:hover {

@@ -55,8 +55,12 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler"></p>
-        
+    <div id="scrambleContainer">
+        <div id="scramblePrevious" onclick="scramble.previousScramble()" title="Go back to previous scramble"></div>
+        <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler or use custom scrambles"></p>
+        <div id="scrambleNext" onclick="scramble.nextScramble()" title="Go to next scramble"></div>
+    </div>
+
     <div id="stats">
         <select title="Event select" id="eventSelect" onchange="events.setEvent()"></select>
         <button title="Edit events" id="eventButton" onclick="events.openEvents()"></button>
@@ -192,7 +196,7 @@ Created by Dallas McNeil
         
     <div id="dialogScramble">
         <p>Scrambler: <select id="scramblerSelect"></select></p>
-        <p>Custom scramble<br><textarea rows="3" id="customScramble"></textarea></p>
+        <p>Custom scrambles (newline separated)<br><textarea rows="3" id="customScramble"></textarea></p>
         <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
         

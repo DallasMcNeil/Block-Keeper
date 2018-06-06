@@ -388,7 +388,7 @@ var events = function() {
         currentSession = getCurrentEvent().sessions.length - 1;
         sessionSelect.value = currentSession;
         updateRecords(true);
-        scramble.resetList(getCurrentEvent().scrambler);
+        scramble.resetList();
     }
 
     // Set the session based on the dropdown
