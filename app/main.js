@@ -5,15 +5,6 @@
 'use strict';
 
 const updater = require("electron-simple-updater");
-updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
-updater.on("update-downloading", function() {
-    dialog.showMessageBox({
-        type:"info",
-        title:"Block Keeper Update",
-        message:"A new update is available and downloading in the background. It will be installed automatically once the program is closed."
-    });
-});
-
 
 const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
@@ -207,6 +198,10 @@ app.on('ready', function() {
     win.on('ready-to-show', function() {
         win.show();
         win.focus();
+        updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
+        updater.on("update-downloading", function() {
+            win.webContents.send('update', "update");
+        });
     })
     win.setTouchBar(touchBar);
 })

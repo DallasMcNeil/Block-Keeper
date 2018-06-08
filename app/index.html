@@ -345,7 +345,15 @@ Created by Dallas McNeil
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
         <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
+
+    <div id="dialogUpdate">
+        <button class="cross" id="closeUpdate"onclick="update.closeUpdate()"></button>
+        <h2 id="updateHeading"></h2>
+        <p id="updateInfo"></p>
+        <pre id="updateNotes"></pre>
+    </div>
     
+    <script src="scripts/update.js"></script>
     <script src="scripts/scrambles.js"></script> 
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>

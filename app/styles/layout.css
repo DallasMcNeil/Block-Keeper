@@ -33,6 +33,11 @@ body {
     background-color:#000000;
 }
 
+pre {
+    color:#F0F0F0;
+    font-size: 18px;
+}
+
 :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
     -webkit-user-select: none;
     user-select: none;
@@ -629,7 +634,7 @@ td p {
     cursor:default;
 }
 
-#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult, #dialogTransferSession {
+#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult, #dialogTransferSession, #dialogUpdate {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -678,6 +683,10 @@ td p {
     margin-left:15px;
 }
 
+#dialogUpdate {
+    padding-left:10px;
+}
+
 #dialogRecord button {
     margin-right: 0px;
     margin-left: 0px;
@@ -687,7 +696,7 @@ td p {
     float:left;
 }
 
-#closePreferences ,#closePreview,#closeShowInfo {
+#closePreferences ,#closePreview,#closeShowInfo, #closeUpdate {
     display: block;
     margin-top:10px;
     margin-right: 10px;
@@ -697,8 +706,7 @@ td p {
 }
 
 #savePreferences {
-    margin-left:
-        10px;
+    margin-left: 10px;
     margin-top: 0px;
 }
 
