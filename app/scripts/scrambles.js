@@ -174,7 +174,6 @@ var scramble = function() {
 
     // Show current scramble
     function updateScramble() {
-        console.log(scrambleList);
         scrambleText.innerHTML = scrambleList[currentScramble].scramble;      
         if (tools != undefined && tools.updateTools != undefined) {
             tools.updateTools();
