@@ -166,17 +166,30 @@ app.on('ready', function() {
         minHeight:540,
         minWidth:720,
         titleBarStyle:titleBar,
-        show:false
+        show:false,
+        backgroundColor: "#181818"
     });
 
     win.loadURL(url.format({
         pathname:path.join(__dirname, 'index.html'),
         protocol:'file:',
         slashes:true
-    }))
+    }));
+        
+    win.once('ready-to-show', function() {
+        win.show();
+        win.focus();
+    });
+
+    win.webContents.once('did-finish-load', function() {
+        updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
+        updater.on("update-downloading", function() {
+            win.webContents.send('update', "update");
+        });
+    });
     
     mainWindowState.manage(win);
-       
+
     Menu.setApplicationMenu(menu);
     
     win.on('enter-full-screen', (e, cmd) => {
@@ -194,15 +207,7 @@ app.on('ready', function() {
     win.on('close', (e, cmd) => {
         win.webContents.send('quit', "quit");
     })
-    
-    win.on('ready-to-show', function() {
-        win.show();
-        win.focus();
-        updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
-        updater.on("update-downloading", function() {
-            win.webContents.send('update', "update");
-        });
-    })
+
     win.setTouchBar(touchBar);
 })
 

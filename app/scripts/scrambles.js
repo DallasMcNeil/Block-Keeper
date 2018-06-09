@@ -481,7 +481,6 @@ var scramble = function() {
     }
     
     function setCurrentScrambler(s) {
-        console.log("Set");
         currentScrambler = s;
         scrambleSelect.value = s;
     }
@@ -500,6 +499,7 @@ var scramble = function() {
         currentScramble:returnCurrentScramble,
         resetList:resetList,
         nextScramble:nextScramble,
+        updateScramble:updateScramble,
         previousScramble:previousScramble,
         scrambleType:returnScrambleType,
         drawScramble:drawScramble,
@@ -511,5 +511,5 @@ var scramble = function() {
         setScramblerOptions:setScramblerOptions,
         getCurrentScrambler:getCurrentScrambler,
         setCurrentScrambler:setCurrentScrambler
-    }
-}()
+    };
+}();
