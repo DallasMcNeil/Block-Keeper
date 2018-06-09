@@ -362,7 +362,7 @@ var timer = function() {
     function fadeOutUI() {
         timerRunning = true;
         $("#stats").fadeOut();
-        $("#scramble").fadeOut();
+        $("#scrambleContainer").fadeOut();
         $("#preferencesButton").fadeOut();
         $("#tools").fadeOut();
         $("#addToolButton").fadeOut();
@@ -374,7 +374,7 @@ var timer = function() {
     function fadeInUI() {
         timerRunning = false;
         $("#stats").fadeIn();
-        $("#scramble").fadeIn();
+        $("#scrambleContainer").fadeIn();
         $("#preferencesButton").fadeIn();
         $("#tools").fadeIn();
         $("#addToolButton").fadeIn();
@@ -541,8 +541,7 @@ var timer = function() {
     // Submit a time to be created
     function submitTime() {
         events.createRecord(timerTime, timerResult, splitTimes)
-        scramble.scramble();
-        
+        scramble.nextScramble();
     }
 
     // Get stackmat information is used and display it

@@ -29,7 +29,7 @@ var windowBar = function() {
         if (hiddenWindowBar) {
             $("#windowBar").css("height", (22 / factor) + "px");
             $("#content").css("top", (22 / factor) + "px");
-            $("#scramble").css("height", (5 + (22 / factor)) + "px");
+            $("#scrambleContainer").css("top", (5 + (22 / factor)) + "px");
             $("#stats").css("height", (5 + (22 / factor)) + "px");
         }
     }
