@@ -62,6 +62,12 @@ var timer = function() {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
         
+        console.log(e.keyCode)
+        // Ignore some keys
+        if (e.keyCode == $.ui.keyCode.TAB || e.keyCode == 17 || e.keyCode == 18 || e.keyCode == 91 ||  e.keyCode == 93 || e.keyCode == 9) {
+            return;
+        }
+
         if (e.keyCode === $.ui.keyCode.ESCAPE && $("#dialogRecord").dialog("isOpen")) {
             events.closeDialogRecord(false);
         }
