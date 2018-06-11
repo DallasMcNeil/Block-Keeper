@@ -834,9 +834,9 @@ var events = function() {
         var sess = getCurrentEvent().sessions.splice(currentSession, 1);
         currentEvent = $("#eventSelectTransfer")[0].value;
         getCurrentEvent().sessions.push(sess[0]);
-        enableAllElements();
         eventSelect.value = currentEvent;
         setEvent();
+        enableAllElements();
     }
 
     // Hide the session stats

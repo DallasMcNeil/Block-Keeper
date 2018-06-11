@@ -486,7 +486,7 @@ var scramble = function() {
     }
     
     function returnScrambleType() {
-        return scrambleStr;
+        return scrambleList[currentScramble].type;
     }
 
     // Setup main scramble select
