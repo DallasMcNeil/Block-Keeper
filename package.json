@@ -2,7 +2,7 @@
   "name": "blockkeeper",
   "productName": "Block Keeper",
   "main": "app/main.js",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": {
     "name": "Dallas McNeil",
     "email": "dallas@dallasmcneil.com",
@@ -18,12 +18,16 @@
     "build": "electron-builder"
   },
   "devDependencies": {
-    "electron": "1.8.3",
+    "ajv": "latest",
+    "electron": "1.8.4",
     "electron-builder": "latest",
-    "electron-builder-squirrel-windows": "^20.8.0",
+    "electron-builder-lib": "latest",
+    "electron-builder-squirrel-windows": "^20.15.0",
     "electron-simple-publisher": "latest"
   },
   "dependencies": {
+    "ajv": "^6.5.1",
+    "electron-builder-lib": "^20.15.3",
     "electron-json-storage": "^2.1.0",
     "electron-shortcut": "^0.5.0",
     "electron-simple-updater": "^1.2.3",
@@ -41,7 +45,7 @@
     "appId": "com.dallasmcneil.blockkeeper",
     "productName": "Block Keeper",
     "electronCompile": false,
-    "electronVersion": "1.8.3",
+    "electronVersion": "1.8.4",
     "asar": false,
     "files": [
       "!README.md",
