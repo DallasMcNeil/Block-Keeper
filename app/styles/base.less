@@ -1,7 +1,7 @@
 @background: #181818; @timer: #F0F0F0; @scramble: #B0B0B0; @base: #303030; @border: #606060; @text: #E0E0E0; @timerSize:30vmin; @timerSecondSize:8vmin;
 @darken: 40%;
 
-p {
+p, pre {
     color:@text;
 }
 
@@ -61,7 +61,19 @@ body {
     cursor: default;
 }
 
-button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,#dialogScramble,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool, select.disabled:hover, #dialogManageEvents, #dialogBlindResult, #dialogTransferSession {
+#scramblePrevious {
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='@{text}' points='8,12 16,4 16,20'></polyline></svg>");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+}
+
+#scrambleNext {
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='@{text}' points='16,12 8,4 8,20'></polyline></svg>");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+}
+
+button, #tool, input, button.disabled, button.disabled:hover, button.disabled:active, input[type="text"],textarea,td,#dialogPreferences, #dialogPreview, #dialogShowInfo, #dialogCSTimer, #dialogAddTime,#dialogRecord,#dialogScramble,input[type="checkbox"],#tool,#sessionStats,#previewVideo,#sessionRecords, tr:first-child td, .tool, select.disabled:hover, #dialogManageEvents, #dialogBlindResult, #dialogTransferSession, #dialogUpdate {
     color:@text;
     background-color: @base;
     border-color: @border;

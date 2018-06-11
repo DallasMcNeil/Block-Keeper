@@ -69,8 +69,8 @@ var prefs = function() {
         setStylesheet();
         $("#centreBackground").css("background-image", 'url("' + preferences.backgroundImage + '")');
         $("#scramble").css("text-align", preferences.scrambleAlign);
-        $("#scramble").css("font-size", preferences.scrambleSize + "vh");
-        $("#scramble").css("line-height", preferences.scrambleSize + "vh");
+        $("#scramble").css("font-size", (preferences.scrambleSize * 10) + "px");
+        $("#scramble").css("line-height", (preferences.scrambleSize * 10) + "px");
 
         if (preferences.voice != "none") {
             timer.s7voice(new Audio("sounds/" + preferences.voice + "8s.mp3"));

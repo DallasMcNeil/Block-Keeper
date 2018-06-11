@@ -62,6 +62,11 @@ var timer = function() {
         leftKey = preferences.leftKey;
         rightKey = preferences.rightKey;
         
+        // Ignore some keys
+        if (e.keyCode == $.ui.keyCode.TAB || e.keyCode == 17 || e.keyCode == 18 || e.keyCode == 91 ||  e.keyCode == 93 || e.keyCode == 9) {
+            return;
+        }
+
         if (e.keyCode === $.ui.keyCode.ESCAPE && $("#dialogRecord").dialog("isOpen")) {
             events.closeDialogRecord(false);
         }
@@ -107,6 +112,9 @@ var timer = function() {
                 }
             }
         } else {
+            if (e.key === mainKey) {
+                mainDown = true;
+            } 
             if (e.key === "Escape") {
                 if (timerState === "inspecting" || timerState === "readyInspection") {
                     cancelTimer();
@@ -359,7 +367,7 @@ var timer = function() {
     function fadeOutUI() {
         timerRunning = true;
         $("#stats").fadeOut();
-        $("#scramble").fadeOut();
+        $("#scrambleContainer").fadeOut();
         $("#preferencesButton").fadeOut();
         $("#tools").fadeOut();
         $("#addToolButton").fadeOut();
@@ -371,7 +379,7 @@ var timer = function() {
     function fadeInUI() {
         timerRunning = false;
         $("#stats").fadeIn();
-        $("#scramble").fadeIn();
+        $("#scrambleContainer").fadeIn();
         $("#preferencesButton").fadeIn();
         $("#tools").fadeIn();
         $("#addToolButton").fadeIn();
@@ -538,8 +546,7 @@ var timer = function() {
     // Submit a time to be created
     function submitTime() {
         events.createRecord(timerTime, timerResult, splitTimes)
-        scramble.scramble();
-        
+        scramble.nextScramble();
     }
 
     // Get stackmat information is used and display it

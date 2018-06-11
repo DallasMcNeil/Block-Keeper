@@ -55,8 +55,12 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
         
-    <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler"></p>
-        
+    <div id="scrambleContainer">
+        <button id="scramblePrevious" onclick="scramble.previousScramble()" title="Go back to previous scramble"></button>
+        <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler or use custom scrambles"></p>
+        <button id="scrambleNext" onclick="scramble.nextScramble()" title="Go to next scramble"></button>
+    </div>
+
     <div id="stats">
         <select title="Event select" id="eventSelect" onchange="events.setEvent()"></select>
         <button title="Edit events" id="eventButton" onclick="events.openEvents()"></button>
@@ -192,7 +196,7 @@ Created by Dallas McNeil
         
     <div id="dialogScramble">
         <p>Scrambler: <select id="scramblerSelect"></select></p>
-        <p>Custom scramble<br><textarea rows="3" id="customScramble"></textarea></p>
+        <p>Custom scrambles (newline separated)<br><textarea rows="3" id="customScramble"></textarea></p>
         <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
         
@@ -341,7 +345,15 @@ Created by Dallas McNeil
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
         <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
+
+    <div id="dialogUpdate">
+        <button class="cross" id="closeUpdate"onclick="update.closeUpdate()"></button>
+        <h2 id="updateHeading"></h2>
+        <p id="updateInfo"></p>
+        <pre id="updateNotes"></pre>
+    </div>
     
+    <script src="scripts/update.js"></script>
     <script src="scripts/scrambles.js"></script> 
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>

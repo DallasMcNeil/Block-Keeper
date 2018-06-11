@@ -75,7 +75,7 @@ var events = function() {
             if (error) {
                 throw error;
             }
-        })
+        });
     }
     
     // Merges current events with other events
@@ -364,7 +364,7 @@ var events = function() {
             getLastRecord().scramble = scramble.currentScramble();
         }
         $("#timer")[0].innerHTML = formatTime(t);
-        scramble.scramble();
+        scramble.nextScramble();
         closeTimeDialog();
     }
 
@@ -388,7 +388,7 @@ var events = function() {
         currentSession = getCurrentEvent().sessions.length - 1;
         sessionSelect.value = currentSession;
         updateRecords(true);
-        scramble.scramble();
+        scramble.resetList();
     }
 
     // Set the session based on the dropdown
@@ -834,9 +834,9 @@ var events = function() {
         var sess = getCurrentEvent().sessions.splice(currentSession, 1);
         currentEvent = $("#eventSelectTransfer")[0].value;
         getCurrentEvent().sessions.push(sess[0]);
-        enableAllElements();
         eventSelect.value = currentEvent;
         setEvent();
+        enableAllElements();
     }
 
     // Hide the session stats

@@ -52,7 +52,7 @@ Block Keeper will check for updates automatically at startup and will download a
 ![](images/interface.png)
 
 1. Timer: Displays the current time of a solve and the time of the last solve in addition to inspection countdown
-2. Scramble: Displays a scramble for the current event and solve. Click to set the scrambler or a custom scramble
+2. Scramble: Displays a scramble for the current event and solve. Click to set the scrambler or a list of custom scrambles. Use left arrow to view the previous scramble or the right arrow to view the next scramble.
 3. Stats and times: See below for additional information
 4. Tools: Provides additional information and tools. See the Tools section
 5. Tool select: Used to select a tool to add
@@ -90,8 +90,9 @@ Block Keeper will check for updates automatically at startup and will download a
 | `CTRL + T`         | Add new time                       |
 | `CTRL + Backspace` | Delete last solve                  |
 | `CTRL + N`         | Create new session                 |
-| `CTRL + S`         | Generate a new scramble            |
 | `CTRL + E`         | Edit current Session               |
+| `CTRL + Left`      | Previous scramble                  |
+| `CTRL + Right`     | Next scramble                      |
 | `CTRL + R`         | View video recording of last solve |
 
 ### Window

@@ -33,6 +33,11 @@ body {
     background-color:#000000;
 }
 
+pre {
+    color:#F0F0F0;
+    font-size: 18px;
+}
+
 :not(input):not(textarea), :not(input):not(textarea)::after, :not(input):not(textarea)::before {
     -webkit-user-select: none;
     user-select: none;
@@ -121,7 +126,7 @@ body {
 #timer {
     vertical-align: bottom;
     text-align: center;
-    font-size: 30vmin;
+    font-size: 20vmin;
     font-family: digital;
     color:#E0E0E0;
     margin:0px;
@@ -130,7 +135,7 @@ body {
 #timerSplit {
     vertical-align: bottom;
     text-align: center;
-    font-size: 10vmin;
+    font-size: 6vmin;
     font-family: digital;
     color:#E0E0E0;
     margin:0px;
@@ -143,7 +148,7 @@ body {
 #announcement {
     vertical-align:middle;
     text-align: center;
-    font-size:10vmin;
+    font-size:6vmin;
     font-family: workSansLight;
     white-space: nowrap;
     color:#E0E0E0;
@@ -153,26 +158,58 @@ body {
     opacity: 0;
 }
 
-#scramble {
-    -webkit-user-select: text;
-    user-select: text;
+#scrambleContainer {
     position: fixed;
     top:32px;
     left:300px;
-    vertical-align:top;
-    text-align: right;
-    font-size:4vh;
-    line-height:4vh;
     width:calc(100vw - 320px);
-    min-height:15vh;
-    max-height:30vh;
+    height:200px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#scramblePrevious {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 30px;
+    height: 100%;
+    display: block;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='#FFF' stroke='#F0F0F0' points='8,12 16,4 16,20'></polyline></svg>");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+}
+
+#scrambleNext {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 30px;
+    height: 100%;
+    display: block;
+    background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' width='24' height='24' viewBox='0 0 24 24'><polyline stroke-width='0' cap='square' fill='#FFF' stroke='#F0F0F0' points='16,12 8,4 8,20'></polyline></svg>");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+}
+
+#scramble {
+    -webkit-user-select: text;
+    user-select: text;
+    vertical-align: top;
+    text-align: right;
+    position: absolute;
+    left: 30px;
+    top: 0px;
+    font-size:40px;
+    line-height:40px;
+    width:calc(100% - 60px);
+    height:100%;
     color:#C0C0C0;
     font-family: workSansLight;
     overflow-y: scroll;
     word-wrap:normal;
     margin: 0px;
     display: block;
-    background-color:rgba(208,208,208,0.1);
 }
 
 #scramble:hover {
@@ -597,7 +634,7 @@ td p {
     cursor:default;
 }
 
-#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult, #dialogTransferSession {
+#dialogManageEvents, #dialogShowInfo,#dialogScramble, #dialogPreferences, #dialogPreview, #dialogCSTimer, #dialogAddTime, #dialogBlindResult, #dialogTransferSession, #dialogUpdate {
     background: #303030;
     border-color:#606060;
     border-width:2px;
@@ -646,6 +683,10 @@ td p {
     margin-left:15px;
 }
 
+#dialogUpdate {
+    padding-left:10px;
+}
+
 #dialogRecord button {
     margin-right: 0px;
     margin-left: 0px;
@@ -655,7 +696,7 @@ td p {
     float:left;
 }
 
-#closePreferences ,#closePreview,#closeShowInfo {
+#closePreferences ,#closePreview,#closeShowInfo, #closeUpdate {
     display: block;
     margin-top:10px;
     margin-right: 10px;
@@ -665,8 +706,7 @@ td p {
 }
 
 #savePreferences {
-    margin-left:
-        10px;
+    margin-left: 10px;
     margin-top: 0px;
 }
 

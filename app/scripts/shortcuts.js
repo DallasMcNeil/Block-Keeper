@@ -38,9 +38,11 @@
             } else if (message === "CommandOrControl+N") {
                 events.createSession();
                 events.setSessionOptions($("#sessionSelect")[0]);
-            } else if (message === "CommandOrControl+S") {
-                scramble.scramble();
-            } else if (message === "CommandOrControl+T") {
+            } else if (message === "CommandOrControl+Left") {
+                scramble.previousScramble();
+            } else if (message === "CommandOrControl+Right") {
+                scramble.nextScramble();
+            } else if (message === "CommandOrControl+R") {
                 events.openTimeDialog();
             } else if (message === "CommandOrControl+,") {
                 prefs.openPreferences();
