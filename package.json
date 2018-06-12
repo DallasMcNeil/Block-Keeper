@@ -2,7 +2,7 @@
   "name": "blockkeeper",
   "productName": "Block Keeper",
   "main": "app/main.js",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": {
     "name": "Dallas McNeil",
     "email": "dallas@dallasmcneil.com",
@@ -19,15 +19,14 @@
   },
   "devDependencies": {
     "ajv": "latest",
-    "electron": "1.8.4",
-    "electron-builder": "latest",
-    "electron-builder-lib": "latest",
+    "electron": "1.8.7",
+    "electron-builder": "20.14.7",
+    "electron-builder-lib": "20.14.7",
     "electron-builder-squirrel-windows": "^20.15.0",
     "electron-simple-publisher": "latest"
   },
   "dependencies": {
     "ajv": "^6.5.1",
-    "electron-builder-lib": "^20.15.3",
     "electron-json-storage": "^2.1.0",
     "electron-shortcut": "^0.5.0",
     "electron-simple-updater": "^1.2.3",
@@ -45,7 +44,7 @@
     "appId": "com.dallasmcneil.blockkeeper",
     "productName": "Block Keeper",
     "electronCompile": false,
-    "electronVersion": "1.8.4",
+    "electronVersion": "1.8.7",
     "asar": false,
     "files": [
       "!README.md",
@@ -72,7 +71,7 @@
     },
     "appImage": {
       "synopsis": "Cubing timer",
-      "category": "Utilities",
+      "category": "Utility",
       "systemIntegration": "doNotAsk"
     }
   }
