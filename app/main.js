@@ -5,15 +5,6 @@
 'use strict';
 
 const updater = require("electron-simple-updater");
-updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
-updater.on("update-downloading", function() {
-    dialog.showMessageBox({
-        type:"info",
-        title:"Block Keeper Update",
-        message:"A new update is available and downloading in the background. It will be installed automatically once the program is closed."
-    });
-});
-
 
 const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
@@ -38,7 +29,8 @@ const template = [{
         {label:"New Session", accelerator:"CmdOrCtrl+N", click() {win.webContents.send('shortcut', 'CommandOrControl+N')}},
         {label:"Edit Session", accelerator:"CmdOrCtrl+E", click() {win.webContents.send('shortcut', 'CommandOrControl+E')}},
         {type:'separator'},
-        {label:"Scramble", accelerator:"CmdOrCtrl+S", click() {win.webContents.send('shortcut', 'CommandOrControl+S')}},
+        {label:"Previous Scramble", accelerator:"CmdOrCtrl+Left", click() {win.webContents.send('shortcut', 'CommandOrControl+Left')}},
+        {label:"Next Scramble", accelerator:"CmdOrCtrl+Right", click() {win.webContents.send('shortcut', 'CommandOrControl+Right')}},
         {type:'separator'},
         {label:"View Recording", accelerator:"CmdOrCtrl+P", click() {win.webContents.send('shortcut', 'CommandOrControl+P')}}
     ]}, {
@@ -117,9 +109,14 @@ const DNFButton = new TouchBarButton({
     click:() => {win.webContents.send('shortcut', 'CommandOrControl+3')}
 })
 
-const scrambleButton = new TouchBarButton({
-    label:' Scramble ',
-    click:() => {win.webContents.send('shortcut', 'CommandOrControl+S')}
+const scramblePreviousButton = new TouchBarButton({
+    label:'  Prev  ',
+    click:() => {win.webContents.send('shortcut', 'CommandOrControl+Left')}
+})
+
+const scrambleNextButton = new TouchBarButton({
+    label:'  Next  ',
+    click:() => {win.webContents.send('shortcut', 'CommandOrControl+Right')}
 })
 
 const addButton = new TouchBarButton({
@@ -137,7 +134,8 @@ const touchBar = new TouchBar([
         plus2Button,
         DNFButton]}),
         new TouchBarSpacer({size: 'flexible'}),
-        scrambleButton,
+        scramblePreviousButton,
+        scrambleNextButton,
         new TouchBarSpacer({size: 'flexible'}),
         new TouchBarGroup({items:[addButton,
         deleteButton]}
@@ -167,15 +165,28 @@ app.on('ready', function() {
         minHeight:540,
         minWidth:720,
         titleBarStyle:titleBar,
-        show:false
+        show:false,
+        backgroundColor: "#181818"
     });
 
     win.loadURL(url.format({
         pathname:path.join(__dirname, 'index.html'),
         protocol:'file:',
         slashes:true
-    }))
+    }));
+        
+    win.once('ready-to-show', function() {
+        win.show();
+        win.focus();
+    });
 
+    win.webContents.once('did-finish-load', function() {
+        updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
+        updater.on("update-downloading", function() {
+            win.webContents.send('update', "update");
+        });
+    });
+    
     mainWindowState.manage(win);
 
     Menu.setApplicationMenu(menu);
@@ -200,6 +211,7 @@ app.on('ready', function() {
         win.show();
         win.focus();
     })
+  
     win.setTouchBar(touchBar);
 })
 

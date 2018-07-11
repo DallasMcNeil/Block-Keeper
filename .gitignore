@@ -1,5 +1,6 @@
 dist
 node_modules/
 publisher.json
+package-lock.json
 docs/doc.html
 docs/docRaw.html

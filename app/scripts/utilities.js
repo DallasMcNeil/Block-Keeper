@@ -37,7 +37,8 @@ function enableElement(elem) {
 
 // Disable all major elements, with exception
 function disableAllElements(exception = "") {
-    var elements = $("#content").children().not("#stats");
+    var elements = $("#content").children().not("#stats").not("#scrambleContainer");
+    elements = elements.add($("#scrambleContainer").children());
     elements = elements.add($("#stats").children().not("#sessionContainer"));
     elements = elements.add($("#sessionContainer").children());
     $("#addTimeButton").prop("disabled", true);
@@ -55,7 +56,8 @@ function disableAllElements(exception = "") {
 
 // Enable all major elements
 function enableAllElements() {
-    var elements = $("#content").children().not("#stats");
+    var elements = $("#content").children().not("#stats").not("#scrambleContainer");
+    elements = elements.add($("#scrambleContainer").children());
     elements = elements.add($("#stats").children().not("#sessionContainer"));
     elements = elements.add($("#sessionContainer").children());
     $("#addTimeButton").prop("disabled", false);
@@ -73,6 +75,7 @@ function enableAllElements() {
             enableElement("#"+elements[e].id);
         }
     }
+    scramble.updateScramble(); 
 }
 
 // Take a time and returns a string taking into account minutes and timer detail
