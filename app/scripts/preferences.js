@@ -2,6 +2,7 @@
 // Manages preferences and preferences menu including functionality
 // Block Keeper
 // Created by Dallas McNeil
+
 const storage = require('electron-json-storage');
 var remote = require('electron').remote;
 const {remote:{dialog}} = require('electron');
@@ -47,12 +48,13 @@ var preferences = {
     videoResolution:720,
     timeSplits:false,
     timerSize:25,
-    timerSecondSize:15
+    timerSecondSize:15,
+    dataPath:storage.getDefaultDataPath()
 }
 
 // Preference management functions
 var prefs = function() {
-  storage.setDataPath(data);
+
     // Preference forms
     var preferencesInterface = document.forms[2];
     var preferencesTimer = document.forms[1];
@@ -60,6 +62,7 @@ var prefs = function() {
 
     // Saves preferences to file
     function savePreferences() {
+      storage.setDataPath(storage.getDefaultDataPath());
         storage.set("preferences", preferences, function(error) {
             if (error) {
                 throw error;
@@ -68,8 +71,8 @@ var prefs = function() {
         setStylesheet();
         $("#centreBackground").css("background-image", 'url("' + preferences.backgroundImage + '")');
         $("#scramble").css("text-align", preferences.scrambleAlign);
-        $("#scramble").css("font-size", preferences.scrambleSize + "vh");
-        $("#scramble").css("line-height", preferences.scrambleSize + "vh");
+        $("#scramble").css("font-size", (preferences.scrambleSize * 10) + "px");
+        $("#scramble").css("line-height", (preferences.scrambleSize * 10) + "px");
 
         if (preferences.voice != "none") {
             timer.s7voice(new Audio("sounds/" + preferences.voice + "8s.mp3"));
@@ -109,6 +112,7 @@ var prefs = function() {
         preferencesTimer.timeSplits.checked = preferences.timeSplits;
         preferencesInterface.timerSecondSize.value = preferences.timerSecondSize;
         preferencesInterface.timerSize.value = preferences.timerSize;
+        preferencesGeneral.dataPath.value = preferences.dataPath;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -133,7 +137,7 @@ var prefs = function() {
                 record.setupRecorder();
             }
         }
-
+        storage.setDataPath(storage.getDefaultDataPath());
         storage.get("preferences", function(error, object) {
             if (error) {
                 savePreferences();
@@ -228,6 +232,7 @@ var prefs = function() {
         preferences.timeSplits = preferencesTimer.timeSplits.checked;
         preferences.timerSecondSize = preferencesInterface.timerSecondSize.value;
         preferences.timerSize = preferencesInterface.timerSize.value;
+        preferences.dataPath = preferencesGeneral.dataPath.value;
 
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
@@ -284,18 +289,6 @@ var prefs = function() {
     }
 
     $("#tabs").tabs();
-//Change storage location
-function setStorageLocation(data) {
-    closePreferences();
-    dialog.showOpenDialog({
-       properties: ["openDirectory"],
-    }, function(filesPaths) {
-        var data = ''+filesPaths+''.substr(1).slice(0, -1);
-        storage.setDataPath(data);
-      })
-}
-
-var data;
 
     // Import Block Keeper session data from a file
     function importBK() {
@@ -520,6 +513,19 @@ var data;
         })
     }
 
+    function setDataPath() {
+      dialog.showOpenDialog({
+        filters:[],
+        properties: ['openDirectory']
+      }, function(fileNames) {
+          if (fileNames === undefined) {
+              return;
+          } else
+          preferencesGeneral.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+          })
+      }
+
+
     loadPreferences();
 
     return {
@@ -535,8 +541,8 @@ var data;
         importCSTime:importCSTime,
         cancelCSTime:cancelCSTime,
         importBK:importBK,
-        setStorageLocation:setStorageLocation,
         exportBK:exportBK,
-        exportCSV:exportCSV
+        exportCSV:exportCSV,
+        setDataPath:setDataPath
     }
 }()

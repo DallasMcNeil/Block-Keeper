@@ -71,11 +71,12 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
-        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
+      storage.setDataPath(preferences.dataPath);
+        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, preferences.dataPath.dataPath, function(error) {
             if (error) {
                 throw error;
             }
-        })
+        });
     }
 
     // Merges current events with other events
@@ -100,6 +101,7 @@ var events = function() {
     var letClose = false;
     var reloading = false;
     function closeApp() {
+      storage.setDataPath(preferences.dataPath);
         storage.set("puzzlesBackup", {puzzles:events, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
             if (error) {
                 throw error;
@@ -214,6 +216,7 @@ var events = function() {
 
         // Load events
         var load = function() {
+          storage.setDataPath(preferences.dataPath);
             storage.get("puzzles", function(error, object) {
                 if (error) {
                     storage.get("puzzlesBackup", function(error, object) {
@@ -236,6 +239,7 @@ var events = function() {
 
         // Load backup events
         var loadBackup = function() {
+          storage.setDataPath(preferences.dataPath);
            storage.get("puzzlesBackup", function(error, object) {
                 if (error) {
                      if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
@@ -349,7 +353,7 @@ var events = function() {
 
     // Create record from the add time menu
     function addRecord() {
-      var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value.split(':').reduce((acc,time) => (60 * acc) + +time)).toFixed(3));
+        var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value.split(':').reduce((acc,time) => (60 * acc) + +time)).toFixed(3));
         if (isNaN(t) || t === undefined || t <= 0) {
             $("#addTimeMessage")[0].innerHTML = "Invalid time";
             return;
@@ -364,7 +368,7 @@ var events = function() {
             getLastRecord().scramble = scramble.currentScramble();
         }
         $("#timer")[0].innerHTML = formatTime(t);
-        scramble.scramble();
+        scramble.nextScramble();
         closeTimeDialog();
     }
 
@@ -388,7 +392,7 @@ var events = function() {
         currentSession = getCurrentEvent().sessions.length - 1;
         sessionSelect.value = currentSession;
         updateRecords(true);
-        scramble.scramble();
+        scramble.resetList();
     }
 
     // Set the session based on the dropdown
@@ -834,9 +838,9 @@ var events = function() {
         var sess = getCurrentEvent().sessions.splice(currentSession, 1);
         currentEvent = $("#eventSelectTransfer")[0].value;
         getCurrentEvent().sessions.push(sess[0]);
-        enableAllElements();
         eventSelect.value = currentEvent;
         setEvent();
+        enableAllElements();
     }
 
     // Hide the session stats

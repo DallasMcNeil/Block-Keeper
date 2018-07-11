@@ -55,7 +55,11 @@ Created by Dallas McNeil
         <div class="indicator" id="rightIndicator"></div>
     </div>
 
-    <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler"></p>
+    <div id="scrambleContainer">
+        <button id="scramblePrevious" onclick="scramble.previousScramble()" title="Go back to previous scramble"></button>
+        <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler or use custom scrambles"></p>
+        <button id="scrambleNext" onclick="scramble.nextScramble()" title="Go to next scramble"></button>
+    </div>
 
     <div id="stats">
         <select title="Event select" id="eventSelect" onchange="events.setEvent()"></select>
@@ -192,7 +196,7 @@ Created by Dallas McNeil
 
     <div id="dialogScramble">
         <p>Scrambler: <select id="scramblerSelect"></select></p>
-        <p>Custom scramble<br><textarea rows="3" id="customScramble"></textarea></p>
+        <p>Custom scrambles (newline separated)<br><textarea rows="3" id="customScramble"></textarea></p>
         <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
 
@@ -246,6 +250,7 @@ Created by Dallas McNeil
                     <p title="Automatically save recorded video to folder">Video auto-save location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display scrambles in lists</p>
                     <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove all formatting in lists</p>
+                    <p title="#">Data auto-save location:  <input name="dataPath" type="text" style="width:150px"/>  <button onclick="prefs.setDataPath(); return false;">Select</button></p>
                 </form>
             </div>
             <div id="tabs-2">
@@ -332,8 +337,7 @@ Created by Dallas McNeil
                 </form>
             </div>
             <div id="tabs-4">
-                <p title="Manage Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
-                <p title="Manage Block Keeper sessions"><button onclick="prefs.setStorageLocation()">Change saving location</button></p>
+                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
                 <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
                 <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
             </div>
@@ -343,6 +347,14 @@ Created by Dallas McNeil
         <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
 
+    <div id="dialogUpdate">
+        <button class="cross" id="closeUpdate"onclick="update.closeUpdate()"></button>
+        <h2 id="updateHeading"></h2>
+        <p id="updateInfo"></p>
+        <pre id="updateNotes"></pre>
+    </div>
+
+    <script src="scripts/update.js"></script>
     <script src="scripts/scrambles.js"></script>
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>
