@@ -559,7 +559,9 @@ var prefs = function() {
             } else {
                 if (fs.existsSync(path.join(fileNames[0],"puzzles.json"))) {
                     try {
-                        events.loadSessions();
+                        events.loadSessions(function() {
+                            
+                        });
                     } catch (e) {
                         
                     }

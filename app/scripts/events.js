@@ -182,7 +182,7 @@ var events = function() {
     }
 
     // Load session from file
-    function loadSessions() {
+    function loadSessions(callback) {
         // Setup loaded object
         var setup = function(object) {
             if (object.puzzles !== undefined) {
@@ -215,6 +215,7 @@ var events = function() {
 
             setEventOptions(eventSelect);
             setEvent();
+            callback();
         }
 
         // Load events
@@ -1503,8 +1504,8 @@ var events = function() {
         return sessionButtonsShowing;
     }
 
-    function setupEvents() {
-        loadSessions();
+    function setupEvents(callback) {
+        loadSessions(callback);
     }
 
     return {

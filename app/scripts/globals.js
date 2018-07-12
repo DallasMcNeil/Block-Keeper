@@ -136,6 +136,6 @@ const globals = function() {
         prepareColor:"#FF0000",
         inspectColor:"#FFFF00",
         readyColor:"#00FF00",
-        menuOpen:false
+        menuOpen:true
     }
 }()

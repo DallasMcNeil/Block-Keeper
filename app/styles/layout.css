@@ -1082,3 +1082,14 @@ ul {
     background-image: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='26' height='26' viewBox='0 0 24 24'><polyline stroke-width='2' cap='square' fill='none' stroke='#F0F0F0' points='6,12 18,12'></polyline></svg>"); 
     background-color: #303030;
 }
+
+#startupCover {
+    z-index: 100;
+    display: block;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: #181818;
+}

@@ -1,4 +1,7 @@
 prefs.setup(function() {
-    events.setup();
     scramble.setup();
+    events.setup(function() {
+        $("#startupCover").fadeOut();
+        globals.menuOpen = false;
+    });
 });

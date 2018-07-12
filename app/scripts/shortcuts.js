@@ -42,7 +42,7 @@
                 scramble.previousScramble();
             } else if (message === "CommandOrControl+Right") {
                 scramble.nextScramble();
-            } else if (message === "CommandOrControl+R") {
+            } else if (message === "CommandOrControl+T") {
                 events.openTimeDialog();
             } else if (message === "CommandOrControl+,") {
                 prefs.openPreferences();
