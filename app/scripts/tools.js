@@ -35,6 +35,12 @@ var tools = function() {
             }
         }))
     }
+
+    function clearTools() {
+        while (toolOptions.length > 0) {
+            deleteTool(0);
+        }
+    }
     
     // Add a tool to the bottom of the list based on tool select
     function addTool() {
@@ -56,9 +62,9 @@ var tools = function() {
 
         var toolCanvas;
         if (toolSelect.value == "scramble") {
-            var toolCanvas = document.createElement("div");
+            toolCanvas = document.createElement("div");
         } else if (toolSelect.value == "metronome") {
-            var toolCanvas = document.createElement("div");
+            toolCanvas = document.createElement("div");
             var startStopButton = document.createElement("button");
             startStopButton.onclick = startStopMetronome;
             startStopButton.id = "metronomeStartStopButton";
@@ -152,8 +158,10 @@ var tools = function() {
     // Setup tool based on list of tool types
     function setupTools(list) {
         for (var i = 0; i < list.length; i++) {
-            toolSelect.value = list[i]
-            addTool()
+            if (list[i] != "") {
+                toolSelect.value = list[i];
+                addTool();
+            }
         }
     } 
 
@@ -816,6 +824,7 @@ var tools = function() {
     return {
         deleteTool:deleteTool,
         addTool:addTool,
+        clearTools:clearTools,
         updateTools:updateTools,
         setupTools:setupTools,
         toolTypes:returnToolTypes

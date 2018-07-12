@@ -71,8 +71,9 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
-      storage.setDataPath(preferences.dataPath);
-        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, preferences.dataPath.dataPath, function(error) {
+        prefs.checkDataPath();
+        storage.setDataPath(preferences.dataPath);
+        storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
             if (error) {
                 throw error;
             }
@@ -101,8 +102,9 @@ var events = function() {
     var letClose = false;
     var reloading = false;
     function closeApp() {
-      storage.setDataPath(preferences.dataPath);
-        storage.set("puzzlesBackup", {puzzles:events, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
+        prefs.checkDataPath();
+        storage.setDataPath(preferences.dataPath);
+        storage.set("puzzlesBackup", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
             if (error) {
                 throw error;
             }
@@ -207,6 +209,7 @@ var events = function() {
             }
 
             if (object.tools != undefined) {
+                tools.clearTools();
                 tools.setupTools(object.tools);
             }
 
@@ -216,10 +219,10 @@ var events = function() {
 
         // Load events
         var load = function() {
-          storage.setDataPath(preferences.dataPath);
+            storage.setDataPath(preferences.dataPath);
             storage.get("puzzles", function(error, object) {
                 if (error) {
-                    storage.get("puzzlesBackup", function(error, object) {
+                    storage.get("puzzlesBackup", function(error, object2) {
                         if (error) {
                              if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
                                  letClose = true;
@@ -228,6 +231,7 @@ var events = function() {
                                  setup({});
                              }
                         } else {
+                            setup(object2);
                             alert("Sessions were restored from backup. Some recent records may be missing.");
                         }
                     })
@@ -239,8 +243,8 @@ var events = function() {
 
         // Load backup events
         var loadBackup = function() {
-          storage.setDataPath(preferences.dataPath);
-           storage.get("puzzlesBackup", function(error, object) {
+            storage.setDataPath(preferences.dataPath);
+            storage.get("puzzlesBackup", function(error, object) {
                 if (error) {
                      if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
                          letClose = true;
@@ -249,12 +253,13 @@ var events = function() {
                          saveSessions();
                      }
                 } else {
-                    alert("Sessions were restored from backup. Some recent records may be missing.");
                     setup(object);
+                    alert("Sessions were restored from backup. Some recent records may be missing.");
                 }
             })
         }
 
+        storage.setDataPath(preferences.dataPath);
         storage.has("puzzles", function(error, hasKey) {
             if (hasKey) {
                 load();
@@ -1498,9 +1503,12 @@ var events = function() {
         return sessionButtonsShowing;
     }
 
-    loadSessions();
+    function setupEvents() {
+        loadSessions();
+    }
 
     return {
+        setup:setupEvents,
         getAllEvents:returnEvents,
         getCurrentEvent:getCurrentEvent,
         getCurrentSession:getCurrentSession,
@@ -1541,6 +1549,8 @@ var events = function() {
         createNewEvent:createNewEvent,
         transferSessionButton:transferSessionButton,
         transferSession:transferSession,
-        closeDialogRecord:closeDialogRecord
+        closeDialogRecord:closeDialogRecord,
+        saveSessions:saveSessions,
+        loadSessions:loadSessions
     }
 }()

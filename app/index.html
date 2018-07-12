@@ -230,7 +230,7 @@ Created by Dallas McNeil
             <li class="tab"><a href="#tabs-1"><button>General</button></a></li>
             <li class="tab"><a href="#tabs-2"><button>Timer</button></a></li>
             <li class="tab"><a href="#tabs-3"><button>Interface</button></a></li>
-            <li class="tab"><a href="#tabs-4"><button>Import/Export</button></a></li>
+            <li class="tab"><a href="#tabs-4"><button>Data</button></a></li>
             </ul>
             <div id="tabs-1">
                 <form name="preferencesGeneral">
@@ -250,7 +250,6 @@ Created by Dallas McNeil
                     <p title="Automatically save recorded video to folder">Video auto-save location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display scrambles in lists</p>
                     <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove all formatting in lists</p>
-                    <p title="#">Data auto-save location:  <input name="dataPath" type="text" style="width:150px"/>  <button onclick="prefs.setDataPath(); return false;">Select</button></p>
                 </form>
             </div>
             <div id="tabs-2">
@@ -295,8 +294,8 @@ Created by Dallas McNeil
                         <option value="10">10</option>
                         <option value="15">15</option>
                         <option value="20">20</option>
-                        <option value="25">25</option>
-                        <option value="30" selected>30</option>
+                        <option value="25" selected>25</option>
+                        <option value="30">30</option>
                         <option value="35">35</option>
                         <option value="40">40</option>
                     </select></p>
@@ -337,9 +336,15 @@ Created by Dallas McNeil
                 </form>
             </div>
             <div id="tabs-4">
-                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
-                <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
-                <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
+                <form name="preferencesData" onsubmit="return false">
+                    <p title="Set auto-save location by loading data from a location or saving to a location">Data:  <button onclick="prefs.setDataPathLoad(); return false;">Load</button>  <button onclick="prefs.setDataPathSave(); return false;">Save</button></p>
+
+                    <p title="The current auto-save location">Auto-save location:  <input disabled name="dataPath" type="text" style="width:150px"/></p>
+
+                    <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
+                    <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
+                    <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
+                </form>
             </div>
         </div>
 
@@ -364,5 +369,6 @@ Created by Dallas McNeil
     <script src="scripts/tools.js"></script>
     <script src="scripts/shortcuts.js"></script>
     <script src="scripts/record.js"></script>
+    <script src="scripts/setup.js"></script>
 </body>
 </html>

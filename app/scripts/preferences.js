@@ -7,6 +7,7 @@ const storage = require('electron-json-storage');
 var remote = require('electron').remote;
 const {remote:{dialog}} = require('electron');
 var fs = require('fs');
+var path = require('path');
 const {clipboard} = require('electron');
 const app = remote.app;
 
@@ -56,13 +57,14 @@ var preferences = {
 var prefs = function() {
 
     // Preference forms
+    var preferencesData = document.forms[3];
     var preferencesInterface = document.forms[2];
     var preferencesTimer = document.forms[1];
     var preferencesGeneral = document.forms[0];
 
     // Saves preferences to file
     function savePreferences() {
-      storage.setDataPath(storage.getDefaultDataPath());
+        storage.setDataPath(storage.getDefaultDataPath());
         storage.set("preferences", preferences, function(error) {
             if (error) {
                 throw error;
@@ -112,16 +114,18 @@ var prefs = function() {
         preferencesTimer.timeSplits.checked = preferences.timeSplits;
         preferencesInterface.timerSecondSize.value = preferences.timerSecondSize;
         preferencesInterface.timerSize.value = preferences.timerSize;
-        preferencesGeneral.dataPath.value = preferences.dataPath;
+        preferencesData.dataPath.value = preferences.dataPath;
     }
 
     // Loads preferences from file and fills in preferences forms
-    function loadPreferences() {
+    function loadPreferences(callback) {
         var setup = function () {
             setStylesheet();
+
+            checkDataPath()
             savePreferences();
 
-            setFormsFromPreferences()
+            setFormsFromPreferences();
 
             $("#timer")[0].innerHTML = (0).toFixed(preferences.timerDetail);
             writeTheme(preferences.customTheme);
@@ -136,16 +140,49 @@ var prefs = function() {
             if (preferences.recordSolve) {
                 record.setupRecorder();
             }
-        }
+            callback();
+        };
+
         storage.setDataPath(storage.getDefaultDataPath());
-        storage.get("preferences", function(error, object) {
-            if (error) {
-                savePreferences();
+        storage.has("preferences", function (error, hasKey) {
+            if (hasKey) {
+                storage.get("preferences", function(error, object) {
+                   if (!error) {
+                        preferences = Object.assign({}, preferences, object); 
+                    }
+                    setup();
+                });
             } else {
-                preferences = Object.assign({}, preferences, object);
+                storage.setDataPath(path.join(storage.getDefaultDataPath(),".."));
+                storage.has("preferences", function (error, hasKey) {
+                    if (hasKey) {
+                        if (!fs.existsSync(storage.getDefaultDataPath())) {
+                            fs.mkdirSync(storage.getDefaultDataPath());
+                        }
+
+                        // Move files to new standard storage location
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "preferences.json"), path.join(storage.getDefaultDataPath(), "preferences.json"));
+
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "puzzles.json"), path.join(storage.getDefaultDataPath(), "puzzles.json"));
+
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "puzzlesBackup.json"), path.join(storage.getDefaultDataPath(), "puzzlesBackup.json"));
+
+                        storage.setDataPath(storage.getDefaultDataPath());
+                        storage.get("preferences", function(error, object) {
+                            if (!error) {
+                                 preferences = Object.assign({}, preferences, object); 
+                             }
+                             setup();
+                         });
+                    } else {
+                        // New user, create preferences
+                        checkDataPath();
+                        savePreferences();
+                        setup();
+                    }
+                });
             }
-            setup();
-        })
+        });
     }
 
     // Initialise preferences dialog
@@ -232,7 +269,6 @@ var prefs = function() {
         preferences.timeSplits = preferencesTimer.timeSplits.checked;
         preferences.timerSecondSize = preferencesInterface.timerSecondSize.value;
         preferences.timerSize = preferencesInterface.timerSize.value;
-        preferences.dataPath = preferencesGeneral.dataPath.value;
 
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
@@ -513,22 +549,62 @@ var prefs = function() {
         })
     }
 
-    function setDataPath() {
-      dialog.showOpenDialog({
-        filters:[],
-        properties: ['openDirectory']
-      }, function(fileNames) {
-          if (fileNames === undefined) {
-              return;
-          } else
-          preferencesGeneral.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
-          })
-      }
+    function setDataPathLoad() {
+        dialog.showOpenDialog({
+            filters:[],
+            properties: ['openDirectory']
+        }, function(fileNames) {
+            if (fileNames === undefined) {
+                return;
+            } else {
+                if (fs.existsSync(path.join(fileNames[0],"puzzles.json"))) {
+                    try {
+                        events.loadSessions();
+                    } catch (e) {
+                        
+                    }
+                    preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+                    preferences.dataPath = preferencesData.dataPath.value;
+                    savePreferencesForm();
+                } else {
+                    alert("'puzzles.json' wasn't found in selected directory");
+                }
+            }
+        });
+    };
 
+    function setDataPathSave() {
+        dialog.showOpenDialog({
+            filters:[],
+            properties: ['openDirectory']
+        }, function(fileNames) {
+            if (fileNames === undefined) {
+                return;
+            } else {
+                preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+                preferences.dataPath = preferencesData.dataPath.value;
+                events.saveSessions();
+                savePreferencesForm();
+            }
+        });
+    }
 
-    loadPreferences();
+    function checkDataPath() {
+        if (!fs.existsSync(preferences.dataPath)) {
+            alert("Data auto-save location inaccessible. Setting back to default.");
+            preferences.dataPath = storage.getDefaultDataPath();
+            preferencesData.dataPath.value = storage.getDefaultDataPath();
+            savePreferences();
+        }
+    }
 
+    function setup(callback) {
+        loadPreferences(callback);
+    }
+    
+    // Wait until fully loaded
     return {
+        setup:setup,
         openPreferences:openPreferences,
         closePreferences:closePreferences,
         savePreferences:savePreferencesForm,
@@ -543,6 +619,8 @@ var prefs = function() {
         importBK:importBK,
         exportBK:exportBK,
         exportCSV:exportCSV,
-        setDataPath:setDataPath
-    }
+        setDataPathLoad:setDataPathLoad,
+        setDataPathSave:setDataPathSave,
+        checkDataPath:checkDataPath
+    };
 }()
