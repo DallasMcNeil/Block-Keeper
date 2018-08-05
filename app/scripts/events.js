@@ -4,7 +4,7 @@
 // Created by Dallas McNeil
 
 var events = function() {
-    
+
     // Stats document elements
     var eventSelect = document.getElementById("eventSelect");
     var sessionSelect = document.getElementById("sessionSelect");
@@ -14,7 +14,7 @@ var events = function() {
     var sessionSD = document.getElementById("sessionSD");
     var sessionRecordsTable = document.getElementById("sessionRecords");
     var sessionStatsTable = document.getElementById("sessionStats");
-    var sessionButtonsDiv = document.getElementById("sessionButtons"); 
+    var sessionButtonsDiv = document.getElementById("sessionButtons");
 
     // All events, holding all session and record data
     // These are the default events and settings
@@ -44,26 +44,26 @@ var events = function() {
     var currentEvent = 0;
     var currentSession = 0;
     var currentRecord = 0;
-    
+
     function getCurrentEvent() {
         return internalEvents[currentEvent];
     }
-    
+
     function getCurrentSession() {
         return internalEvents[currentEvent].sessions[currentSession];
     }
-    
+
     function getCurrentRecord() {
         if (currentRecord >= internalEvents[currentEvent].sessions[currentSession].records.length) {
             currentRecord = internalEvents[currentEvent].sessions[currentSession].records.length - 1;
         }
         return internalEvents[currentEvent].sessions[currentSession].records[currentRecord];
     }
-    
+
     function getLastSession() {
         return internalEvents[currentEvent].sessions[internalEvents[currentEvent].sessions.length - 1];
     }
-    
+
     function getLastRecord() {
         return internalEvents[currentEvent].sessions[currentSession].records[internalEvents[currentEvent].sessions[currentSession].records.length - 1];
     }
@@ -71,13 +71,15 @@ var events = function() {
     // Save events to a file
     // Note: Events are stored as puzzles as to not interfere with pre-existing records which were saved before the name was changed
     function saveSessions() {
+        prefs.checkDataPath();
+        storage.setDataPath(preferences.dataPath);
         storage.set("puzzles", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
             if (error) {
                 throw error;
             }
         });
     }
-    
+
     // Merges current events with other events
     function mergeEvents(newEvents) {
         for (var i=0; i < newEvents.length; i++) {
@@ -100,7 +102,9 @@ var events = function() {
     var letClose = false;
     var reloading = false;
     function closeApp() {
-        storage.set("puzzlesBackup", {puzzles:events, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes()}, function(error) {
+        prefs.checkDataPath();
+        storage.setDataPath(preferences.dataPath);
+        storage.set("puzzlesBackup", {puzzles:internalEvents, puzzle:currentEvent, session:currentSession, tools:tools.toolTypes(),currentScrambler:scramble.getCurrentScrambler()}, function(error) {
             if (error) {
                 throw error;
             }
@@ -112,7 +116,7 @@ var events = function() {
             }
         })
     }
-    
+
     function reloadApp() {
         reloading = true;
         closeApp();
@@ -178,7 +182,7 @@ var events = function() {
     }
 
     // Load session from file
-    function loadSessions() {
+    function loadSessions(callback) {
         // Setup loaded object
         var setup = function(object) {
             if (object.puzzles !== undefined) {
@@ -199,32 +203,38 @@ var events = function() {
                     currentSession = 0;
                 }
             }
-            
+
             if (object.currentScrambler !== undefined) {
                 scramble.setCurrentScrambler(object.currentScrambler);
             }
-            
+
             if (object.tools != undefined) {
+                tools.clearTools();
                 tools.setupTools(object.tools);
             }
 
             setEventOptions(eventSelect);
             setEvent();
+            callback();
         }
 
         // Load events
         var load = function() {
+            storage.setDataPath(preferences.dataPath);
             storage.get("puzzles", function(error, object) {
                 if (error) {
-                    storage.get("puzzlesBackup", function(error, object) {
+                    console.log(error);
+                    storage.get("puzzlesBackup", function(error, object2) {
                         if (error) {
-                             if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
-                                 letClose = true;
-                                 remote.getCurrentWindow().close();
-                             } else {
-                                 setup({});
-                             }
+                            console.log(error);
+                            if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                                letClose = true;
+                                remote.getCurrentWindow().close();
+                            } else {
+                                setup({});
+                            }
                         } else {
+                            setup(object2);
                             alert("Sessions were restored from backup. Some recent records may be missing.");
                         }
                     })
@@ -233,24 +243,27 @@ var events = function() {
                 }
             })
         }
-        
+
         // Load backup events
         var loadBackup = function() {
-           storage.get("puzzlesBackup", function(error, object) {
+            storage.setDataPath(preferences.dataPath);
+            storage.get("puzzlesBackup", function(error, object) {
                 if (error) {
-                     if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
-                         letClose = true;
-                         remote.getCurrentWindow().close();
-                     } else {
-                         saveSessions();
-                     }
+                    console.log(error);
+                    if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                        letClose = true;
+                        remote.getCurrentWindow().close();
+                    } else {
+                        saveSessions();
+                    }
                 } else {
-                    alert("Sessions were restored from backup. Some recent records may be missing.");
                     setup(object);
+                    alert("Sessions were restored from backup. Some recent records may be missing.");
                 }
             })
         }
-        
+
+        storage.setDataPath(preferences.dataPath);
         storage.has("puzzles", function(error, hasKey) {
             if (hasKey) {
                 load();
@@ -273,7 +286,7 @@ var events = function() {
         var ext = 2;
         var shouldBreak = false;
         var sessions = getCurrentEvent().sessions;
-        var length = sessions.length;       
+        var length = sessions.length;
         while (!shouldBreak) {
             shouldBreak = true;
             for (var i = 0; i < length; i++) {
@@ -284,7 +297,7 @@ var events = function() {
                     break;
                 }
             }
-        }   
+        }
         var session = {date:new Date().getTime(), name:name, records:[]};
         getCurrentEvent().sessions.push(session);
         currentSession = getCurrentEvent().sessions.length - 1;
@@ -306,7 +319,7 @@ var events = function() {
     function shouldUpdateStats(b) {
         updateStats = b;
     }
-    
+
     // Create a record in the current session
     function createRecord(time, result, split=[]) {
         // Find best time
@@ -321,14 +334,14 @@ var events = function() {
                 launchConfetti()
             }
         }
-        
+
         var record = {time:time, scramble:scramble.currentScramble(), result:result, date: new Date().getTime(), split:split};
         getCurrentSession().records.push(record);
         if (updateStats) {
             updateRecords(true, getCurrentSession().records.length-1);
         }
     }
-           
+
     // Show time dialog to add a custom time
     function openTimeDialog() {
         if ($("#dialogAddTime").dialog("isOpen")) {
@@ -349,14 +362,14 @@ var events = function() {
 
     // Create record from the add time menu
     function addRecord() {
-        var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value).toFixed(3));
+        var t = parseFloat(parseFloat(document.getElementById("addTimeInput").value.split(':').reduce((acc,time) => (60 * acc) + +time)).toFixed(3));
         if (isNaN(t) || t === undefined || t <= 0) {
             $("#addTimeMessage")[0].innerHTML = "Invalid time";
             return;
         }
         $("#addTimeMessage")[0].innerHTML = "";
         document.getElementById("addTimeInput").value = "";
-    
+
         createRecord(t, "OK");
         if ($("#addTimeScramble")[0].checked) {
             getLastRecord().scramble = document.getElementById("addScrambleInput").value;
@@ -393,10 +406,10 @@ var events = function() {
 
     // Set the session based on the dropdown
     function setSession() {
-         currentSession = sessionSelect.value;   
+         currentSession = sessionSelect.value;
          updateRecords(true);
     }
-        
+
     // Populate a dropdown with events
     function setEventOptions(selectElem) {
         var length = selectElem.options.length;
@@ -416,7 +429,7 @@ var events = function() {
         }
         selectElem.value = currentEvent;
     }
-    
+
 
     // Populate a dropdown with sessions
     function setSessionOptions(selectElem) {
@@ -433,7 +446,7 @@ var events = function() {
         }
         selectElem.value = sessions.length - 1;
     }
-    
+
     // Update all records displayed on screen
     var calculatedTimes = {
         times:[],
@@ -445,12 +458,12 @@ var events = function() {
         ao500s:[],
         ao1000s:[],
     }
-        
+
     function updateRecords(scrollDown = false, updateFrom = 0) {
-        setTimeout(function() { 
+        setTimeout(function() {
             var debugTime = new Date();
             console.log("Benchmark Start");
-            
+
             var records = getCurrentSession().records;
             // Set records table up for adding records
             var length = sessionRecordsTable.rows.length - 1;
@@ -475,7 +488,7 @@ var events = function() {
                         }
                         cell.onclick = function() {
                             openShowInfo("Ao5", n);
-                        }   
+                        }
                         cell = row.insertCell(-1);
                         cell.appendChild(document.createElement("p"));
                         if (n > 11) {
@@ -483,7 +496,7 @@ var events = function() {
                         }
                         cell.onclick = function() {
                             openShowInfo("Ao12", n);
-                        } 
+                        }
                     }())
                 }
             }
@@ -502,7 +515,7 @@ var events = function() {
             var DNFsolves = 0;
 
             console.log("Calculation Benchmark Start: " + (new Date().getTime() - debugTime));
-            
+
             // Main calculations, possible to optmise?
             for (var i = 0; i < records.length; i++) {
                 if (records[i].result === "DNF") {
@@ -529,7 +542,7 @@ var events = function() {
                     }
                     if (i >= 99) {
                         calculatedTimes.ao100s[i-99] = averageLastRecords(calculatedTimes.times, 100);
-                    } 
+                    }
                     if (i >= 499) {
                         calculatedTimes.ao500s[i-499] = averageLastRecords(calculatedTimes.times, 500);
                     }
@@ -540,7 +553,7 @@ var events = function() {
                     sessionRecordsTable.rows[i + 1].cells[0].children[0].innerHTML = i + 1;
                     sessionRecordsTable.rows[i + 1].cells[1].children[0].innerHTML = formatRecord(records[i]);
                     sessionRecordsTable.rows[i + 1].cells[2].children[0].innerHTML = formatTime(ao5t);
-                    sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);   
+                    sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);
                 }
             }
 
@@ -562,7 +575,7 @@ var events = function() {
             while (sessionStatsTable.rows.length > 1) {
                 sessionStatsTable.deleteRow(-1);
             }
-            
+
             var extraHeight = 0;
             function createRow(title,size,ts) {
                 if (ts.length > 0) {
@@ -580,7 +593,7 @@ var events = function() {
                     current.className+=" selectable";
                     current.onclick = function() {
                         openShowInfo("Current", size);
-                    } 
+                    }
                     var currentP = document.createElement("p");
                     if (ts.length == 0) {
                         currentP.innerHTML = "-";
@@ -593,7 +606,7 @@ var events = function() {
                     best.className += " selectable";
                     best.onclick = function() {
                         openShowInfo("Best", size);
-                    } 
+                    }
                     var bestP = document.createElement("p");
                     if (calculatedTimes.times.length == 0) {
                         bestP.innerHTML = "-";
@@ -609,7 +622,7 @@ var events = function() {
                     extraHeight = extraHeight + 30;
                 }
             }
-            
+
             // Create session stats
             createRow("Time",1,calculatedTimes.times);
             createRow("Mo3",3,calculatedTimes.mo3s);
@@ -623,7 +636,7 @@ var events = function() {
             // On hover record details
             $("#sessionRecords td").unbind().click(function(e) {
                 var column = parseInt($(this).index());
-                var row = parseInt($(this).parent().index());  
+                var row = parseInt($(this).parent().index());
                 if (!globals.menuOpen || ($("#dialogRecord").dialog("isOpen") && row != currentRecord + 1)) {
                     if (column == 1 && row > 0) {
                         globals.menuOpen = true;
@@ -639,7 +652,7 @@ var events = function() {
                                 str += formatSplits(getCurrentRecord().split.concat(getCurrentRecord().time)) + "<br>";
                             }
                         }
-                        
+
                         str += formatTime(getCurrentRecord().time) + " " + getCurrentRecord().result;
                         $("#recordTime").html(str);
 
@@ -656,17 +669,17 @@ var events = function() {
                             // Consider replacing with a library
                             var d = new Date(getCurrentRecord().date);
                             var options = {
-                                year: "numeric", 
-                                month: "short",  
-                                day: "numeric", 
-                                hour: "2-digit", 
-                                minute: "2-digit"  
-                            };  
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            };
                             $("#recordDate").html(d.toLocaleTimeString("en-us",options));
                         } else {
                             $("#recordDate").html("-");
                         }
-                        
+
                         $("#dialogRecord").dialog({
                             autoOpen:false,
                             modal:true,
@@ -680,7 +693,7 @@ var events = function() {
                                 of:sessionRecordsTable.rows[row].cells[column]
                             }
                         })
-                        
+
                         $("#dialogRecord").dialog("open");
                         disableAllElements("sessionRecordsContainer");
                         $(".selectable").prop("disabled", false);
@@ -698,7 +711,7 @@ var events = function() {
                 } else {
                     closeDialogRecord(true);
                 }
-            })    
+            })
             setTimeout(function() {
                 extraHeight+=$("#sessionDetails").height();
                 $("#sessionRecordsContainer").css("max-height","calc(100vh - (" + extraHeight + "px + 170px))");
@@ -706,17 +719,17 @@ var events = function() {
                     $("#sessionRecordsContainer").animate({scrollTop:Number.MAX_SAFE_INTEGER + "px"}, 100);
                 }
             }, 20);
-            
+
             tools.updateTools();
             saveSessions();
- 
+
             console.log("Done: " + (new Date().getTime() - debugTime))
-            
+
         }, 0);
     }
-    
+
     //var ignoreClickout = true;
-    
+
     function closeDialogRecord(save,didDelete=false) {
         if ($("#dialogRecord").dialog("isOpen")) {
             enableAllElements();
@@ -738,7 +751,7 @@ var events = function() {
         if (getCurrentEvent().sessions.length < 2) {
             disableElement("#deleteSessionButton");
         } else {
-            enableElement("#deleteSessionButton");     
+            enableElement("#deleteSessionButton");
         }
         if (sessionButtonsShowing) {
             var newElement = document.createElement("select");
@@ -766,14 +779,14 @@ var events = function() {
             sessionButtonsShowing = true;
             disableStats();
             globals.menuOpen = true;
-        } 
+        }
     }
 
     // Create session button pressed
     function createSessionButton() {
         getCurrentSession().name = sessionSelect.value;
         createSession();
-        sessionSelect.value = getCurrentSession().name; 
+        sessionSelect.value = getCurrentSession().name;
         updateRecords(true);
         if (getCurrentEvent().sessions.length > 1) {
             enableElement("#deleteSessionButton");
@@ -796,7 +809,7 @@ var events = function() {
             $("#sessionButtons").animate({height:'0px'}, 200);
         }
     }
-    
+
     // Clear the session by removing all records
     function clearSessionButton() {
         if (confirm("Delete all records?")) {
@@ -804,7 +817,7 @@ var events = function() {
             updateRecords(true);
         }
     }
-    
+
     $("#dialogTransferSession").dialog({
         autoOpen:false,
         modal:true,
@@ -819,7 +832,7 @@ var events = function() {
         }
         evt.stopPropagation();
     });
-    
+
     // Open transfer session dialog
     function transferSessionButton() {
         $("#dialogTransferSession").dialog("open");
@@ -827,7 +840,7 @@ var events = function() {
         setEventOptions($("#eventSelectTransfer")[0]);
         disableAllElements();
     }
-    
+
     // Move a session to an event
     function transferSession() {
         $("#dialogTransferSession").dialog("close");
@@ -907,7 +920,7 @@ var events = function() {
         autoOpen:false,
         modal:true,
         width:"199",
-        height:"152" 
+        height:"152"
     });
 
     // Create add time dialog
@@ -931,7 +944,7 @@ var events = function() {
 
     $("#dialogShowInfo").dialog({
         autoOpen:false,
-        modal:true,    
+        modal:true,
         position: {
             my:"center",
             at:"center",
@@ -947,13 +960,13 @@ var events = function() {
         } else if (evt.keyCode === 13) {
             closeShowInfo();
             evt.preventDefault();
-        }        
+        }
         evt.stopPropagation();
     })
-    
+
     $("#dialogManageEvents").dialog({
         autoOpen:false,
-        modal:true,    
+        modal:true,
         position: {
             my:"center",
             at:"center",
@@ -969,18 +982,18 @@ var events = function() {
         } else if (evt.keyCode === 13) {
             closeEvents();
             evt.preventDefault();
-        }        
+        }
         evt.stopPropagation();
     })
-    
+
     // Create a row in the event list
     function addEventItem(list, index) {
         // Enabled, name, scrambler, OH, Blind, remove
         (function() {
             var li = document.createElement("li");
-            li.eventname = internalEvents[index].name; 
+            li.eventname = internalEvents[index].name;
             li.style.position = "relative";
-                
+
             event = internalEvents[index];
 
             var enable = document.createElement("input");
@@ -989,7 +1002,7 @@ var events = function() {
             enable.style.position = "absolute";
             enable.style.top = "3px";
             enable.style.left = "30px";
-            
+
             enable.checked = event.enabled;
             li.appendChild(enable);
             enable.onchange = function() {
@@ -998,7 +1011,7 @@ var events = function() {
 
             if (internalEvents[index].default) {
                 var name = document.createElement("p");
-                name.style.width = "175px"; 
+                name.style.width = "175px";
                 name.style.display = "inline-block";
                 name.style.lineHeight = "30px";
                 name.style.margin = "0px";
@@ -1010,7 +1023,7 @@ var events = function() {
             } else {
                 var name = document.createElement("input");
                 name.type = "text";
-                name.style.width = "175px"; 
+                name.style.width = "175px";
                 name.style.position = "absolute";
                 name.style.top = "0px";
                 name.style.left = "65px";
@@ -1051,7 +1064,7 @@ var events = function() {
             var scrambler = document.createElement("select");
             scramble.setScramblerOptions(scrambler);
             scrambler.options.remove(0);
-            scrambler.style.width = "175px"; 
+            scrambler.style.width = "175px";
             scrambler.style.position = "absolute";
             scrambler.style.top = "0px";
             scrambler.style.left = "250px";
@@ -1068,7 +1081,7 @@ var events = function() {
             blind.style.position = "absolute";
             blind.style.top = "3px";
             blind.style.left = "435px";
-            
+
             var OH = document.createElement("input");
             OH.type = "checkbox";
             OH.className = "checkbox";
@@ -1080,7 +1093,7 @@ var events = function() {
             var splits = document.createElement("input");
             splits.type = "text";
             splits.maxLength = 1;
-            splits.style.width = "20px"; 
+            splits.style.width = "20px";
             splits.style.position = "absolute";
             splits.style.top = "0px";
             splits.style.left = "520px";
@@ -1097,17 +1110,17 @@ var events = function() {
                 internalEvents[index].splits = n;
                 splits.value = n;
             }
-            
+
             li.appendChild(OH);
             OH.onchange = function() {
                 internalEvents[index].OH = OH.checked;
             }
-            
+
             li.appendChild(blind);
             blind.onchange = function() {
                 internalEvents[index].blind = blind.checked;
             }
-            
+
             if (event.default) {
                 scrambler.className += " disabled";
                 scrambler.disabled = true;
@@ -1116,15 +1129,15 @@ var events = function() {
                 blind.className += " disabled";
                 blind.disabled = true;
             }
-        
+
             if (!internalEvents[index].default) {
                 var remove = document.createElement("button");
                 remove.className = "delete";
                 remove.style.position = "absolute";
                 remove.style.top = "0px";
                 remove.style.left = "580px";
-            
-                
+
+
                 remove.onclick = function() {
                     if (confirm("Do you want to remove this event? All of it's sessions will also be deleted.")) {
                         var scroll = $("#eventsList")[0].scrollTop;
@@ -1134,7 +1147,7 @@ var events = function() {
                             if (internalEvents[i].name === n) {
                                 internalEvents.splice(i,1);
                                 break;
-                            } 
+                            }
                         }
                         for (var i = 0; i < internalEvents.length; i++) {
                             addEventItem($("#eventsList")[0], i);
@@ -1151,7 +1164,7 @@ var events = function() {
             list.appendChild(li);
         })()
     }
-    
+
     // Open the event management dialog
     function openEvents() {
         if (globals.menuOpen) {
@@ -1168,7 +1181,7 @@ var events = function() {
         disableAllElements("eventButton");
         globals.menuOpen = true;
     }
-    
+
     // Create a new event and add it to the events list
     function createNewEvent() {
         var newEvent = {name:"New Event",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:false,splits:1};
@@ -1178,7 +1191,7 @@ var events = function() {
         $("#eventsList").disableSelection();
         $("#eventsList")[0].scrollTop = Number.MAX_SAFE_INTEGER;
     }
-    
+
     // Remove all event items and reorder events in the lists order
     function removeEventsList() {
         var eventsList = document.getElementById("eventsList");
@@ -1193,7 +1206,7 @@ var events = function() {
             eventsList.removeChild(eventsList.firstChild);
         }
         internalEvents = newEvents;
-        
+
         eventSelect.value =  eventSelect.firstChild.value;
         setEvent();
         setEventOptions(eventSelect);
@@ -1208,18 +1221,18 @@ var events = function() {
         enableAllElements();
         globals.menuOpen = false;
     }
-    
-    
+
+
     function infoHeader() {
         return "Generated by Block Keeper on " + new Date().toDateString() + "<br>"
     }
-    
+
     function averageExport(a,size) {
         var r = getCurrentSession().records.slice(a - size, a);
         var str = ""
         var toRemove = [];
         var ts = extractTimes(r);
-        
+
         if (!preferences.onlyList) {
             str = infoHeader() + "<br>";
             if (size === 1) {
@@ -1254,12 +1267,12 @@ var events = function() {
                 }
             }
             if (!didRemove) {
-                str += (formatRecord(r[i]));                       
+                str += (formatRecord(r[i]));
             }
             if (preferences.scramblesInList) {
                 str += " (" + r[i].scramble.trim() + ")";
             }
-        } 
+        }
         return str;
     }
 
@@ -1347,7 +1360,7 @@ var events = function() {
                 }
                 if (!preferences.onlyList) {
                     str = infoHeader() + "<br>Mo3 list<br>";
-                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";    
+                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
                 }
                 for (var i = 0; i < means.length; i++) {
                     if (preferences.onlyList) {
@@ -1466,37 +1479,40 @@ var events = function() {
             $("#announcement").animate({opacity:0}, 2000);
             $("#confetti").animate({opacity:0}, 2000, function() {
                  confettiCanvas.destroy();
-            })   
+            })
         }, 5000)
     }
-        
+
     function returnCurrentRecord() {
         return currentRecord;
     }
-    
+
     function returnCurrentSession() {
         return currentSession;
     }
-    
+
     function setCurrentRecord(i) {
         currentRecord = i;
     }
-    
+
     function setCurrentEvent(i) {
         currentEvent = i;
     }
-    
+
     function returnEvents() {
         return internalEvents;
     }
-    
+
     function returnSessionButtonsShowing() {
         return sessionButtonsShowing;
     }
-    
-    loadSessions();
-        
+
+    function setupEvents(callback) {
+        loadSessions(callback);
+    }
+
     return {
+        setup:setupEvents,
         getAllEvents:returnEvents,
         getCurrentEvent:getCurrentEvent,
         getCurrentSession:getCurrentSession,
@@ -1537,6 +1553,8 @@ var events = function() {
         createNewEvent:createNewEvent,
         transferSessionButton:transferSessionButton,
         transferSession:transferSession,
-        closeDialogRecord:closeDialogRecord
+        closeDialogRecord:closeDialogRecord,
+        saveSessions:saveSessions,
+        loadSessions:loadSessions
     }
 }()

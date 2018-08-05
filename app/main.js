@@ -1,5 +1,5 @@
 // main.js
-// Main proccess of Block Keeper app 
+// Main proccess of Block Keeper app
 // Block Keeper
 // Created by Dallas McNeil
 'use strict';
@@ -9,7 +9,6 @@ const updater = require("electron-simple-updater");
 const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
 const windowStateKeeper = require('electron-window-state');
-
 const path = require('path');
 const url = require('url');
 var os = require("os");
@@ -67,7 +66,7 @@ if (process.platform === 'darwin') {
             {role:'about'},
             {type:'separator'},
             {label:"Preferences...", accelerator:"CmdOrCtrl+,", click() {win.webContents.send('shortcut', 'CommandOrControl+,')}},
-            {type:'separator'}, 
+            {type:'separator'},
             {role:'hide'},
             {role:'hideothers'},
             {role:'unhide'},
@@ -78,7 +77,7 @@ if (process.platform === 'darwin') {
 
     template[3].submenu = [
         {label:'Close', accelerator:'CmdOrCtrl+W', role:'close'},
-        {label:'Minimize', accelerator:'CmdOrCtrl+M', role:'minimize'}, 
+        {label:'Minimize', accelerator:'CmdOrCtrl+M', role:'minimize'},
         {role:'togglefullscreen'},
         {type:'separator'},
         {label:'Bring All to Front', role:'front'},
@@ -133,7 +132,7 @@ const deleteButton = new TouchBarButton({
 const touchBar = new TouchBar([
     new TouchBarGroup({items:[OKButton,
         plus2Button,
-        DNFButton]}),  
+        DNFButton]}),
         new TouchBarSpacer({size: 'flexible'}),
         scramblePreviousButton,
         scrambleNextButton,
@@ -150,14 +149,14 @@ app.on('ready', function() {
     if (os.type() === "Darwin") {
         var titleBar = "hidden";
     }
-    
+
     global.appDetails = {version:require('../package.json').version, titleBar:titleBar};
 
     let mainWindowState = windowStateKeeper({
         defaultWidth:960,
         defaultHeight:640
     });
-    
+
     win = new BrowserWindow({
         height:mainWindowState.height,
         width:mainWindowState.width,
@@ -191,23 +190,28 @@ app.on('ready', function() {
     mainWindowState.manage(win);
 
     Menu.setApplicationMenu(menu);
-    
+
     win.on('enter-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "enter");
-    })   
-    
+    })
+
     win.on('leave-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "leave");
     })
-    
+
     win.on('leave-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "leave");
     })
-    
+
     win.on('close', (e, cmd) => {
         win.webContents.send('quit', "quit");
     })
 
+    win.on('ready-to-show', function() {
+        win.show();
+        win.focus();
+    })
+  
     win.setTouchBar(touchBar);
 })
 

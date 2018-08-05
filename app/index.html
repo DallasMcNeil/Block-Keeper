@@ -38,7 +38,7 @@ Created by Dallas McNeil
     <script src="scripts/utilities.js"></script>
     <script>if (window.module) module = window.module;</script>
 </head>
-    
+
 <body>
     <style id="theme"></style>
     <link type="text/css" rel="stylesheet" href="styles/standardWindowBar.css" id="titleBarStyle">
@@ -54,7 +54,7 @@ Created by Dallas McNeil
         <div class="indicator" id="leftIndicator"></div>
         <div class="indicator" id="rightIndicator"></div>
     </div>
-        
+
     <div id="scrambleContainer">
         <button id="scramblePrevious" onclick="scramble.previousScramble()" title="Go back to previous scramble"></button>
         <p id="scramble" onclick="scramble.openScramble()" title="Current scramble, click to select scrambler or use custom scrambles"></p>
@@ -116,8 +116,8 @@ Created by Dallas McNeil
                 </td>
             </tr>
         </table>
-        <div id="sessionRecordsContainer"> 
-            
+        <div id="sessionRecordsContainer">
+
         <table id="sessionRecordsHeader">
             <thead>
                 <tr>
@@ -134,7 +134,7 @@ Created by Dallas McNeil
                         <p>Ao12</p>
                     </td>
                 </tr>
-            </thead>    
+            </thead>
         </table>
         <table id="sessionRecords">
         </table>
@@ -158,25 +158,27 @@ Created by Dallas McNeil
 
     <div id="tools">
     </div>
-    <button title="Add tool" id="addToolButton" onclick="tools.addTool()"></button> 
+    <button title="Add tool" id="addToolButton" onclick="tools.addTool()"></button>
     </div>
-    
+
+    <div id="startupCover"></div>
+
     <!-- Dialogs -->
-    
+
     <div id="dialogManageEvents">
         <p style="margin-bottom: 10px; display:inline;margin-left:10px;">Enabled</p><p style="margin-bottom: 10px; display:inline;margin-left:60px;">Name</p><p style="margin-bottom: 10px; display:inline;margin-left:95px;">Scrambler</p><p style="margin-bottom: 30px; display:inline;margin-left:30px;">Blind</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">OH</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Splits</p><p style="margin-bottom: 10px; display:inline;margin-left:10px;">Remove</p>
         <ul id="eventsList"></ul>
         <p><button style="margin-left:10px;" onclick="events.createNewEvent()">Add event</button>   <button onclick="events.closeEvents()">Done</button></p>
     </div>
-        
+
     <div id="dialogAddTime">
-        <p>Add time (in seconds)</p>
-        <p><input type="text" id="addTimeInput">   <span id="addTimeMessage"></span></p>
+        <p>Add time</p>
+        <p><input type="text" id="addTimeInput" placeholder="x:xx.xxx">   <span id="addTimeMessage"></span></p>
         <p><input type="checkbox" id="addTimeScramble" class="checkbox">Use custom scramble</p>
-        <textarea rows="3" id="addScrambleInput"></textarea>
+        <textarea placeholder="Scramble" rows="3" id="addScrambleInput"></textarea>
         <p><button onclick="events.addRecord()">Add</button> <button onclick="events.closeTimeDialog()">Cancel</button></p>
     </div>
-    
+
     <div id="dialogRecord">
         <button style="width:55px;" title="Set result to OK" onclick="events.recordResultOK()">OK</button>
         <button style="width:50px;" title="Set result to +2 penalty" onclick="events.recordResult2()">+2</button>
@@ -185,44 +187,44 @@ Created by Dallas McNeil
         <p id="recordDate"></p>
         <p id="recordTime"></p>
         <p id="recordScramble"></p>
-        <textarea id="recordComment"></textarea>
+        <textarea placeholder="Comment" id="recordComment"></textarea>
     </div>
-    
+
     <div id="dialogPreview">
         <button id="closePreview" class="cross" onclick="record.closePreview()"></button><br>
         <video id="previewVideo" controls></video>
         <button title="Save video as file" id="savePreview" onclick="record.saveVideo()">Save video</button>
     </div>
-        
+
     <div id="dialogScramble">
         <p>Scrambler: <select id="scramblerSelect"></select></p>
-        <p>Custom scrambles (newline separated)<br><textarea rows="3" id="customScramble"></textarea></p>
+        <p>Custom scrambles (newline separated)<br><textarea placeholder="Scramble" rows="3" id="customScramble"></textarea></p>
         <p><button onclick="scramble.closeScramble()">Done</button></p>
     </div>
-        
+
     <div id="dialogShowInfo">
         <button id="closeShowInfo" class="cross" onclick="events.closeShowInfo()"></button><br>
         <p id="messageShowInfo"></p>
     </div>
-    
+
     <div id="dialogBlindResult">
         <p>What was the result?</p>
         <p><button onclick="timer.blindResult('OK')">OK</button>   <button onclick="timer.blindResult('+2')">+2</button>   <button onclick="timer.blindResult('DNF')">DNF</button></p>
     </div>
-        
+
     <div id="dialogCSTimer">
         <p id="messageCSTimer"></p><br>
         <select id="eventSelectCSTimer" style="margin-bottom:10px;"></select>
         <button title="Import into selected session" id="importCSTimer" onclick="prefs.importCSTime(true)">Import</button>
         <button title="Stop importing sessions" id="cancelCSTimer" onclick="prefs.cancelCSTime()">Cancel</button>
     </div>
-    
+
     <div id="dialogTransferSession">
         <p>Select the event to move the session to.</p><br>
         <select id="eventSelectTransfer" style="margin-bottom:10px;"></select>
         <button title="Move session to selected event" onclick="events.transferSession()">Transfer</button>
     </div>
-        
+
     <div id="dialogPreferences">
         <button id="closePreferences" class="cross" onclick="prefs.closePreferences()"></button>
         <div id="tabs">
@@ -230,7 +232,7 @@ Created by Dallas McNeil
             <li class="tab"><a href="#tabs-1"><button>General</button></a></li>
             <li class="tab"><a href="#tabs-2"><button>Timer</button></a></li>
             <li class="tab"><a href="#tabs-3"><button>Interface</button></a></li>
-            <li class="tab"><a href="#tabs-4"><button>Import/Export</button></a></li>
+            <li class="tab"><a href="#tabs-4"><button>Data</button></a></li>
             </ul>
             <div id="tabs-1">
                 <form name="preferencesGeneral">
@@ -250,7 +252,7 @@ Created by Dallas McNeil
                     <p title="Automatically save recorded video to folder">Video auto-save location:  <input name="autosaveLocation" type="text" style="width:150px"/>  <button onclick="prefs.selectLocation(); return false;">Select</button></p>
                     <p title="Show scrambles next to times in exported sessions and average details"><input type="checkbox" name="scramblesInList" class="checkbox">Display scrambles in lists</p>
                     <p title="Only show list of times with no other information"><input type="checkbox" name="onlyList" class="checkbox">Remove all formatting in lists</p>
-                </form> 
+                </form>
             </div>
             <div id="tabs-2">
                 <form name="preferencesTimer">
@@ -285,7 +287,7 @@ Created by Dallas McNeil
                         <option value="3.5">3.5</option>
                         <option value="4" selected>4</option>
                         <option value="5">5</option>
-                        <option value="6">6</option> 
+                        <option value="6">6</option>
                         <option value="8">8</option>
                         <option value="10">10</option>
                         <option value="12">12</option>
@@ -294,8 +296,8 @@ Created by Dallas McNeil
                         <option value="10">10</option>
                         <option value="15">15</option>
                         <option value="20">20</option>
-                        <option value="25">25</option>
-                        <option value="30" selected>30</option>
+                        <option value="25" selected>25</option>
+                        <option value="30">30</option>
                         <option value="35">35</option>
                         <option value="40">40</option>
                     </select></p>
@@ -332,16 +334,22 @@ Created by Dallas McNeil
                     <p title="Colors used in the custom theme">Custom theme colors   <button title="Refresh custom theme" onclick="prefs.previewStylesheet();return false;">Refresh theme</button></p>
                     <p>Background:   <input name="theme0" type=text style="width:100px">     Timer text: <input name="theme1" type=text style="width:100px"></p>
                     <p>Scramble text:   <input name="theme2" type=text style="width:100px">     Base: <input name="theme3" type=text style="width:100px"></p>
-                    <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>  
+                    <p>Border:   <input name="theme4" type=text style="width:100px">     Text: <input name="theme5" type=text style="width:100px"></p>
                 </form>
             </div>
             <div id="tabs-4">
-                <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
-                <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
-                <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
+                <form name="preferencesData" onsubmit="return false">
+                    <p title="Set auto-save location by loading data from a location or saving to a location">Data:  <button onclick="prefs.setDataPathLoad(); return false;">Load</button>  <button onclick="prefs.setDataPathSave(); return false;">Save</button></p>
+
+                    <p title="The current auto-save location">Auto-save location:  <input disabled name="dataPath" type="text" style="width:150px"/></p>
+
+                    <p title="Import and export Block Keeper sessions">Block Keeper:  <button onclick="prefs.importBK()">Import</button>  <button onclick="prefs.exportBK()">Export</button></p>
+                    <p title="Import csTimer Sessions">csTimer:  <button onclick="prefs.importCS()">Import</button></p>
+                    <p title="Export all times as flat CSV file">CSV:  <button onclick="prefs.exportCSV()">Export</button></p>
+                </form>
             </div>
         </div>
-        
+
         <p>Created by Dallas McNeil, <span id="versionLabel">Version 0.0.0</span></p>
         <button title="Save preferences and close" id="savePreferences" onclick="prefs.savePreferences()">Save</button>
     </div>
@@ -352,16 +360,17 @@ Created by Dallas McNeil
         <p id="updateInfo"></p>
         <pre id="updateNotes"></pre>
     </div>
-    
+
     <script src="scripts/update.js"></script>
-    <script src="scripts/scrambles.js"></script> 
+    <script src="scripts/scrambles.js"></script>
     <script src="scripts/style.js"></script>
     <script src="scripts/preferences.js"></script>
-    <script src="scripts/events.js"></script> 
+    <script src="scripts/events.js"></script>
     <script src="scripts/timer.js"></script>
     <script src="scripts/windowBar.js"></script>
     <script src="scripts/tools.js"></script>
     <script src="scripts/shortcuts.js"></script>
     <script src="scripts/record.js"></script>
+    <script src="scripts/setup.js"></script>
 </body>
 </html>

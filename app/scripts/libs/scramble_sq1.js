@@ -780,12 +780,12 @@ function binarySearch(sortedArray, key){
 
   // Modified by Dallas McNeil for Block Keeper, using custom colors
   function colorGet(col){
-    if (col==="r") return globals.cubeColors[0];
-    if (col==="o") return globals.cubeColors[1];
-    if (col==="b") return globals.cubeColors[2];
-    if (col==="g") return globals.cubeColors[3];
-    if (col==="y") return globals.cubeColors[4];
-    if (col==="w") return globals.cubeColors[5];
+    if (col==="r") return globals.cubeColors[3];
+    if (col==="o") return globals.cubeColors[2];
+    if (col==="b") return globals.cubeColors[1];
+    if (col==="g") return globals.cubeColors[0];
+    if (col==="y") return globals.cubeColors[5];
+    if (col==="w") return globals.cubeColors[4];
     if (col==="x") return globals.cubeColors[6];
   }
     

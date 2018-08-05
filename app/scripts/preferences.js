@@ -3,10 +3,11 @@
 // Block Keeper
 // Created by Dallas McNeil
 
-const storage = require('electron-json-storage'); 
-var remote = require('electron').remote; 
+const storage = require('electron-json-storage');
+var remote = require('electron').remote;
 const {remote:{dialog}} = require('electron');
 var fs = require('fs');
+var path = require('path');
 const {clipboard} = require('electron');
 const app = remote.app;
 
@@ -48,19 +49,22 @@ var preferences = {
     videoResolution:720,
     timeSplits:false,
     timerSize:25,
-    timerSecondSize:15
+    timerSecondSize:10,
+    dataPath:storage.getDefaultDataPath()
 }
 
 // Preference management functions
 var prefs = function() {
 
     // Preference forms
+    var preferencesData = document.forms[3];
     var preferencesInterface = document.forms[2];
     var preferencesTimer = document.forms[1];
     var preferencesGeneral = document.forms[0];
 
     // Saves preferences to file
     function savePreferences() {
+        storage.setDataPath(storage.getDefaultDataPath());
         storage.set("preferences", preferences, function(error) {
             if (error) {
                 throw error;
@@ -77,7 +81,7 @@ var prefs = function() {
             timer.s3voice(new Audio("sounds/" + preferences.voice + "12s.mp3"));
         }
     }
-    
+
     function setFormsFromPreferences() {
         if (!isNaN(parseInt(preferences.theme)) || preferences.theme == "custom") {
             preferencesInterface.theme.value = preferences.theme;
@@ -110,20 +114,23 @@ var prefs = function() {
         preferencesTimer.timeSplits.checked = preferences.timeSplits;
         preferencesInterface.timerSecondSize.value = preferences.timerSecondSize;
         preferencesInterface.timerSize.value = preferences.timerSize;
+        preferencesData.dataPath.value = preferences.dataPath;
     }
 
     // Loads preferences from file and fills in preferences forms
-    function loadPreferences() {
+    function loadPreferences(callback) {
         var setup = function () {
             setStylesheet();
+
+            checkDataPath()
             savePreferences();
 
-            setFormsFromPreferences()
+            setFormsFromPreferences();
 
             $("#timer")[0].innerHTML = (0).toFixed(preferences.timerDetail);
             writeTheme(preferences.customTheme);
             $("#centreBackground").css("background-image", 'url("' + preferences.backgroundImage + '")')
-            $("#scramble").css("text-align", preferences.scrambleAlign); 
+            $("#scramble").css("text-align", preferences.scrambleAlign);
 
             if (preferences.stackmat) {
                 stackmat.init();
@@ -133,16 +140,49 @@ var prefs = function() {
             if (preferences.recordSolve) {
                 record.setupRecorder();
             }
-        }
+            callback();
+        };
 
-        storage.get("preferences", function(error, object) {
-            if (error) {
-                savePreferences();
+        storage.setDataPath(storage.getDefaultDataPath());
+        storage.has("preferences", function (error, hasKey) {
+            if (hasKey) {
+                storage.get("preferences", function(error, object) {
+                   if (!error) {
+                        preferences = Object.assign({}, preferences, object); 
+                    }
+                    setup();
+                });
             } else {
-                preferences = Object.assign({}, preferences, object);
+                storage.setDataPath(path.join(storage.getDefaultDataPath(),".."));
+                storage.has("preferences", function (error, hasKey) {
+                    if (hasKey) {
+                        if (!fs.existsSync(storage.getDefaultDataPath())) {
+                            fs.mkdirSync(storage.getDefaultDataPath());
+                        }
+
+                        // Move files to new standard storage location
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "preferences.json"), path.join(storage.getDefaultDataPath(), "preferences.json"));
+
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "puzzles.json"), path.join(storage.getDefaultDataPath(), "puzzles.json"));
+
+                        fs.renameSync(path.join(path.join(storage.getDefaultDataPath(),".."), "puzzlesBackup.json"), path.join(storage.getDefaultDataPath(), "puzzlesBackup.json"));
+
+                        storage.setDataPath(storage.getDefaultDataPath());
+                        storage.get("preferences", function(error, object) {
+                            if (!error) {
+                                 preferences = Object.assign({}, preferences, object); 
+                             }
+                             setup();
+                         });
+                    } else {
+                        // New user, create preferences
+                        checkDataPath();
+                        savePreferences();
+                        setup();
+                    }
+                });
             }
-            setup();
-        })
+        });
     }
 
     // Initialise preferences dialog
@@ -157,14 +197,14 @@ var prefs = function() {
             of:"#background"
         },
         width:"520",
-        height:"520" 
+        height:"520"
     }).on('keydown',function(evt) {
         if (evt.keyCode === $.ui.keyCode.ESCAPE) {
             closePreferences();
         } else if (evt.keyCode === 13) {
             savePreferencesForm();
             evt.preventDefault();
-        }        
+        }
         evt.stopPropagation();
     });
 
@@ -172,7 +212,7 @@ var prefs = function() {
     function openPreferences() {
         if ($('#dialogPreferences').dialog('isOpen')) {
             closePreferences();
-        } else { 
+        } else {
             $("#dialogPreferences").dialog("open")
             disableAllElements("preferencesButton");
             globals.menuOpen = true;
@@ -192,12 +232,12 @@ var prefs = function() {
         }
 
         timer.clearTimer();
-        
+
         $("#dialogPreferences").dialog("close");
-        
+
         record.setupRecorder();
         setStylesheet();
-        
+
         enableAllElements();
         globals.menuOpen = false;
     }
@@ -207,13 +247,13 @@ var prefs = function() {
         preferences.theme = preferencesInterface.theme.value;
         preferences.inspection = preferencesTimer.inspection.checked;
         preferences.split = preferencesTimer.splitMode.checked;
-        preferences.endSplit = preferencesTimer.endSplit.checked;  
+        preferences.endSplit = preferencesTimer.endSplit.checked;
         preferences.timerDetail = preferencesGeneral.timerDetail.value;
         preferences.hideTiming = preferencesTimer.hideTiming.checked;
         preferences.voice = preferencesTimer.voice.value;
         preferences.formatTime = preferencesGeneral.formatTime.checked;
         preferences.recordSolve = preferencesGeneral.recordSolve.checked;
-        preferences.stackmat = preferencesTimer.stackmat.checked; 
+        preferences.stackmat = preferencesTimer.stackmat.checked;
         preferences.scrambleSize = preferencesInterface.scrambleSize.value;
         preferences.backgroundImage = preferencesInterface.backgroundImage.value;
         preferences.timerDelay = preferencesTimer.timerDelay.value;
@@ -229,7 +269,7 @@ var prefs = function() {
         preferences.timeSplits = preferencesTimer.timeSplits.checked;
         preferences.timerSecondSize = preferencesInterface.timerSecondSize.value;
         preferences.timerSize = preferencesInterface.timerSize.value;
-    
+
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;
         }
@@ -238,7 +278,7 @@ var prefs = function() {
         }
 
         preferences.customTheme = readTheme();
-        writeTheme(preferences.customTheme); 
+        writeTheme(preferences.customTheme);
 
         savePreferences();
         events.updateRecords();
@@ -329,7 +369,7 @@ var prefs = function() {
                     alert("An error ocurred creating the file: " + err.message);
                 }
             });
-        }); 
+        });
     }
 
     var CSData = []
@@ -349,7 +389,7 @@ var prefs = function() {
                     alert("An error ocurred reading the file:" + err.message);
                     return;
                 }
-                    
+
                 var first = JSON.parse(data);
                 for (var property in first) {
                     if (first.hasOwnProperty(property) && property != "properties") {
@@ -381,7 +421,7 @@ var prefs = function() {
             of:"#background"
         },
         width:"380",
-        height:"353" 
+        height:"353"
     })
 
     var currentCS = 0;
@@ -426,7 +466,7 @@ var prefs = function() {
             globals.menuOpen = false;
             $("#dialogCSTimer").dialog("close");
             enableAllElements();
-        } 
+        }
     }
 
     function cancelCSTime() {
@@ -434,7 +474,7 @@ var prefs = function() {
         $("#dialogCSTimer").dialog("close");
         enableAllElements();
     }
-    
+
     // Exports all session data as CSV data
     function exportCSV() {
         closePreferences();
@@ -443,7 +483,7 @@ var prefs = function() {
         },function (fileName) {
             if (fileName === undefined){
                 return;
-            }  
+            }
             var str = "Event,Session,SessionOrder,Order,Time,Result,Scramble,Split,Date,FormattedDate,Comment"
             var e = events.getAllEvents();
             for (var p = 0; p < e.length; p++) {
@@ -454,7 +494,7 @@ var prefs = function() {
                     if (e[p].sessions[s].records.length === 0) {
                         continue;
                     }
-                    
+
                     for (var r = 0; r < e[p].sessions[s].records.length; r++) {
                         var d = 0;
                         if (e[p].sessions[s].records[r].date != undefined) {
@@ -472,14 +512,14 @@ var prefs = function() {
                         }
                         str += "\n\"" + e[p].name.replaceAll('"','""') + "\",\"" + e[p].sessions[s].name.replaceAll('"','""') + "\"," + (s + 1) + "," + (r + 1) + "," + e[p].sessions[s].records[r].time + "," + e[p].sessions[s].records[r].result + ",\"" + e[p].sessions[s].records[r].scramble.replaceAll('"','""') + "\"," + sp + "," + d + ",\"" + new Date(d).toUTCString() + "\",\"" + com + "\"";
                     }
-                }   
-            }     
+                }
+            }
             fs.writeFile(fileName, str, function (err) {
                 if (err) {
                     alert("An error ocurred creating the file: " + err.message);
                 }
             });
-        }); 
+        });
     }
 
     // Open dialog to select image for background image
@@ -491,7 +531,7 @@ var prefs = function() {
                 return;
             } else {
                 preferencesInterface.backgroundImage.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
-            } 
+            }
         })
     }
 
@@ -505,13 +545,68 @@ var prefs = function() {
                 return;
             } else {
                 preferencesGeneral.autosaveLocation.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
-            } 
+            }
         })
     }
 
-    loadPreferences();
+    function setDataPathLoad() {
+        dialog.showOpenDialog({
+            filters:[],
+            properties: ['openDirectory']
+        }, function(fileNames) {
+            if (fileNames === undefined) {
+                return;
+            } else {
+                if (fs.existsSync(path.join(fileNames[0],"puzzles.json"))) {
+                    preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+                    preferences.dataPath = preferencesData.dataPath.value;
+                    savePreferencesForm();
+                    try {
+                        events.loadSessions(function() {
+
+                        });
+                    } catch (e) {
+                        
+                    }
+                } else {
+                    alert("'puzzles.json' wasn't found in selected directory");
+                }
+            }
+        });
+    };
+
+    function setDataPathSave() {
+        dialog.showOpenDialog({
+            filters:[],
+            properties: ['openDirectory']
+        }, function(fileNames) {
+            if (fileNames === undefined) {
+                return;
+            } else {
+                preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+                preferences.dataPath = preferencesData.dataPath.value;
+                events.saveSessions();
+                savePreferencesForm();
+            }
+        });
+    }
+
+    function checkDataPath() {
+        if (!fs.existsSync(preferences.dataPath)) {
+            alert("Data auto-save location inaccessible. Setting back to default.");
+            preferences.dataPath = storage.getDefaultDataPath();
+            preferencesData.dataPath.value = storage.getDefaultDataPath();
+            savePreferences();
+        }
+    }
+
+    function setup(callback) {
+        loadPreferences(callback);
+    }
     
+    // Wait until fully loaded
     return {
+        setup:setup,
         openPreferences:openPreferences,
         closePreferences:closePreferences,
         savePreferences:savePreferencesForm,
@@ -525,6 +620,9 @@ var prefs = function() {
         cancelCSTime:cancelCSTime,
         importBK:importBK,
         exportBK:exportBK,
-        exportCSV:exportCSV
-    }
+        exportCSV:exportCSV,
+        setDataPathLoad:setDataPathLoad,
+        setDataPathSave:setDataPathSave,
+        checkDataPath:checkDataPath
+    };
 }()

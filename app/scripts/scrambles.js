@@ -114,12 +114,13 @@ var scramble = function() {
             }
             selectElem.add(o);
         }
+        selectElem.selectedIndex = 0;
     }
     
     function setupList() {
         scrambleList = [];
         currentScramble = -1;
-        scrambleSelect.value = "None";
+        scrambleSelect.value = "Recommended";
         nextScramble();
     }
 
@@ -161,7 +162,7 @@ var scramble = function() {
     // Add custom scrambles to list
     function appendCustomScrambles() {
         var customScramble = document.getElementById("customScramble").value;
-        var scrambles = customScramble.split("\n");
+        var scrambles = customScramble.split(/\r?\n/);
         for (var i=0; i<scrambles.length; i++) {
             if (scrambles[i] != "") {
                 var scrambleObject = {};
@@ -489,13 +490,16 @@ var scramble = function() {
         return scrambleList[currentScramble].type;
     }
 
-    // Setup main scramble select
-    setScramblerOptions(scrambleSelect);
+    function setup() {
+        // Setup main scramble select
+        setScramblerOptions(scrambleSelect);
 
-    // Setup scramble list
-    setupList();
+        // Setup scramble list
+        setupList();
+    }
 
     return {
+        setup:setup,
         currentScramble:returnCurrentScramble,
         resetList:resetList,
         nextScramble:nextScramble,

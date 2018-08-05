@@ -1,29 +1,29 @@
 {
   "win32-ia32-prod": {
     "readme": "",
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/Block-Keeper-Setup.exe",
-    "version": "2.0.3"
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/Block-Keeper-Setup.exe",
+    "version": "2.0.4"
   },
   "darwin-x64-prod": {
     "readme": "",
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/release.json",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/Block-Keeper.dmg",
-    "version": "2.0.3"
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/release.json",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/Block-Keeper.dmg",
+    "version": "2.0.4"
   },
   "linux-ia32-prod": {
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-i386.AppImage",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-i386.AppImage",
-    "version": "2.0.3"
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-i386.AppImage",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-i386.AppImage",
+    "version": "2.0.4"
   },
   "linux-x64-prod": {
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-x86_64.AppImage",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-x86_64.AppImage",
-    "version": "2.0.3"
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-x86_64.AppImage",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-x86_64.AppImage",
+    "version": "2.0.4"
   },
   "linux-arm-prod": {
-    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-armv7l.AppImage",
-    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.3/blockkeeper-armv7l.AppImage",
-    "version": "2.0.3"
+    "update": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-armv7l.AppImage",
+    "install": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v2.0.4/blockkeeper-armv7l.AppImage",
+    "version": "2.0.4"
   }
 }
