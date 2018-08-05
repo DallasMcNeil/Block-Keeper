@@ -59,7 +59,9 @@ A debug console is available to use for debugging and other purposes. In the tit
 Dallas McNeil ([dallasmcneil.com](https://dallasmcneil.com))
 
 James Hamm ([https://github.com/jameshamm](https://github.com/jameshamm))
+
 Mano Ségransan ([https://github.com/ManoSegransan](https://github.com/ManoSegransan))
+
 Nicolas Brassard ([https://github.com/awesomecuber](https://github.com/awesomecuber))
 
 A huge thanks to the people who made these fantastic libraries, tools and assets, which make Block Keeper possible.
