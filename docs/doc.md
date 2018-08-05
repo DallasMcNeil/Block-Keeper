@@ -33,15 +33,15 @@ Block Keeper uses [Electron](http://electron.atom.io) and should run on all [sup
 
 ### Windows
 
-Run `Block-Keeper-Setup.exe` to install Block Keeper. Block Keeper is installed in `Users/YourName/AppData/Local`. Save data and preferences are stored in `Users/YourName/AppData/Roaming`. You may need to enable hidden folders to access these folders.
+Run `Block-Keeper-Setup.exe` to install Block Keeper. Block Keeper is installed in `Users/YourName/AppData/Local`. Save data and preferences are stored in `Users/YourName/AppData/Roaming/storage` by default. You may need to enable hidden folders to access these folders.
 
 ### MacOS
 
-Block Keeper is a standalone application and can be run from anywhere. You can place `Block Keeper.app` wherever you want (Applications folder is recommended). Save data and preferences are stored in `/Users/YourName/Library/Application Support/Block Keeper`.
+Block Keeper is a standalone application and can be run from anywhere. You can place `Block Keeper.app` wherever you want (Applications folder is recommended). Save data and preferences are stored in `/Users/YourName/Library/Application Support/Block Keeper/storage` by default.
 
 ### Linux
 
-Block Keeper can be launched through the `blockkeeper` AppImage executable file. Save data and preferences are stored in `$HOME/.config` or `$XDG_CONFIG_HOME`.
+Block Keeper can be launched through the `blockkeeper` AppImage executable file. Save data and preferences are stored in `$HOME/.config/Block Keeper/storage` or `$XDG_CONFIG_HOME` by default.
 
 ## Updates
 
@@ -217,8 +217,9 @@ Tools offer additional visual information and functionality. After selecting a t
 * Theme: Set color scheme of the application to predefined options or set to custom to use defined color scheme
 * Custom theme colors: Specify the color of specific UI elements. All colors specified should be in hexadecimal form (e.g `#FF0000` for red), rgb form (e.g `rgb(255,0,0)` for red) or rgba form (e.g `rgba(255,0,0,0.5)` for red at half opacity). If any values have been input incorrectly, the default theme (Dark) will be used.
 
-### Import/Export
+### Data
 
+* Data: Session data (not preferences) can be auto-saved in a different location such as an external drive. This is shown below. `Load` will switch the location and then *load* that data, replacing whatever data is currently loaded. `Save` will switch the location and then *save* currently loaded data to that location. If the location is inaccessible, the default location with be used instead.
 * Block Keeper export: Exports all session data to a JSON file.
 * Block Keeper import: Imports all session data from a compatible JSON file. This merges the data with pre-existing data.
 * csTimer import: Imports session times, results and scrambles from a csTimer JSON file. After selecting the file, you will need to specify the event you would like to place each session under. The first time and result for each session will be shown to identify the session. Use the event select dropdown to choose the event to import the session into. Repeat this for all sessions.

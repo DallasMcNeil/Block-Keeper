@@ -223,14 +223,16 @@ var events = function() {
             storage.setDataPath(preferences.dataPath);
             storage.get("puzzles", function(error, object) {
                 if (error) {
+                    console.log(error);
                     storage.get("puzzlesBackup", function(error, object2) {
                         if (error) {
-                             if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
-                                 letClose = true;
-                                 remote.getCurrentWindow().close();
-                             } else {
-                                 setup({});
-                             }
+                            console.log(error);
+                            if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                                letClose = true;
+                                remote.getCurrentWindow().close();
+                            } else {
+                                setup({});
+                            }
                         } else {
                             setup(object2);
                             alert("Sessions were restored from backup. Some recent records may be missing.");
@@ -247,12 +249,13 @@ var events = function() {
             storage.setDataPath(preferences.dataPath);
             storage.get("puzzlesBackup", function(error, object) {
                 if (error) {
-                     if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
-                         letClose = true;
-                         remote.getCurrentWindow().close();
-                     } else {
-                         saveSessions();
-                     }
+                    console.log(error);
+                    if (confirm("Sessions couldn't be loaded. They may be damaged. Please contact dallas@dallasmcneil.com for help. You will need to quit Block Keeper to preserve the damaged session data, or you could erase it and continue using Block Keeper. Would you like to quit?")) {
+                        letClose = true;
+                        remote.getCurrentWindow().close();
+                    } else {
+                        saveSessions();
+                    }
                 } else {
                     setup(object);
                     alert("Sessions were restored from backup. Some recent records may be missing.");

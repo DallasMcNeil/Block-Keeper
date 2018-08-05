@@ -49,7 +49,7 @@ var preferences = {
     videoResolution:720,
     timeSplits:false,
     timerSize:25,
-    timerSecondSize:15,
+    timerSecondSize:10,
     dataPath:storage.getDefaultDataPath()
 }
 
@@ -558,16 +558,16 @@ var prefs = function() {
                 return;
             } else {
                 if (fs.existsSync(path.join(fileNames[0],"puzzles.json"))) {
+                    preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
+                    preferences.dataPath = preferencesData.dataPath.value;
+                    savePreferencesForm();
                     try {
                         events.loadSessions(function() {
-                            
+
                         });
                     } catch (e) {
                         
                     }
-                    preferencesData.dataPath.value = fileNames[0].replace(new RegExp("\\\\", "g"), "/");
-                    preferences.dataPath = preferencesData.dataPath.value;
-                    savePreferencesForm();
                 } else {
                     alert("'puzzles.json' wasn't found in selected directory");
                 }
