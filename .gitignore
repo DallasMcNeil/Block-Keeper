@@ -4,3 +4,4 @@ publisher.json
 package-lock.json
 docs/doc.html
 docs/docRaw.html
+.DS_Store

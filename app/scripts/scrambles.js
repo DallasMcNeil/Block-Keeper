@@ -3,10 +3,16 @@
 // Block Keeper
 // Created by Dallas McNeil
 
+// Receive TNoodle puzzles
+function puzzlesLoaded(puzzles) {
+    window.puzzles = puzzles;
+}
+
 var scramble = function() {
 
+    // tnoodle is used to scramble major events and draw scrambles for tool
     // cubesolver is used to solve Cross, EOLine and first block for tools
-    // Scrambo is used to scramble major events and draw scrambles for tool
+    // random move scrambles for puzzles above 7x7x7
 
     // To add a new scramble
     // 1. Write a function which generates a scramble. The function must set 'currentScramble' to the final scramble. It should also set 'scrambleStr' to the type of puzzle and if possible set up the 'scrambleState' object. The 'scrambleState.scramble_str' should be the same as 'currentScramble' and 'scrambleState.STATE' to the face colors of the puzzle, if possible. If this cannot be done, or the puzzle doesn't support drawing, set the scrambleStr to 'none'. Check out https://github.com/nickcolley/scrambo for more information
@@ -41,14 +47,14 @@ var scramble = function() {
         "None":scrambleNone
     };
     
+    const saveHistory = 3;
+
     // Internal scrambler being used for tool drawing
     var scrambleStr = "";
     // Scramble history
     var scrambleList = [];
     // The current scramble being used from the list
     var currentScramble = 0; 
-
-    const saveHistory = 3;
 
     var scrambleText = document.getElementById("scramble");
     var scrambleImage = document.getElementById("scrambleImage");
@@ -190,8 +196,10 @@ var scramble = function() {
     // Draw the current scramble in the canvas, if possible
     function drawScramble(ctx) {
         ctx.innerHTML = "";
-        if (!(scramblers[scrambleList[currentScramble].type] == undefined || (scrambleStr == "333mbf"))) {
-            scramblers[scrambleList[currentScramble].type].drawScramble(ctx, scrambleList[currentScramble].state, 300, 200);
+        if (puzzles[scrambleList[currentScramble].type] != undefined) {
+            ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
+            ctx.children[0].setAttribute("width", "300px");
+            ctx.children[0].setAttribute("height", "200px");
         }
     }
 
@@ -208,9 +216,7 @@ var scramble = function() {
     function scrambleObjectFromType(type) {
         var scrambleObject = {};
         scrambleObject.type = type;
-        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
-        scrambleObject.state = scramblerResult.state.slice();
-        scrambleObject.scramble = scramblerResult.scramble_string;
+        scrambleObject.scramble = puzzles[scrambleObject.type].generateScramble();
         return scrambleObject;
     }
 
@@ -244,11 +250,7 @@ var scramble = function() {
     }
 
     function scrambleSkewb() {
-        var scrambleObject = {};
-        scrambleObject.type = "skewb";
-        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
-        scrambleObject.scramble = scramblerResult.scramble_string;
-        return scrambleObject;
+        return scrambleObjectFromType("skewb");
     }
 
     function scrambleMegaminx() {
@@ -256,56 +258,20 @@ var scramble = function() {
     }
 
     function scrambleSquare1() {
-        var scrambleObject = {};
-        scrambleObject.type = "sq1";
-        var scramblerResult = scramblers[scrambleObject.type].getRandomScramble();
-        scrambleObject.state = scramblerResult.state;
-        scrambleObject.scramble = scramblerResult.scramble_string;
-        return scrambleObject;
+        return scrambleObjectFromType("sq1");
     }
 
     function scrambleClock() {
-        // Legacy scramble
-        //scrambleStr = "clock";
-        //scrambleState = scramblers[scrambleStr].getRandomScramble();
-        //currentScramble = scrambleState.scramble_string;
-        
-        var scrambleObject = {};
-        scrambleObject.type = "other"; // No state information for drawing
-
-        var str = "";
-        var moves = ["UR", "DR", "DL", "UL", "U", "R", "D", "L", "ALL", "y2", "U", "R", "D", "L", "ALL"];
-        var pins = ["UR", "DR", "DL", "UL"];
-        for (var i = 0; i < 15; i++) {
-            if (i === 9) {
-                str += moves[i] + " ";
-                continue;
-            }
-            var hour = Math.floor(Math.random() * 12) - 5;
-            if (hour < 0) {
-                str += moves[i] + Math.abs(hour) + "- ";
-            } else {
-                str += moves[i] + hour + "+ ";
-            }
-        }
-        for (var i = 0; i < 4; i++) {
-            if (Math.random() < 0.5) {
-                str += pins[i] + " ";
-            }
-        }
-
-        scrambleObject.scramble = str;
-        return scrambleObject;
+        return scrambleObjectFromType("clock");
     }
 
     // Add rotation to 3x3x3 scramble
     function scramble3x3x3BLD() {
         var obj = scrambleObjectFromType("333");
-        obj.type = "333bf";
 
         // Orientate up face and then orient front face
-        obj.scramble += [" "," z"," z2"," z'"," x"," x'"][Math.floor(Math.random() * 6)];
-        obj.scramble += [" y", " y'", " y2", ""][Math.floor(Math.random() * 4)];
+        //obj.scramble += [" "," z"," z2"," z'"," x"," x'"][Math.floor(Math.random() * 6)];
+        //obj.scramble += [" y", " y'", " y2", ""][Math.floor(Math.random() * 4)];
 
         return obj;
     }
@@ -374,10 +340,10 @@ var scramble = function() {
     function scramble2to5Relay() {
         var scrambleObject = {};
         
-        var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
-        str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
-        str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
-        str += "(5x5x5) " + scramblers["555"].getRandomScramble().scramble_string;
+        var str = "(2x2x2) " + puzzles["222"].generateScramble() + "<br>";
+        str += "(3x3x3) " + puzzles["333"].generateScramble() + "<br>";
+        str += "(4x4x4) " + puzzles["444"].generateScramble() + "<br>";
+        str += "(5x5x5) " + puzzles["555"].generateScramble();
         
         scrambleObject.type = "relay";
         scrambleObject.scramble = str;
@@ -388,12 +354,12 @@ var scramble = function() {
     function scramble2to7Relay() {
         var scrambleObject = {};
         
-        var str = "(2x2x2) " + scramblers["222"].getRandomScramble().scramble_string + "<br>";
-        str += "(3x3x3) " + scramblers["333"].getRandomScramble().scramble_string + "<br>";
-        str += "(4x4x4) " + scramblers["444"].getRandomScramble().scramble_string + "<br>";
-        str += "(5x5x5) " + scramblers["555"].getRandomScramble().scramble_string + "<br>";
-        str += "(6x6x6) " + scramblers["666"].getRandomScramble().scramble_string + "<br>";
-        str += "(7x7x7) " + scramblers["777"].getRandomScramble().scramble_string;
+        var str = "(2x2x2) " + puzzles["222"].generateScramble() + "<br>";
+        str += "(3x3x3) " + puzzles["333"].generateScramble() + "<br>";
+        str += "(4x4x4) " + puzzles["444"].generateScramble() + "<br>";
+        str += "(5x5x5) " + puzzles["555"].generateScramble() + "<br>";
+        str += "(6x6x6) " + puzzles["666"].generateScramble() + "<br>";
+        str += "(7x7x7) " + puzzles["777"].generateScramble();
         
         scrambleObject.type = "relay";
         scrambleObject.scramble = str;
