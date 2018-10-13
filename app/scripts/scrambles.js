@@ -170,8 +170,64 @@ var scramble = function() {
         currentScramble++;
         if (currentScramble >= scrambleList.length) {
             scrambleText.innerHTML = "Generating...";
+            
+            if (preloading) {
+                disableElement("#scramblePrevious");
+                disableElement("#scrambleNext");
+                generating = true;
+                return;
+            }
+
+            generating = true;
+
             var scrambler = scrambleOptions[scrambleSelect.value];
-            console.log(scrambler);
+            
+            if (scrambler == "recommended") {
+                scrambler = scrambleRecommended();
+            }
+            if (scrambler == "none") {
+                var scrambleObject = {};
+                scrambleObject.type = "none";
+                scrambleObject.scramble = "";
+                receiveScramble(scrambleObject);
+            } else if (scrambler == "888") {
+                receiveScramble(scrambleNxNxN(8,120));
+            } else if (scrambler == "999") {
+                receiveScramble(scrambleNxNxN(9,140));
+            } else if (scrambler == "101010") {
+                receiveScramble(scrambleNxNxN(10,160));
+            } else if (scrambler == "111111") {
+                receiveScramble(scrambleNxNxN(11,180));
+            } else if (scrambler == "131313") {
+                receiveScramble(scrambleNxNxN(13,200));
+            } else if (scrambler == "151515") {
+                receiveScramble(scrambleNxNxN(15,220));
+            } else if (scrambler == "171717") {
+                receiveScramble(scrambleNxNxN(17,240));
+            } else {
+                disableElement("#scramblePrevious");
+                disableElement("#scrambleNext");
+                
+                requestScrambleForType(scrambler);
+            }
+        } else {
+            if (currentScramble + 1 == scrambleList.length) {
+                preloadScramble();
+            }
+            updateScramble();
+        }
+    }
+
+    var preloading = false;
+
+    function preloadScramble() {
+        setTimeout(function() {   
+            if (generating || preloading) {
+                return;
+            }
+            preloading = true;
+            var scrambler = scrambleOptions[scrambleSelect.value];
+                
             if (scrambler == "recommended") {
                 scrambler = scrambleRecommended();
             }
@@ -197,18 +253,14 @@ var scramble = function() {
             } else {
                 requestScrambleForType(scrambler);
             }
-        } else {
-            updateScramble();
-        }
+        },0);
+        
     }
 
     // Send message to scramble process to create scramble object
     function requestScrambleForType(type) {
         console.log("SEND: " + type);
-        disableElement("#scramblePrevious");
-        disableElement("#scrambleNext");
         ipcRenderer.send('scramble', type);
-        generating = true;
     }
 
     function receiveScramble(scrambleObj) {
@@ -219,9 +271,17 @@ var scramble = function() {
         if (scrambler == "recommended") {
             scrambler = scrambleRecommended();
         }
-        console.log(scrambler)
+
         if (scrambleObj.type != scrambler) {
             console.log("Invalid");
+            console.log(currentScramble)
+            console.log(scrambleList.length)
+            if (currentScramble >= scrambleList.length) {
+                currentScramble--;
+                generating = false;
+                preloading = false;
+                nextScramble();
+            }
             return;
         }
         
@@ -234,11 +294,12 @@ var scramble = function() {
             currentScramble--;
         }
 
+        generating = false;
+        preloading = false;
         if (currentScramble + 1 == scrambleList.length) {
-            console.log("END of list");
+            preloadScramble();
         }
 
-        generating = false;
         updateScramble();
     }
 
