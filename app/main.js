@@ -6,7 +6,7 @@
 
 const updater = require("electron-simple-updater");
 
-const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage} = require('electron');
+const {dialog, app, BrowserWindow, Menu, localShortcut, TouchBar, nativeImage, ipcMain} = require('electron');
 const {TouchBarButton, TouchBarLabel, TouchBarGroup, TouchBarSpacer} = TouchBar;
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
@@ -14,6 +14,7 @@ const url = require('url');
 var os = require("os");
 
 let win;
+let tnoodleWin;
 
 // Setup menu bar items
 const template = [{
@@ -169,16 +170,29 @@ app.on('ready', function() {
         backgroundColor: "#181818"
     });
 
+    tnoodleWin = new BrowserWindow({
+        height:10,
+        width:10,
+        x:0,
+        y:0,
+        minHeight:10,
+        minWidth:10,
+        show:false,
+        backgroundColor: "#181818"
+    });
+
+
     win.loadURL(url.format({
         pathname:path.join(__dirname, 'index.html'),
         protocol:'file:',
         slashes:true
     }));
-        
-    win.once('ready-to-show', function() {
-        win.show();
-        win.focus();
-    });
+
+    tnoodleWin.loadURL(url.format({
+        pathname:path.join(__dirname, 'tnoodle.html'),
+        protocol:'file:',
+        slashes:true
+    }));
 
     win.webContents.once('did-finish-load', function() {
         updater.init("https://raw.githubusercontent.com/DallasMcNeil/Block-Keeper/master/updates.json");
@@ -193,27 +207,38 @@ app.on('ready', function() {
 
     win.on('enter-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "enter");
-    })
+    });
 
     win.on('leave-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "leave");
-    })
+    });
 
     win.on('leave-full-screen', (e, cmd) => {
         win.webContents.send('fullscreen', "leave");
-    })
+    });
 
     win.on('close', (e, cmd) => {
         win.webContents.send('quit', "quit");
-    })
+    });
 
     win.on('ready-to-show', function() {
         win.show();
         win.focus();
-    })
-  
+    });
+
+
+    ipcMain.on("scramble", function(event, message) {
+        console.log("scramble: " + message);
+        tnoodleWin.webContents.send('scramble', message);
+    });
+
+    ipcMain.on("scramble-done", function(event, message) {
+        console.log("scramble-done: " + message);
+        win.webContents.send('scramble-done', message);
+    });
+
     win.setTouchBar(touchBar);
-})
+});
 
 function handler(e) {
     win.webContents.send('shortcut', e);
