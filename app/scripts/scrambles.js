@@ -181,40 +181,19 @@ var scramble = function() {
                 scrambleObject.scramble = "";
                 receiveScramble(scrambleObject);
             } else if (scrambler == "888") {
-                var scrambleObject = {};
-                scrambleObject.type = "888";
-                scrambleObject.scramble = scrambleNxNxN(8,120);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(8,120));
             } else if (scrambler == "999") {
-                var scrambleObject = {};
-                scrambleObject.type = "999";
-                scrambleObject.scramble = scrambleNxNxN(9,140);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(9,140));
             } else if (scrambler == "101010") {
-                var scrambleObject = {};
-                scrambleObject.type = "101010";
-                scrambleObject.scramble = scrambleNxNxN(10,160);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(10,160));
             } else if (scrambler == "111111") {
-                var scrambleObject = {};
-                scrambleObject.type = "111111";
-                scrambleObject.scramble = scrambleNxNxN(11,180);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(11,180));
             } else if (scrambler == "131313") {
-                var scrambleObject = {};
-                scrambleObject.type = "131313";
-                scrambleObject.scramble = scrambleNxNxN(13,200);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(13,200));
             } else if (scrambler == "151515") {
-                var scrambleObject = {};
-                scrambleObject.type = "151515";
-                scrambleObject.scramble = scrambleNxNxN(15,220);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(15,220));
             } else if (scrambler == "171717") {
-                var scrambleObject = {};
-                scrambleObject.type = "171717";
-                scrambleObject.scramble = scrambleNxNxN(17,240);
-                receiveScramble(scrambleObject);
+                receiveScramble(scrambleNxNxN(17,240));
             } else {
                 requestScrambleForType(scrambler);
             }
@@ -226,6 +205,7 @@ var scramble = function() {
     // Send message to scramble process to create scramble object
     function requestScrambleForType(type) {
         console.log("SEND: " + type);
+        disableElement("#scramblePrevious");
         disableElement("#scrambleNext");
         ipcRenderer.send('scramble', type);
         generating = true;
@@ -294,7 +274,10 @@ var scramble = function() {
         if (!generating) {
             scrambleText.innerHTML = scrambleList[currentScramble].scramble;      
             if (tools != undefined && tools.updateTools != undefined) {
-                tools.updateTools();
+                if (returnCurrentScramble() != lastDrawnScramble) {
+                    tools.updateTools();
+                    lastDrawnScramble = returnCurrentScramble()+"";
+                }
 
                 if (currentScramble == 0) {
                     disableElement("#scramblePrevious");
@@ -305,14 +288,19 @@ var scramble = function() {
         }
     }
     
+    var lastDrawnScramble = "";
+
     // Draw the current scramble in the canvas, if possible
     function drawScramble(ctx) {
-        ctx.innerHTML = "";
-        if (currentScramble < scrambleList.length) {
-            if (puzzles[scrambleList[currentScramble].type] != undefined) {
-                ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
-                ctx.children[0].setAttribute("width", "300px");
-                ctx.children[0].setAttribute("height", "200px");
+        if (returnCurrentScramble() != lastDrawnScramble) {
+            ctx.innerHTML = "";
+            if (currentScramble < scrambleList.length) {
+                if (puzzles[scrambleList[currentScramble].type] != undefined) {
+                    lastDrawnScramble = returnCurrentScramble()+"";
+                    ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
+                    ctx.children[0].setAttribute("width", "300px");
+                    ctx.children[0].setAttribute("height", "200px");
+                }
             }
         }
     }
@@ -453,7 +441,10 @@ var scramble = function() {
     }
     
     function returnCurrentScramble() {
-        return scrambleList[currentScramble].scramble;
+        if (scrambleList.length > currentScramble) {
+            return scrambleList[currentScramble].scramble;
+        }
+        return "";
     }
     
     function getCurrentScrambler() {
@@ -466,7 +457,10 @@ var scramble = function() {
     }
     
     function returnScrambleType() {
-        return scrambleList[currentScramble].type;
+        if (scrambleList.length > currentScramble) {
+            return scrambleList[currentScramble].type;
+        }
+        return "none";
     }
 
     function setup() {
