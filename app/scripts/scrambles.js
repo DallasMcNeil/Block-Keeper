@@ -43,7 +43,6 @@ var scramble = function() {
     var scrambleOptions = {
         "Recommended":"recommended",
         "3x3x3":"333",   
-        "3x3x3 BLD":"333",
         "2x2x2":"222",
         "4x4x4":"444",
         "5x5x5":"555",
@@ -54,6 +53,9 @@ var scramble = function() {
         "Clock":"clock",
         "6x6x6":"666",
         "7x7x7":"777",
+        "3x3x3 BLD":"333ni",
+        "4x4x4 BLD":"444ni",
+        "5x5x5 BLD":"555ni",
         "8x8x8":"888",
         "9x9x9":"999",
         "10x10x10":"101010",
@@ -205,6 +207,9 @@ var scramble = function() {
             } else if (scrambler == "171717") {
                 receiveScramble(scrambleNxNxN(17,240));
             } else {
+                if ((scrambler == "444" || scrambler == "sq1") && preferences.fastScramblers) {
+                    scrambler += "fast";
+                }
                 disableElement("#scramblePrevious");
                 disableElement("#scrambleNext");
                 
@@ -251,6 +256,9 @@ var scramble = function() {
             } else if (scrambler == "171717") {
                 receiveScramble(scrambleNxNxN(17,240));
             } else {
+                if ((scrambler == "444" || scrambler == "sq1") && preferences.fastScramblers) {
+                    scrambler += "fast";
+                }
                 requestScrambleForType(scrambler);
             }
         },0);
@@ -272,7 +280,7 @@ var scramble = function() {
             scrambler = scrambleRecommended();
         }
 
-        if (scrambleObj.type != scrambler) {
+        if (scrambleObj.type != scrambler && scrambleObj.type != scrambler+"fast") {
             console.log("Invalid");
             console.log(currentScramble)
             console.log(scrambleList.length)

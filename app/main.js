@@ -219,6 +219,7 @@ app.on('ready', function() {
 
     win.on('close', (e, cmd) => {
         win.webContents.send('quit', "quit");
+        tnoodleWin.close();
     });
 
     win.on('ready-to-show', function() {

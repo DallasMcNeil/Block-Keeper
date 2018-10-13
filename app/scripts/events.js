@@ -34,8 +34,8 @@ var events = function() {
 
         {name:"3x3x3 OH",sessions:[],scrambler:"3x3x3",enabled:true,OH:true,blind:false,default:true,splits:1},
         {name:"3x3x3 BLD",sessions:[],scrambler:"3x3x3 BLD",enabled:true,OH:false,blind:true,default:true,splits:2},
-        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4",enabled:true,OH:false,blind:true,default:true,splits:2},
-        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5",enabled:true,OH:false,blind:true,default:true,splits:2},
+        {name:"4x4x4 BLD",sessions:[],scrambler:"4x4x4 BLD",enabled:true,OH:false,blind:true,default:true,splits:2},
+        {name:"5x5x5 BLD",sessions:[],scrambler:"5x5x5 BLD",enabled:true,OH:false,blind:true,default:true,splits:2},
         {name:"3x3x3 FT",sessions:[],scrambler:"3x3x3",enabled:true,OH:false,blind:false,default:true,splits:1},
 
         {name:"Other",sessions:[],scrambler:"None",enabled:true,OH:false,blind:false,default:true,splits:1}
@@ -145,6 +145,9 @@ var events = function() {
                 }
             }
             if (shared) {
+                // Require default scrambler
+                y[i].scrambler = x[j].scrambler;
+                
                 final.push(Object.assign({}, x[j], y[i]));
                 x.splice(j, 1);
             } else {
