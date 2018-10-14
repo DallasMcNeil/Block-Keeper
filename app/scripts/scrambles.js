@@ -53,9 +53,11 @@ var scramble = function() {
         "Clock":"clock",
         "6x6x6":"666",
         "7x7x7":"777",
+
         "3x3x3 BLD":"333ni",
         "4x4x4 BLD":"444ni",
         "5x5x5 BLD":"555ni",
+
         "8x8x8":"888",
         "9x9x9":"999",
         "10x10x10":"101010",
@@ -63,8 +65,22 @@ var scramble = function() {
         "13x13x13":"131313",
         "15x15x15":"151515",
         "17x17x17":"171717",
+
         "2x2x2 - 5x5x5":"relay2-5",
         "2x2x2 - 7x7x7":"relay2-7",
+
+        "3x3x3 F2L":"333f2l",
+        "3x3x3 LL":"333ll",
+        "3x3x3 PLL":"333pll",
+        "3x3x3 Edges":"333edge",
+        "3x3x3 Corners":"333corner",
+        "3x3x3 Last Slot":"333ls",
+
+        "3x3x3 COLL":"333coll",
+        "3x3x3 CMLL":"333cmll",
+        "3x3x3 ELL":"333ell",
+        "3x3x3 ZBLL":"333zbll",
+
         "None":"none"
     };
     
@@ -187,26 +203,7 @@ var scramble = function() {
             if (scrambler == "recommended") {
                 scrambler = scrambleRecommended();
             }
-            if (scrambler == "none") {
-                var scrambleObject = {};
-                scrambleObject.type = "none";
-                scrambleObject.scramble = "";
-                receiveScramble(scrambleObject);
-            } else if (scrambler == "888") {
-                receiveScramble(scrambleNxNxN(8,120));
-            } else if (scrambler == "999") {
-                receiveScramble(scrambleNxNxN(9,140));
-            } else if (scrambler == "101010") {
-                receiveScramble(scrambleNxNxN(10,160));
-            } else if (scrambler == "111111") {
-                receiveScramble(scrambleNxNxN(11,180));
-            } else if (scrambler == "131313") {
-                receiveScramble(scrambleNxNxN(13,200));
-            } else if (scrambler == "151515") {
-                receiveScramble(scrambleNxNxN(15,220));
-            } else if (scrambler == "171717") {
-                receiveScramble(scrambleNxNxN(17,240));
-            } else {
+            if (!resolveScrambler(scrambler)) {
                 if ((scrambler == "444" || scrambler == "sq1") && preferences.fastScramblers) {
                     scrambler += "fast";
                 }
@@ -236,26 +233,7 @@ var scramble = function() {
             if (scrambler == "recommended") {
                 scrambler = scrambleRecommended();
             }
-            if (scrambler == "none") {
-                var scrambleObject = {};
-                scrambleObject.type = "none";
-                scrambleObject.scramble = "";
-                receiveScramble(scrambleObject);
-            } else if (scrambler == "888") {
-                receiveScramble(scrambleNxNxN(8,120));
-            } else if (scrambler == "999") {
-                receiveScramble(scrambleNxNxN(9,140));
-            } else if (scrambler == "101010") {
-                receiveScramble(scrambleNxNxN(10,160));
-            } else if (scrambler == "111111") {
-                receiveScramble(scrambleNxNxN(11,180));
-            } else if (scrambler == "131313") {
-                receiveScramble(scrambleNxNxN(13,200));
-            } else if (scrambler == "151515") {
-                receiveScramble(scrambleNxNxN(15,220));
-            } else if (scrambler == "171717") {
-                receiveScramble(scrambleNxNxN(17,240));
-            } else {
+            if (!resolveScrambler(scrambler)) {
                 if ((scrambler == "444" || scrambler == "sq1") && preferences.fastScramblers) {
                     scrambler += "fast";
                 }
@@ -271,7 +249,7 @@ var scramble = function() {
         ipcRenderer.send('scramble', type);
     }
 
-    function receiveScramble(scrambleObj) {
+    function receiveScramble(scrambleObj, ignoreInvalid=false) {
         console.log("RECEIVE: ");
         console.log(scrambleObj);
 
@@ -280,10 +258,8 @@ var scramble = function() {
             scrambler = scrambleRecommended();
         }
 
-        if (scrambleObj.type != scrambler && scrambleObj.type != scrambler+"fast") {
+        if (!ignoreInvalid && scrambleObj.type != scrambler && scrambleObj.type != scrambler+"fast") {
             console.log("Invalid");
-            console.log(currentScramble)
-            console.log(scrambleList.length)
             if (currentScramble >= scrambleList.length) {
                 currentScramble--;
                 generating = false;
@@ -331,7 +307,13 @@ var scramble = function() {
         for (var i=0; i<scrambles.length; i++) {
             if (scrambles[i] != "") {
                 var scrambleObject = {};
-                scrambleObject.type = "other";
+
+                var scrambler = scrambleOptions[scrambleSelect.value];
+                if (scrambler == "recommended") {
+                    scrambler = scrambleRecommended();
+                }
+
+                scrambleObject.type = scrambler;
                 scrambleObject.scramble = scrambles[i];
                 scrambleList.push(scrambleObject);
             }
@@ -366,7 +348,12 @@ var scramble = function() {
             if (currentScramble < scrambleList.length) {
                 if (puzzles[scrambleList[currentScramble].type] != undefined) {
                     lastDrawnScramble = returnCurrentScramble()+"";
-                    ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
+                    try {
+                        ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
+                    } catch(err) {
+                        console.log("Can't draw scramble");
+                        return;
+                    }
                     ctx.children[0].setAttribute("width", "300px");
                     ctx.children[0].setAttribute("height", "200px");
                 }
@@ -381,6 +368,82 @@ var scramble = function() {
         } else {
             return "none";
         }
+    }
+
+    function resolveScrambler(scrambler) {
+        if (scrambler == "none") {
+            var scrambleObject = {};
+            scrambleObject.type = "none";
+            scrambleObject.scramble = "";
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "888") {
+            receiveScramble(scrambleNxNxN(8,120), ignoreInvalid=true);
+        } else if (scrambler == "999") {
+            receiveScramble(scrambleNxNxN(9,140), ignoreInvalid=true);
+        } else if (scrambler == "101010") {
+            receiveScramble(scrambleNxNxN(10,160), ignoreInvalid=true);
+        } else if (scrambler == "111111") {
+            receiveScramble(scrambleNxNxN(11,180), ignoreInvalid=true);
+        } else if (scrambler == "131313") {
+            receiveScramble(scrambleNxNxN(13,200), ignoreInvalid=true);
+        } else if (scrambler == "151515") {
+            receiveScramble(scrambleNxNxN(15,220), ignoreInvalid=true);
+        } else if (scrambler == "171717") {
+            receiveScramble(scrambleNxNxN(17,240), ignoreInvalid=true);
+        } else if (scrambler == "333f2l") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getF2LScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333ll") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333pll") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getPLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333edge") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getEdgeScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333corner") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getCornerScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333ls") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getLSLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333coll") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getCLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333cmll") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getCMLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333ell") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getELLScramble()
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else if (scrambler == "333zbll") {
+            var scrambleObject = {};
+            scrambleObject.type = "333";
+            scrambleObject.scramble = scramble_333.getZBLLScramble();
+            receiveScramble(scrambleObject, ignoreInvalid=true);
+        } else {
+            return false;
+        }
+        return true;
     }
     
     // Use random move to create a scramble for NxNxN puzzles
@@ -438,20 +501,32 @@ var scramble = function() {
     
     // Find cross solution to scramble for side
     function solveCross(scramble,type) {
-        var s = formatScrambleForFace(scramble,type);
-        return cubeSolver.crossSolver(s);
+        try {
+            var s = formatScrambleForFace(scramble,type);
+            return cubeSolver.crossSolver(s);
+        } catch (err) {
+            return "";
+        }
     }
 
     // Find EOline solution to scramble for side
     function solveEOLine(scramble,type) {
-        var s = formatScrambleForFace(scramble,type);
-        return cubeSolver.EOLineSolver(s);
+        try {
+            var s = formatScrambleForFace(scramble,type);
+            return cubeSolver.EOLineSolver(s);
+        } catch (err) {
+            return "";
+        }
     }
 
     // Find first block solution to scramble for side
     function solveFirstBlock(scramble,type) {
-        var s = formatScrambleForFace(scramble,type);
-        return cubeSolver.firstBlockSolver(s);
+        try {
+            var s = formatScrambleForFace(scramble,type);
+            return cubeSolver.firstBlockSolver(s);
+        } catch (err) {
+            return "";
+        }
     }
 
     // Adjust scramble for different face

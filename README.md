@@ -75,11 +75,11 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [muaz-khan/RecordRTC](https://github.com/muaz-khan/RecordRTC)
 - [less/less.js](https://github.com/less/less.js)
 - [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael)
+- [thewca/tnoodle](https://github.com/thewca/tnoodle)
 - [cs0x7f/stackmat](https://github.com/cs0x7f/stackmat)
+- [cs0x7f/cstimer](https://github.com/cs0x7f/cstimer)
 - [jquery/jquery](https://github.com/jquery/jquery)
 - [jquery/jquery-ui](https://github.com/jquery/jquery-ui)
-- [cubing/jsss](https://github.com/cubing/jsss)
-- [nickcolley/scrambo](https://github.com/nickcolley/scrambo)
 - [wesleycho/confetti.js](https://github.com/wesleycho/confetti.js/)
 - [torjusti/cube-solver](https://github.com/torjusti/cube-solver)
 
@@ -90,4 +90,4 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 
 ## License
 
-Block Keeper is licensed under the GNU General Public License.
+Block Keeper is licensed under the GNU General Public License v3. 
