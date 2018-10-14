@@ -18,7 +18,7 @@ Array.prototype.min = function() {
 
 // Stop zooming in
 var webFrame = require('electron').webFrame;
-webFrame.setZoomLevelLimits(1, 1);
+webFrame.setVisualZoomLevelLimits(1, 1);
 
 // Disable a specific element so it cannot be interacted with
 function disableElement(elem) {
