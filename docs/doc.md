@@ -10,13 +10,14 @@ Main Features:
 - Completely offline and no Java required
 - Customizable event based session organization
 - Simple and stylish interface with multiple themes
-- Scrambler for all WCA events and more
+- Official TNoodle scrambles for all WCA events and more
 - WCA inspection support with voice announcements
-- Blind and one handed event specializations
+- Blind and one handed event accommodations
 - Event and session results graphs
 - Video recorder to view and save last solve
 - Stackmat support
 - Session import and export
+
 
 If you encounter any bugs, issues or want to suggest any improvements, please let me know so I can make Block Keeper even better. You can contact me on Twitter [@dmcneil_](https://twitter.com/dmcneil_) or email [dallas@dallasmcneil.com](mailto:dallas@dallasmcneil.com).
 
@@ -187,6 +188,7 @@ Tools offer additional visual information and functionality. After selecting a t
 
 * Time detail: Number of decimal points to show for times throughout the application
 * Format time: Times shown throughout the application will have a format of `mm:ss` rather than just seconds (e.g `1:34.23` instead of `94.23`)
+* Fast scrambles: Uses a faster but unofficial scramble generator for 4x4x4 and Square-1
 * Video record solves: Enables an attached webcam to video record a solve for viewing and saving after. See the Video Record section
 * Video resolution: Sets the resolution of the recorded video. Final quality will depend on the camera
 * Record inspection: Include inspections and just after a solve while video recording.

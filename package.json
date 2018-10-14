@@ -2,13 +2,13 @@
   "name": "blockkeeper",
   "productName": "Block Keeper",
   "main": "app/main.js",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "author": {
     "name": "Dallas McNeil",
     "email": "dallas@dallasmcneil.com",
     "url": "https://dallasmcneil.com"
   },
-  "license": "GNU GPL3",
+  "license": "GPL-3.0",
   "description": "Cross-platform desktop cubing timer",
   "homepage": "https://github.com/DallasMcNeil/Block-Keeper",
   "scripts": {

@@ -12,31 +12,10 @@ var {ipcRenderer, remote} = require('electron');
 
 var scramble = function() {
 
-    /*
-    this.onmessage = function(event) {
-        console.log("X")
-        importScripts("libs/tnoodle.js");
-        console.log(tnoodlejs.getVersion())
-        var scrambleObject;
-        /*postMessage(event.data);
-        postMessage("B")
-        
-        postMessage(scrambleObject)
-            
-    // Once scramble is generated
-    worker.onmessage = function(event) {
-        console.log(event.data);
-    };
-    */
-
     // tnoodle is used to scramble major events and draw scrambles for tool
     // cubesolver is used to solve Cross, EOLine and first block for tools
     // random move scrambles for puzzles above 7x7x7
 
-    // To add a new scramble generator
-    // 1. Write a function which generates a scramble. It should return an object with a 'scramble' property being the string and 'type' being the puzzle (e.g '333', 'pyram', 'other')
-    // 2. Add the scramble to the 'scrambleOptions' object with the key being the displayed name of the scramble and the value being the function. If the function must be called with parameters, call it within another function
-    
     // All scramblers and which one is currently being used
     // Scramblers are in displayed order
     var currentScrambler = "Recommended";
@@ -222,6 +201,7 @@ var scramble = function() {
 
     var preloading = false;
 
+    // Preload the next scramble to reduce wait time
     function preloadScramble() {
         setTimeout(function() {   
             if (generating || preloading) {
@@ -245,22 +225,18 @@ var scramble = function() {
 
     // Send message to scramble process to create scramble object
     function requestScrambleForType(type) {
-        console.log("SEND: " + type);
         ipcRenderer.send('scramble', type);
     }
 
+    // Take scramble and add to list
     function receiveScramble(scrambleObj, ignoreInvalid=false) {
-        console.log("RECEIVE: ");
-        console.log(scrambleObj);
-
         var scrambler = scrambleOptions[scrambleSelect.value];
         if (scrambler == "recommended") {
             scrambler = scrambleRecommended();
         }
 
         if (!ignoreInvalid && scrambleObj.type != scrambler && scrambleObj.type != scrambler+"fast") {
-            console.log("Invalid");
-            if (currentScramble >= scrambleList.length) {
+             if (currentScramble >= scrambleList.length) {
                 currentScramble--;
                 generating = false;
                 preloading = false;
@@ -351,7 +327,7 @@ var scramble = function() {
                     try {
                         ctx.innerHTML = tnoodlejs.scrambleToSvg(scrambleList[currentScramble].scramble, puzzles[scrambleList[currentScramble].type]);
                     } catch(err) {
-                        console.log("Can't draw scramble");
+                        console.log("Can't draw scramble" + scrambleList[currentScramble].scramble);
                         return;
                     }
                     ctx.children[0].setAttribute("width", "300px");
@@ -370,6 +346,7 @@ var scramble = function() {
         }
     }
 
+    // Try and create scramble, otherwise require TNoodle
     function resolveScrambler(scrambler) {
         if (scrambler == "none") {
             var scrambleObject = {};
@@ -438,7 +415,7 @@ var scramble = function() {
         } else if (scrambler == "333zbll") {
             var scrambleObject = {};
             scrambleObject.type = "333";
-            scrambleObject.scramble = scramble_333.getZBLLScramble();
+            scrambleObject.scramble = scramble_333.getZBLLScramble(); 
             receiveScramble(scrambleObject, ignoreInvalid=true);
         } else {
             return false;

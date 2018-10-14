@@ -10,7 +10,7 @@ Main Features:
 - Completely offline and no Java required
 - Customizable event based session organization
 - Simple and stylish interface with multiple themes
-- Scrambler for all WCA events and more
+- Official TNoodle scrambles for all WCA events and more
 - WCA inspection support with voice announcements
 - Blind and one handed event accommodations
 - Event and session results graphs
@@ -74,7 +74,6 @@ A huge thanks to the people who made these fantastic libraries, tools and assets
 - [mawie81/electron-window-state](https://github.com/mawie81/electron-window-state)
 - [muaz-khan/RecordRTC](https://github.com/muaz-khan/RecordRTC)
 - [less/less.js](https://github.com/less/less.js)
-- [DmitryBaranovskiy/raphael](https://github.com/DmitryBaranovskiy/raphael)
 - [thewca/tnoodle](https://github.com/thewca/tnoodle)
 - [cs0x7f/stackmat](https://github.com/cs0x7f/stackmat)
 - [cs0x7f/cstimer](https://github.com/cs0x7f/cstimer)

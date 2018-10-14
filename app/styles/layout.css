@@ -1093,3 +1093,11 @@ ul {
     height: 100vh;
     background: #181818;
 }
+
+#startupImage {
+    position: absolute;
+    top: calc(50vh - 120px);
+    left: calc(50vw - 120px);
+    width: 240px;
+    height: 240px;
+}

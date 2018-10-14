@@ -219,7 +219,9 @@ app.on('ready', function() {
 
     win.on('close', (e, cmd) => {
         win.webContents.send('quit', "quit");
-        tnoodleWin.close();
+        if (!tnoodleWin.isDestroyed()) {
+            tnoodleWin.close();
+        }
     });
 
     win.on('ready-to-show', function() {
@@ -229,12 +231,10 @@ app.on('ready', function() {
 
 
     ipcMain.on("scramble", function(event, message) {
-        console.log("scramble: " + message);
         tnoodleWin.webContents.send('scramble', message);
     });
 
     ipcMain.on("scramble-done", function(event, message) {
-        console.log("scramble-done: " + message);
         win.webContents.send('scramble-done', message);
     });
 
