@@ -50,7 +50,8 @@ var preferences = {
     timeSplits:false,
     timerSize:25,
     timerSecondSize:10,
-    dataPath:storage.getDefaultDataPath()
+    dataPath:storage.getDefaultDataPath(),
+    fastScramblers:false
 }
 
 // Preference management functions
@@ -115,6 +116,7 @@ var prefs = function() {
         preferencesInterface.timerSecondSize.value = preferences.timerSecondSize;
         preferencesInterface.timerSize.value = preferences.timerSize;
         preferencesData.dataPath.value = preferences.dataPath;
+        preferencesGeneral.fastScramblers.checked = preferences.fastScramblers;
     }
 
     // Loads preferences from file and fills in preferences forms
@@ -269,6 +271,7 @@ var prefs = function() {
         preferences.timeSplits = preferencesTimer.timeSplits.checked;
         preferences.timerSecondSize = preferencesInterface.timerSecondSize.value;
         preferences.timerSize = preferencesInterface.timerSize.value;
+        preferences.fastScramblers = preferencesGeneral.fastScramblers.checked;
 
         if (preferencesTimer.leftKey.value != "") {
             preferences.leftKey = preferencesTimer.leftKey.value;

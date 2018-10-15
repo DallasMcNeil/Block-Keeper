@@ -23,15 +23,9 @@ Created by Dallas McNeil
     <script src="scripts/libs/jQuery.js"></script>
     <script src="scripts/libs/jQuery UI.js"></script>
     <script src="scripts/libs/RecordRTC.js"></script>
-    <script src="scripts/libs/raphael-min.js"></script>
-    <script src="scripts/libs/scramble_222.js"></script>
+    <script src="scripts/libs/tnoodle.js"></script>
+    <script src="scripts/libs/mathlib.js"></script>
     <script src="scripts/libs/scramble_333.js"></script>
-    <script src="scripts/libs/scramble_NNN.js"></script>
-    <script src="scripts/libs/scramble_pyram.js"></script>
-    <script src="scripts/libs/scramble_minx.js"></script>
-    <script src="scripts/libs/scramble_sq1.js"></script>
-    <script src="scripts/libs/scramble_clock.js"></script>
-    <script src="scripts/libs/scramble_skewb.js"></script>
     <script src="scripts/libs/stackmat.js"></script>
     <script src="scripts/libs/confetti.js"></script>
     <script src="scripts/libs/solver.js"></script>
@@ -161,7 +155,9 @@ Created by Dallas McNeil
     <button title="Add tool" id="addToolButton" onclick="tools.addTool()"></button>
     </div>
 
-    <div id="startupCover"></div>
+    <div id="startupCover">
+        <img id="startupImage" src="images/icon.png">
+    </div>
 
     <!-- Dialogs -->
 
@@ -243,6 +239,7 @@ Created by Dallas McNeil
                         <option value="3">3</option>
                     </select></p>
                     <p title="Time displayed as minutes and seconds"><input type="checkbox" name="formatTime" class="checkbox">Format times (mm:ss)</p>
+                    <p title="Use fast 4x4x4 and Square-1 scramble generators (unofficial)"><input type="checkbox" name="fastScramblers" class="checkbox">Fast scrambles</p>
                     <p title="Use camera to record solves"><input type="checkbox" name="recordSolve" class="checkbox">Video record solves</p>
                     <p title="Resolution of recorded videos, quality may depend on camera">Video resolution:  <select name="videoResolution" style="width:140px">
                         <option value="480">640x480</option>

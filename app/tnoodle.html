@@ -1,0 +1,67 @@
+<!--
+index.html
+Produces TNoodle scrambles in separate process
+Block Keeper
+Created by Dallas McNeil
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <script src="scripts/libs/tnoodle.js"></script>
+    <script>     
+        var {ipcRenderer, remote} = require('electron'); 
+
+        // Receive TNoodle puzzles 
+        function puzzlesLoaded(puzzles) {
+            window.puzzles = puzzles;
+        }
+
+        // Scramble for 2x2x2 to 5x5x5 relay
+        function scramble2to5Relay() {
+            var scrambleObject = {};
+            
+            var str = "(2x2x2) " + puzzles["222"].generateScramble() + "<br>";
+            str += "(3x3x3) " + puzzles["333"].generateScramble() + "<br>";
+            str += "(4x4x4) " + puzzles["444"].generateScramble() + "<br>";
+            str += "(5x5x5) " + puzzles["555"].generateScramble();
+            
+            scrambleObject.type = "relay2-5";
+            scrambleObject.scramble = str;
+            return scrambleObject;
+        }
+        
+        // Scramble for 2x2x2 to 7x7x7 relay
+        function scramble2to7Relay() {
+            var scrambleObject = {};
+            
+            var str = "(2x2x2) " + puzzles["222"].generateScramble() + "<br>";
+            str += "(3x3x3) " + puzzles["333"].generateScramble() + "<br>";
+            str += "(4x4x4) " + puzzles["444"].generateScramble() + "<br>";
+            str += "(5x5x5) " + puzzles["555"].generateScramble() + "<br>";
+            str += "(6x6x6) " + puzzles["666"].generateScramble() + "<br>";
+            str += "(7x7x7) " + puzzles["777"].generateScramble();
+            
+            scrambleObject.type = "relay2-7";
+            scrambleObject.scramble = str;
+            return scrambleObject;
+        }
+
+        // Receive scrambles to generate
+        require('electron').ipcRenderer.on('scramble', function(event, message) {
+            var scrambleObj = {};
+            if (message == "relay2-5") {
+                scrambleObj = scramble2to5Relay()
+            } else if (message == "relay2-7") {
+                scrambleObj = scramble2to7Relay()
+            } else {
+                scrambleObj.type = message;
+                scrambleObj.scramble = puzzles[scrambleObj.type].generateScramble();
+            }
+            ipcRenderer.send('scramble-done', scrambleObj);                
+        });
+    </script>
+</body>
+</html>

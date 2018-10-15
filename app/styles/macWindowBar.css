@@ -5,7 +5,7 @@
     left:0px;
     width:100vw;
     height:22px;
-    z-index: -2;
+    z-index: 10;
 }
 
 #content {
