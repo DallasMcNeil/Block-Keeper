@@ -86,7 +86,7 @@ function formatTime(time) {
         return "DNF";
     }
     let d = Math.pow(10, preferences.timerDetail);
-    let t = (Math.round(time * d) / d);
+    let t = (Math.floor(time * d) / d);
     if (preferences.formatTime && t >= 60) {
         if (t % 60 < 10) {
             return Math.floor(t / 60) + ":0" + (t % 60).toFixed(preferences.timerDetail);
@@ -94,6 +94,25 @@ function formatTime(time) {
             return Math.floor(t / 60) + ":" + (t % 60).toFixed(preferences.timerDetail);
         }
     } else { 
+        return t.toFixed(preferences.timerDetail);
+    }
+}
+
+function formatAverage(time) {
+    if (time === "-") {
+        return "-";
+    } else if (time === -1) {
+        return "DNF";
+    }
+    let d = Math.pow(10, preferences.timerDetail);
+    let t = (Math.round(time * d) / d);
+    if (preferences.formatTime && t >= 60) {
+        if (t % 60 < 10) {
+            return Math.floor(t / 60) + ":0" + (t % 60).toFixed(preferences.timerDetail);
+        } else {
+            return Math.floor(t / 60) + ":" + (t % 60).toFixed(preferences.timerDetail);
+        }
+    } else {
         return t.toFixed(preferences.timerDetail);
     }
 }
