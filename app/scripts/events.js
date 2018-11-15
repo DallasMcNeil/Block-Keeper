@@ -555,8 +555,8 @@ var events = function() {
 
                     sessionRecordsTable.rows[i + 1].cells[0].children[0].innerHTML = i + 1;
                     sessionRecordsTable.rows[i + 1].cells[1].children[0].innerHTML = formatRecord(records[i]);
-                    sessionRecordsTable.rows[i + 1].cells[2].children[0].innerHTML = formatTime(ao5t);
-                    sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatTime(ao12t);
+                    sessionRecordsTable.rows[i + 1].cells[2].children[0].innerHTML = formatAverage(ao5t);
+                    sessionRecordsTable.rows[i + 1].cells[3].children[0].innerHTML = formatAverage(ao12t);
                 }
             }
 
@@ -565,13 +565,13 @@ var events = function() {
             // Create session stats
             var mean = meanTimes(removeDNFs(calculatedTimes.times));
             if (mean === -1) {
-                $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatTime(0));
-                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(0));
-                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(0));
+                $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatAverage(0));
+                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatAverage(0));
+                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatAverage(0));
             } else {
-                $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatTime(mean));
-                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatTime(standardDeviation(calculatedTimes.times)));
-                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatTime(medianTimes(calculatedTimes.times)));
+                $("#sessionMean").prop("innerHTML", "<b>Mean:</b> " + formatAverage(mean));
+                $("#sessionSD").prop("innerHTML", "<b>σ(s.d):</b> " + formatAverage(standardDeviation(calculatedTimes.times)));
+                $("#sessionMedian").prop("innerHTML", "<b>Median:</b> " + formatAverage(medianTimes(calculatedTimes.times)));
             }
             $("#sessionSolves").prop("innerHTML", "<b>Solves:</b> " + (records.length - DNFsolves) + "/" + records.length);
 
@@ -600,8 +600,10 @@ var events = function() {
                     var currentP = document.createElement("p");
                     if (ts.length == 0) {
                         currentP.innerHTML = "-";
+                    } else if (size === 1) {
+                      currentP.innerHTML = formatTime(ts[ts.length-1]);
                     } else {
-                        currentP.innerHTML = formatTime(ts[ts.length-1]);
+                      currentP.innerHTML = formatAverage(ts[ts.length-1]);
                     }
                     current.appendChild(currentP);
 
@@ -1245,9 +1247,9 @@ var events = function() {
                 }
                 return str;
             } else if (size < 5) {
-                str+= "Mo"+size+": " + formatTime(meanTimes(extractTimes(r))) + "<br>";
+                str+= "Mo"+size+": " + formatAverage(meanTimes(extractTimes(r))) + "<br>";
             } else {
-                str+= "Ao"+size+": " + formatTime(averageTimes(extractTimes(r))) + "<br>";
+                str+= "Ao"+size+": " + formatAverage(averageTimes(extractTimes(r))) + "<br>";
             }
         }
         if (size > 4) {
@@ -1340,9 +1342,9 @@ var events = function() {
                 var records = getCurrentSession().records;
                 if (!preferences.onlyList) {
                     str = infoHeader() + "<br>Time list<br>";
-                    str += "Mean: " + formatTime(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
-                    str += "Median: " + formatTime(medianTimes(extractTimes(records))) + "<br>";
-                    str += "σ(s.d): " + formatTime(standardDeviation(extractTimes(records))) + "<br>";
+                    str += "Mean: " + formatAverage(meanTimes(removeDNFs(extractTimes(records)))) + "<br>";
+                    str += "Median: " + formatAverage(medianTimes(extractTimes(records))) + "<br>";
+                    str += "σ(s.d): " + formatAverage(standardDeviation(extractTimes(records))) + "<br>";
                 }
                 for (var i = 0; i < records.length; i++) {
                     if (preferences.onlyList) {
@@ -1363,14 +1365,14 @@ var events = function() {
                 }
                 if (!preferences.onlyList) {
                     str = infoHeader() + "<br>Mo3 list<br>";
-                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                    str += "σ(s.d): " + formatAverage(standardDeviation(means)) + "<br>";
                 }
                 for (var i = 0; i < means.length; i++) {
-                    if (preferences.onlyList) {
-                        str += formatTime(means[i]) + "<br>";
+                  if (preferences.onlyList) {
+                        str += formatAverage(means[i]) + "<br>";
                     } else {
-                        str += "<br>" + (i + 1) + ". ";
-                        str += formatTime(means[i]);
+                      str += "<br>" + (i + 1) + ". ";
+                        str += formatAverage(means[i]);
                     }
                 }
             } else {
@@ -1381,14 +1383,14 @@ var events = function() {
                 }
                 if (!preferences.onlyList) {
                     str = infoHeader() + "<br>Ao" + a + " list<br>";
-                    str += "σ(s.d): " + formatTime(standardDeviation(means)) + "<br>";
+                    str += "σ(s.d): " + formatAverage(standardDeviation(means)) + "<br>";
                 }
                 for (var i = 0; i < means.length; i++) {
                     if (preferences.onlyList) {
-                        str += formatTime(means[i]) + "<br>";
+                        str += formatAverage(means[i]) + "<br>";
                     } else {
                         str += "<br>" + (i + 1) + ". ";
-                        str += formatTime(means[i]);
+                        str += formatAverage(means[i]);
                     }
                 }
             }
