@@ -326,7 +326,7 @@ var tools = function() {
             }
         }
         
-        function drawTime(c,s,x,x2,y) {
+        function drawTime(c,s,x,x2,y,avg) {
             if (Math.abs(c - s) < 0.001) {
                 ctx.fillStyle = "#00FF00";
             } else {
@@ -339,7 +339,11 @@ var tools = function() {
                 ctx.fillStyle = mainColor;
                 ctx.fillText("DNF", x, y);
             } else {
-                ctx.fillText(formatTime(c), x, y); 
+                if (avg) {
+                    ctx.fillText(formatAverage(c), x, y); 
+                } else {
+                    ctx.fillText(formatTime(c), x, y); 
+                }
             }
             
             if (s === -2 || s === 0) {
@@ -349,15 +353,19 @@ var tools = function() {
                 ctx.fillStyle = mainColor;
                 ctx.fillText("DNF", x2, y); 
             } else {
-                ctx.fillText(formatTime(s), x2, y);
+                if (avg) {
+                    ctx.fillText(formatAverage(s), x2, y); 
+                } else {
+                    ctx.fillText(formatTime(s), x2, y); 
+                }
             }
         }
 
-        drawTime(ctime, stime, width / 3, (2 * width) / 3, height * 0.3);
-        drawTime(cmo3, smo3, width / 3, (2 * width) / 3, height * 0.45);
-        drawTime(cao5, sao5, width / 3, (2 * width) / 3, height * 0.6);
-        drawTime(cao12, sao12, width / 3, (2 * width) / 3, height * 0.75);
-        drawTime(cmean, smean, width / 3, (2 * width) / 3, height * 0.9);
+        drawTime(ctime, stime, width / 3, (2 * width) / 3, height * 0.3, false);
+        drawTime(cmo3, smo3, width / 3, (2 * width) / 3, height * 0.45, true);
+        drawTime(cao5, sao5, width / 3, (2 * width) / 3, height * 0.6, true);
+        drawTime(cao12, sao12, width / 3, (2 * width) / 3, height * 0.75, true);
+        drawTime(cmean, smean, width / 3, (2 * width) / 3, height * 0.9, true);
     }
     
     function drawTrendline(ctx, dis, times, len, a, color, width, height) {
