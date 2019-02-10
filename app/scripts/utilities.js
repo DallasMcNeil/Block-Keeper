@@ -54,8 +54,29 @@ function disableAllElements(exception = "") {
     }
 }
 
+// Deselect any selections
+function clearSelection() {
+    var sel;
+    if ((sel = document.selection) && sel.empty) {
+        sel.empty();
+    } else {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        }
+        var activeEl = document.activeElement;
+        if (activeEl) {
+            var tagName = activeEl.nodeName.toLowerCase();
+            if (tagName == "textarea" || (tagName == "input" && activeEl.type == "text")) {
+                 activeEl.selectionStart = activeEl.selectionEnd;
+            }
+        }
+    }
+}
+
+
 // Enable all major elements
 function enableAllElements() {
+    clearSelection();
     var elements = $("#content").children().not("#stats").not("#scrambleContainer");
     elements = elements.add($("#scrambleContainer").children());
     elements = elements.add($("#stats").children().not("#sessionContainer"));
