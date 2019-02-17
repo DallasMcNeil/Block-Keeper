@@ -43,7 +43,7 @@
     "appId": "com.dallasmcneil.blockkeeper",
     "productName": "Block Keeper",
     "electronCompile": false,
-    "electronVersion": "1.8.8",
+    "electronVersion": "4.0.4",
     "asar": false,
     "files": [
       "!README.md",
