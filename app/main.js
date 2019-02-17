@@ -167,7 +167,10 @@ app.on('ready', function() {
         minWidth:720,
         titleBarStyle:titleBar,
         show:false,
-        backgroundColor: "#181818"
+        backgroundColor: "#181818",    
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
 
     tnoodleWin = new BrowserWindow({
@@ -178,7 +181,10 @@ app.on('ready', function() {
         minHeight:10,
         minWidth:10,
         show:false,
-        backgroundColor: "#181818"
+        backgroundColor: "#181818",    
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
 
 

@@ -28,15 +28,18 @@ mkdir upload
 
 cp Block\ Keeper-$VER-mac.zip upload/Block-Keeper-mac.zip
 cp Block\ Keeper-$VER.dmg upload/Block-Keeper.dmg
-cp github/latest-mac.json upload/release.json
 
-jq '.url = "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/Block-Keeper-mac.zip"' < upload/release.json > tmp.json
-cat tmp.json > upload/release.json
-rm tmp.json
+RELEASEDATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 
-cp blockkeeper-$VER-armv7l.AppImage upload/blockkeeper-armv7l.AppImage
-cp blockkeeper-$VER-i386.AppImage upload/blockkeeper-i386.AppImage
-cp blockkeeper-$VER-x86_64.AppImage upload/blockkeeper-x86_64.AppImage
+echo '{
+  "version": "'$VER'",
+  "releaseDate": "'$RELEASEDATE'",
+  "url": "https://github.com/DallasMcNeil/Block-Keeper/releases/download/v'$VER'/Block-Keeper-mac.zip"
+}' > upload/release.json
+
+cp Block\ Keeper\ $VER\ armv7l.AppImage upload/blockkeeper-armv7l.AppImage
+cp Block\ Keeper\ $VER\ i386.AppImage upload/blockkeeper-i386.AppImage
+cp Block\ Keeper\ $VER.AppImage upload/blockkeeper-x86_64.AppImage
 
 cp squirrel-windows-ia32/Block\ Keeper\ Setup\ $VER.exe upload/Block-Keeper-Setup.exe
 cp squirrel-windows-ia32/blockkeeper-$VER-full.nupkg upload/blockkeeper-$VER-full.nupkg

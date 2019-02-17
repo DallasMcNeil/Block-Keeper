@@ -185,7 +185,8 @@ const record = function() {
         // Write file
         var reader = new FileReader();
         reader.onload = function() {
-            var buffer = new Buffer(reader.result);
+            console.log(reader.result);
+            var buffer = new Buffer.alloc(reader.result.byteLength, reader.result);
             fs.writeFile(path, buffer, {}, function(error, res) {
                 if (error) {
                     throw error;
