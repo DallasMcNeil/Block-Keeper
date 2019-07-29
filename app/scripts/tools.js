@@ -484,7 +484,7 @@ var tools = function() {
             }
             means.push(meanTimes(times));
             var ao5s = []
-            for (var x = 0;x < sessions[i].records.length - 4; x++) {    
+            for (var x = 0;x < times.length - 4; x++) {    
                 ao5s.push(averageTimes(times.slice(x,x+5)));
             }
             if (ao5s.length === 0) {
