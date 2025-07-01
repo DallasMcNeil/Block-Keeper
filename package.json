@@ -18,7 +18,7 @@
     "build": "electron-builder"
   },
   "devDependencies": {
-    "electron": "4.0.4",
+    "electron": "28.3.2",
     "electron-builder": "20.38.5",
     "electron-builder-lib": "20.23.1",
     "electron-builder-squirrel-windows": "^20.38.5",
